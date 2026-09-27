@@ -19,7 +19,7 @@ if (newer) links.push({ season: newer, dir: 'Later season', icon: 'ph:arrow-righ
       <ul class="inner" role="list">
         {links.map(({ season, dir, icon }) => (
           <li>
-            <a href={`/robots/${season.slug}/`} class:list={{ back: icon === 'ph:arrow-left' }}>
+            <a href={`/robots/${season.slug}`} class:list={{ back: icon === 'ph:arrow-left' }}>
               <span class="ring" aria-hidden="true">
                 <Icon name={icon} />
               </span>

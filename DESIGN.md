@@ -332,7 +332,7 @@ Solvers Yellow, Sun as a fill, and the yellow blocks are unchanged inside it.
 **Loading:** Inter and Orbitron are preloaded (the Latin woff2 files). Until Inter arrives, 'Inter Fallback' sets the text: local Arial scaled to Inter's metrics (size-adjust 107.12%, ascent 90.44%, descent 22.52%, no line gap), so lines break the same way before and after the swap and nothing below jumps.
 
 ### Hierarchy
-- **Display** (Orbitron 500, up to 6rem, 0.98): the home H1 and the 404 title ("Out of bounds"), uppercase.
+- **Display** (Orbitron 500, up to 6rem, 0.98): the home H1 and the 404 title, uppercase.
 - **Page title** (Orbitron 500, up to 5rem, 1.0, `--step-page-title`): the H1 of every inner page header and every robot season header, capped at 16ch. Its size is also capped by `titleFit`: the width of the title's longest word (measured Orbitron capital advances, plus 8% air) sets `--fit`, and the size never exceeds the line divided by it, so a long word such as "Newsletters" fits a phone.
 - **Headline** (Orbitron 500, up to 3.5rem): H2 on split, band and night panels. **Section headline** (up to 3rem) for heading-left sections, the most used heading on the site. **Closing headline** (up to 2.5rem) for the quieter closes (Resources' other resources and support, the Classes policies close). **Row headline** (up to 2.25rem) for sponsor tier names, policy names and the season pager. Always uppercase, balanced.
 - **Accent** (Orbitron 600, up to 1.875rem, 0.04em): the hero's Sun "FTC Team #23511" line.
@@ -352,7 +352,7 @@ Solvers Yellow, Sun as a fill, and the yellow blocks are unchanged inside it.
 
 **The No Kicker Rule.** Headings stand alone. No eyebrow or category label is placed above an H1, H2 or H3; a season's years or an issue's date sit in a mono meta line under the heading.
 
-**The Big Numeral Rule.** Stand-alone display numerals are reserved for the home "Who we are" readouts and the Awards Worlds lead band. The Outreach programs ledger's figure column is a recorded exception, held to the figure-column size (at most 2.375rem), and so is the 404 page's "404" across its sun. Everywhere else a figure is set inline in its sentence, in Orbitron and gold, and a title block's values are set as text, not numerals (the RISE pilot's cells).
+**The Big Numeral Rule.** Stand-alone display numerals are reserved for the home "Who we are" readouts and the Awards Worlds lead band. The Outreach programs ledger's figure column is the one recorded exception, held to the figure-column size (at most 2.375rem). Everywhere else a figure is set inline in its sentence, in Orbitron and gold, and a title block's values are set as text, not numerals (the RISE pilot's cells).
 
 **The Words Under Ten Rule.** Counts under ten are written as words ("Seven videos", "our last two seasons"): a lone Orbitron digit at body size reads as a glyph. From ten up the count is an inline figure again.
 
@@ -500,7 +500,7 @@ The newest issue set large: its period as the heading, a mono meta line, its con
 The programs ledger on the 112px Sun grid: a figure column in Orbitron gold (the figure-column size) with a mono unit under it, the title and body, and a photo closing each row. The RISE School pilot sits on a yellow band with a title block on solid band: a route with two pins (Home to School) that draws in on scroll, then cells whose values are set as text. Community events are a brick log of photo frames.
 
 ### 404
-"Out of bounds": a square of field tape (a 1px dashed cream line at 30% with 2px Ink 3 corner marks) with a sun disk rolling two thirds out of it, bottom right, and "404" in Orbitron Solvers Yellow across the disk (up to 10rem). Beside it, the display title (with a visually hidden "Page not found:" for screen readers), a lede that names the missing address in a dashed mono chip, one arrow link per audience in two columns, and an Ink 3 line inviting a report of the broken link. Below 900px the field sits above the words at 62% width. Noindex, no canonical link.
+"404: Page not found" as the display title, with a lede that names the missing address in a dashed mono chip, one arrow link per audience in two columns, and an Ink 3 line inviting a report of the broken link. The right half is the robot's stage, full height, as in the home hero but with no box and no words to clear: the dot robot stands in its sun already built (no assembly) and turns steadily until someone drags it or turns it with the arrow keys, with the same Pause motion ring at the stage's lower left (hidden under reduced motion, when it doesn't turn by itself). Without WebGL or JavaScript the hero poster fills the sun. Below 900px the stage follows the words, about as tall as the screen is wide. Noindex, no canonical link.
 
 ### Hero Controls and Slideshow
 Behind everything, the team's own photos crossfade (1.6s, `--ease-inout`) every 7 seconds on a slow drift (scale 1.02 to 1.09), in the held duotone. An ink gradient sits only behind the headline (90% at the left edge, 80% at 32%, gone by 66%; top-down on phones, gone by 72%). The control group (Turn left, Turn right, View from below, then the "Drag to rotate" hint in caption mono) sits on an ink backing at 86%. On wide screens it sits outside the disk's lower left, its top right corner on the disk's 45 degree radius just past the rim; below 1024px it sits above the robot at the right. The controls stay hidden, and the canvas stays out of the tab order, until the robot is live. The Pause motion button pauses the photos and the robot's turn; the slideshow also pauses off screen and in a hidden tab and holds the first photo under reduced motion.
@@ -545,7 +545,7 @@ The team's robot as 174,728 dots, packed 32 bits each by `tools/pointcloud/build
 - **Don't** use a serif, anywhere.
 - **Don't** put an eyebrow or kicker label above a heading.
 - **Don't** use Azeret Mono for headings.
-- **Don't** set a stand-alone big numeral outside the home readouts, the Awards Worlds lead band and the 404 sun (the Outreach figure column is held at 2.375rem).
+- **Don't** set a stand-alone big numeral outside the home readouts and the Awards Worlds lead band (the Outreach figure column is held at 2.375rem).
 - **Don't** round rectangle corners; circles are only for arrow rings, step, pause and play buttons, markers, the cursor and suns.
 - **Don't** draw a side rule thicker than 1px.
 - **Don't** set text in Deep Gold on the dark ground, or small text in Solvers Yellow on the ground.

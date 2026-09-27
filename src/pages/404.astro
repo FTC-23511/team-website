@@ -3,14 +3,17 @@ import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import { nav, emails } from '../data/site';
 
+// The home hero's dot robot (same file and dot count), shown already built.
+const POINTS = 174728;
+
 // The places most visitors are looking for, one per audience. Robots is the current season (the menu's first entry).
 const ways = [
   { label: 'Home', href: '/' },
-  { label: 'Meet the Team', href: '/about/team/' },
+  { label: 'Meet the Team', href: '/about/team' },
   { label: 'Robots', href: nav.find((n) => n.label === 'Robots')!.children![0].href },
-  { label: 'Resources', href: '/resources/' },
-  { label: 'LEGO Robotics Classes', href: '/classes/' },
-  { label: 'Contact', href: '/contact/' },
+  { label: 'Resources', href: '/resources' },
+  { label: 'LEGO Robotics Classes', href: '/classes' },
+  { label: 'Contact', href: '/contact' },
 ];
 ---
 
@@ -22,15 +25,8 @@ const ways = [
 >
   <section class="lost" aria-labelledby="lost-title">
     <div class="inner">
-      <!-- A field boundary in tape, and the 404 sun rolling out past it. -->
-      <div class="field" aria-hidden="true">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span
-          class="corner br"></span>
-        <div class="sun"><span class="num">404</span></div>
-      </div>
-
       <div class="copy">
-        <h1 id="lost-title"><span class="visually-hidden">Page not found: </span>Out of bounds</h1>
+        <h1 id="lost-title">404: Page not found</h1>
         <p class="lede">
           There’s no page at <code class="path" data-path>this address</code>. It may have moved when we rebuilt our
           site, or the address has a typo.
@@ -56,11 +52,39 @@ const ways = [
           we’ll fix it.
         </p>
       </div>
+
+      <!-- The dot robot in its sun, as on the home page: built already, turning until someone takes hold of it. -->
+      <div class="stage" data-robot data-src="/models/cypher.bin" data-count={POINTS}>
+        <div class="sun" aria-hidden="true"></div>
+        <!-- Shown only when the live robot can't run. -->
+        <img class="poster" data-src="/images/home/hero-poster.webp" alt="" width="766" height="766" />
+        <noscript><img class="poster still" src="/images/home/hero-poster.webp" alt="" width="766" height="766" /></noscript>
+        <canvas data-label="Cypher, the team's robot, drawn in dots. Drag or use the arrow keys to rotate it."></canvas>
+        <!-- The script shows this group once the robot is live (the renderer's .hint). -->
+        <div class="hint" hidden>
+          <button class="pause" type="button" aria-pressed="false" aria-label="Pause motion" data-pause>
+            <Icon name="ph:pause" class="i-pause" aria-hidden="true" />
+            <Icon name="ph:play" class="i-play" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 </Base>
 
 <script>
+  import { mountCypher } from '../scripts/cypher';
+
+  // The robot arrives already built and turns slowly, like the home page's, until it is dragged or paused.
+  const stage = document.querySelector<HTMLElement>('[data-robot]');
+  const robot = stage ? mountCypher(stage, { assembled: true }) : undefined;
+  const pause = document.querySelector<HTMLButtonElement>('[data-pause]');
+  pause?.addEventListener('click', () => {
+    const on = pause.getAttribute('aria-pressed') !== 'true';
+    pause.setAttribute('aria-pressed', String(on));
+    robot?.setPaused(on);
+  });
+
   // Name the address that wasn't found, so a mistyped link is easy to spot.
   const path = document.querySelector<HTMLElement>('[data-path]');
   if (path) {
@@ -81,82 +105,118 @@ const ways = [
   }
   .inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: 'copy field';
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
     align-items: center;
-    gap: var(--s-8);
+    gap: var(--s-7);
     min-height: calc(100dvh - var(--header-h));
     max-width: 1680px;
     margin-inline: auto;
-    padding: var(--s-8) var(--gutter);
+    padding: var(--s-7) var(--gutter);
   }
 
-  /* The field: a square of tape with corner marks. The sun sits two thirds out of it, bottom right. */
-  .field {
-    grid-area: field;
+  /* The right side is the robot's stage, full height. The script places the robot (from the --robot-* values) and
+     writes the sun's centre and size back as --sun-cx, --sun-cy and --sun-d; until then the sun sits centred. */
+  .stage {
+    --robot-x: 0;
+    --robot-y: 0;
+    --robot-s: 0.62;
+    --robot-fit: 0.98;
     position: relative;
-    justify-self: center;
-    width: min(100%, 34rem);
-    aspect-ratio: 1;
-    border: 1px dashed rgb(252 249 222 / 0.3);
+    align-self: stretch;
+    min-height: 30rem;
   }
-  .corner {
+  .sun,
+  .poster {
     position: absolute;
-    width: 1.25rem;
-    height: 1.25rem;
-    border: 0 solid var(--ink-3);
-  }
-  .tl {
-    top: -1px;
-    left: -1px;
-    border-top-width: 2px;
-    border-left-width: 2px;
-  }
-  .tr {
-    top: -1px;
-    right: -1px;
-    border-top-width: 2px;
-    border-right-width: 2px;
-  }
-  .bl {
-    bottom: -1px;
-    left: -1px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
-  }
-  .br {
-    bottom: -1px;
-    right: -1px;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
+    left: var(--sun-cx, 50%);
+    top: var(--sun-cy, 53%);
+    height: var(--sun-d, min(84%, 38rem));
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
   }
   .sun {
-    position: absolute;
-    left: 38%;
-    top: 34%;
-    display: grid;
-    place-items: center;
-    width: 78%;
-    aspect-ratio: 1;
     border-radius: 50%;
     background: radial-gradient(circle at 50% 42%, var(--sun-disk) 0 58%, var(--sun-disk-edge) 100%);
     box-shadow: inset 0 0 0 2px var(--sun-rim);
   }
-  .num {
-    font-family: var(--font-display);
-    font-size: clamp(4.5rem, 2rem + 8vw, 10rem);
-    font-weight: 500;
-    line-height: 0.8;
-    letter-spacing: 0.01em;
-    color: var(--band);
-    font-variant-numeric: tabular-nums;
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: pan-y;
+  }
+  .stage.is-over-robot canvas {
+    cursor: grab;
+  }
+  .stage.is-dragging canvas {
+    cursor: grabbing;
+  }
+  canvas:focus-visible {
+    outline: 2px solid var(--gold-deep);
+    outline-offset: -6px;
+  }
+  /* The robot at rest, screened over the sun, when the live one can't run (no WebGL, no JavaScript). */
+  .poster {
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+  .stage:not(.is-fallback) > .poster:not(.still) {
+    display: none;
+  }
+  .stage.is-fallback canvas {
+    visibility: hidden;
+  }
+
+  /* Pause motion, as on the home page: a small ring at the stage's lower left. */
+  .hint {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  .pause {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .pause:hover {
+    border-color: var(--ink);
+    background: var(--paper);
+  }
+  .pause :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+  .pause :global(.i-play),
+  .pause[aria-pressed='true'] :global(.i-pause) {
+    display: none;
+  }
+  .pause[aria-pressed='true'] :global(.i-play) {
+    display: block;
+  }
+  /* Under reduced motion the robot doesn't turn by itself, so there is nothing to pause. */
+  @media (prefers-reduced-motion: reduce) {
+    .hint {
+      display: none;
+    }
   }
 
   .copy {
-    grid-area: copy;
+    position: relative;
+    z-index: 1;
   }
   h1 {
-    max-width: 10ch;
+    max-width: 11ch;
     font-size: var(--step-4);
     line-height: 0.98;
   }
@@ -200,22 +260,18 @@ const ways = [
     color: var(--gold-ink);
   }
 
-  /* Phones and small tablets: the field above the words, smaller, the sun still rolling out of it. */
+  /* Phones and small tablets: the words first, then the robot's stage beneath them. */
   @media (max-width: 899px) {
     .inner {
       grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: 'field' 'copy';
       align-items: start;
-      gap: var(--s-7);
+      gap: var(--s-6);
       min-height: 0;
       padding-block: var(--s-7) var(--s-8);
     }
-    .field {
-      justify-self: start;
-      width: min(62%, 17rem);
-    }
-    .num {
-      font-size: clamp(3.25rem, 1.5rem + 9vw, 5.5rem);
+    .stage {
+      min-height: 0;
+      height: clamp(20rem, 92vw, 32rem);
     }
   }
   @media (max-width: 479px) {

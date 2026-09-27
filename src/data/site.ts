@@ -14,45 +14,52 @@ export const nav: NavItem[] = [
   { label: 'Home', href: '/' },
   {
     label: 'About',
-    href: '/about/',
+    href: '/about',
     children: [
-      { label: 'Meet the Team', href: '/about/team/' },
-      { label: 'Awards', href: '/about/awards/' },
-      { label: 'Newsletters', href: '/about/newsletters/' },
-      { label: 'Join the Team', href: '/apply/' },
+      { label: 'Meet the Team', href: '/about/team' },
+      { label: 'Awards', href: '/about/awards' },
+      { label: 'Newsletters', href: '/about/newsletters' },
+      { label: 'Join the Team', href: '/apply' },
     ],
   },
-  { label: 'Impact', href: '/impact/' },
+  { label: 'Impact', href: '/impact' },
   {
     label: 'Robots',
-    href: '/robots/',
+    href: '/robots',
     children: [
-      { label: 'DECODE', href: '/robots/decode-2025-26/' },
-      { label: 'INTO THE DEEP', href: '/robots/into-the-deep-2024-25/' },
+      { label: 'DECODE', href: '/robots/decode-2025-26' },
+      { label: 'INTO THE DEEP', href: '/robots/into-the-deep-2024-25' },
     ],
   },
   {
     label: 'Resources',
-    href: '/resources/',
+    href: '/resources',
     children: [
-      { label: 'Overview', href: '/resources/' },
+      { label: 'Overview', href: '/resources' },
       { label: 'SolversLib Docs', href: 'https://docs.seattlesolvers.com', external: true },
-      { label: 'Designs', href: '/resources/designs/' },
-      { label: 'Portfolios', href: '/resources/portfolios/' },
-      { label: 'Videos & Workshops', href: '/resources/videos/' },
+      { label: 'Designs', href: '/resources/designs' },
+      { label: 'Portfolios', href: '/resources/portfolios' },
+      { label: 'Videos & Workshops', href: '/resources/videos' },
     ],
   },
-  { label: 'Classes', href: '/classes/' },
+  {
+    label: 'Services',
+    href: '/services',
+    children: [
+      { label: 'Classes', href: '/classes' },
+      { label: 'Plate Manufacturing', href: '/services/plate-manufacturing' },
+    ],
+  },
   {
     label: 'Sponsors',
-    href: '/sponsors/',
+    href: '/sponsors',
     children: [
-      { label: 'Our Sponsors', href: '/sponsors/' },
-      { label: 'Become a Sponsor', href: '/sponsors/become-a-sponsor/' },
-      { label: 'Donate', href: '/sponsors/donate/' },
+      { label: 'Our Sponsors', href: '/sponsors' },
+      { label: 'Become a Sponsor', href: '/sponsors/become-a-sponsor' },
+      { label: 'Donate', href: '/sponsors/donate' },
     ],
   },
-  { label: 'Contact', href: '/contact/' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const socials = [
@@ -91,4 +98,4 @@ export const donate = {
 };
 
 // One label per intent, used everywhere on the page.
-export const cta = { sponsor: { label: 'Sponsor us', href: '/sponsors/become-a-sponsor/' } };
+export const cta = { sponsor: { label: 'Sponsor us', href: '/sponsors/become-a-sponsor' } };

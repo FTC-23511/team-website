@@ -1,4 +1,4 @@
 {
-  "prompt": "Origin: about-us-17-mentor-kai.png, About Us page of the Seattle Solvers Google Site (sites.google.com/view/seattlesolvers), scraped 2026-09-26; cropped 3:4 (360x480+64+150 of the source) around face and upper body, kept at the crop's full size (360x480, no resampling), levels normalized (0.3% contrast stretch).",
-  "createdAt": "2026-09-27T06:41:00.402Z"
+  "prompt": "Origin: the team's own photo of Kai (kai.png, 317x563, provided by the team on 2026-09-27); cropped 3:4 around face and upper body (box 38,68 240x320), scaled to 360x480 (Lanczos) to match the other mentor portraits, levels normalized (0.3% contrast stretch), webp q84.",
+  "createdAt": "2026-09-27T23:50:00.000Z"
 }

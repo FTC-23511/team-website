@@ -16,22 +16,23 @@ const robots = nav.find((n) => n.label === 'Robots')!.children![0].href;
     // /#apply-team and so on) forward to the page that replaced each view, on arrival or on a hash change.
     (function () {
       var routes = {
-        about: '/about/team/',
-        awards: '/about/awards/',
-        seasons: '/about/awards/',
-        impact: '/impact/',
+        about: '/about/team',
+        awards: '/about/awards',
+        seasons: '/about/awards',
+        impact: '/impact',
         robots: robots,
-        resources: '/resources/',
-        solverslib: '/resources/',
-        'solverslib-docs': '/resources/',
-        classes: '/classes/',
-        'apply-class': '/classes/',
-        'class-policies': '/classes/policies/',
-        apply: '/apply/',
-        'apply-team': '/apply/',
-        sponsors: '/sponsors/',
-        'sponsors-list': '/sponsors/',
-        contact: '/contact/',
+        resources: '/resources',
+        solverslib: '/resources',
+        'solverslib-docs': '/resources',
+        classes: '/classes',
+        'apply-class': '/classes',
+        'class-policies': '/classes/policies',
+        machining: '/services/plate-manufacturing',
+        apply: '/apply',
+        'apply-team': '/apply',
+        sponsors: '/sponsors',
+        'sponsors-list': '/sponsors',
+        contact: '/contact',
       };
       function forward() {
         var key = location.hash.slice(1);

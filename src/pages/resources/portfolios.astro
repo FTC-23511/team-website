@@ -12,7 +12,7 @@ import { portfolioSeasons, portfoliosLede } from '../../data/resources';
   description="Engineering portfolios of Seattle Solvers, FTC Team #23511: DECODE World Championship and Washington editions, and every INTO THE DEEP edition."
 >
   <PageHeader title="Engineering Portfolios" lede={portfoliosLede}>
-    <a class="arrow-link" href="/about/awards/">
+    <a class="arrow-link" href="/about/awards">
       <span>Every award by season</span>
       <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
     </a>
@@ -20,7 +20,7 @@ import { portfolioSeasons, portfoliosLede } from '../../data/resources';
 
   {portfolioSeasons.map((s, i) => <PortfolioSeason season={s} first={i === 0} />)}
 
-  <MoreResources current="/resources/portfolios/" />
+  <MoreResources current="/resources/portfolios" />
 </Base>
 
 <style>

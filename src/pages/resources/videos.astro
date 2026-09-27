@@ -9,8 +9,8 @@ import { channel } from '../../data/videos';
 
 // Each group can point at the robot page its videos come from.
 const links: Record<string, { label: string; href: string }> = {
-  features: { label: 'Meet Cypher', href: '/robots/decode-2025-26/' },
-  autonomous: { label: 'Meet Riptide', href: '/robots/into-the-deep-2024-25/' },
+  features: { label: 'Meet Cypher', href: '/robots/decode-2025-26' },
+  autonomous: { label: 'Meet Riptide', href: '/robots/into-the-deep-2024-25' },
 };
 ---
 
@@ -30,7 +30,7 @@ const links: Record<string, { label: string; href: string }> = {
 
   {videoGroups.map((g) => <VideoGroup group={g} link={links[g.id]} />)}
 
-  <MoreResources current="/resources/videos/" />
+  <MoreResources current="/resources/videos" />
 </Base>
 
 <style>

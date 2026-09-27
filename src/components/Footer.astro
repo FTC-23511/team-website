@@ -4,17 +4,18 @@ import { nav, socials, team, emails, linktree, donate, cta } from '../data/site'
 
 const year = new Date().getFullYear();
 const explore = [
-  { label: 'Meet the Team', href: '/about/team/' },
-  { label: 'Awards', href: '/about/awards/' },
-  { label: 'Newsletters', href: '/about/newsletters/' },
-  { label: 'Outreach', href: '/impact/' },
+  { label: 'Meet the Team', href: '/about/team' },
+  { label: 'Awards', href: '/about/awards' },
+  { label: 'Newsletters', href: '/about/newsletters' },
+  { label: 'Outreach', href: '/impact' },
   { label: 'Robots', href: nav.find((n) => n.label === 'Robots')!.children![0].href },
-  { label: 'Resources', href: '/resources/' },
+  { label: 'Resources', href: '/resources' },
 ];
 const involved = [
-  { label: 'LEGO Robotics Classes', href: '/classes/' },
-  { label: 'Join the Team', href: '/apply/' },
-  { label: 'Contact', href: '/contact/' },
+  { label: 'LEGO Robotics Classes', href: '/classes' },
+  { label: 'Plate Manufacturing', href: '/services/plate-manufacturing' },
+  { label: 'Join the Team', href: '/apply' },
+  { label: 'Contact', href: '/contact' },
 ];
 ---
 
@@ -56,7 +57,7 @@ const involved = [
         <p class="col-h mono" id="footer-support">Support</p>
         <ul role="list" aria-labelledby="footer-support">
           <li><a href={cta.sponsor.href}>Become a Sponsor</a></li>
-          <li><a href="/sponsors/">Our Sponsors</a></li>
+          <li><a href="/sponsors">Our Sponsors</a></li>
           <li>
             <a href={donate.hcb} target="_blank" rel="noopener"
               >Donate with Hack Club<span class="visually-hidden"> (opens in a new tab)</span></a

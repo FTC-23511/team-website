@@ -1,0 +1,120 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+
+// The old seattlesolvers.com "Plate Manufacturing" page (#machining, fetched 2026-09-27), a service that is coming
+// soon. Its sentence said "fully aluminum swerve drivetrains"; Cypher's chassis pairs aluminum plates with a carbon
+// fiber bellypan (robots.ts), so here it reads "swerve drivetrains".
+const lede =
+  'We’re launching a student-run plate manufacturing service: custom-cut plates in wood, aluminum, and self-reinforced polypropylene, from the same shop that builds our swerve drivetrains.';
+const materials = [{ name: 'Wood' }, { name: 'Aluminum' }, { name: 'Self-reinforced polypropylene', short: 'SRPP' }];
+---
+
+<Base
+  title="Plate Manufacturing | Seattle Solvers"
+  description="Custom-cut plates in wood, aluminum, and self-reinforced polypropylene from the student-run shop of Seattle Solvers, FTC Team #23511. Coming soon."
+>
+  <PageHeader title="Plate Manufacturing" lede={lede}>
+    <p class="status">
+      <span class="tag">Coming soon</span>
+      <span>Details, capabilities, and pricing are on the way.</span>
+    </p>
+    <a class="btn btn-primary head-action" href="/contact">
+      <span>Get in touch</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+  </PageHeader>
+
+  <section class="materials" aria-labelledby="materials-title">
+    <div class="inner">
+      <h2 id="materials-title">Materials</h2>
+      <ul class="list" role="list">
+        {
+          materials.map((m) => (
+            <li>
+              <span class="name">{m.name}</span>
+              {m.short && <span class="short">{m.short}</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2) var(--s-4);
+    margin-top: var(--s-5);
+    color: var(--ink-2);
+  }
+  .tag {
+    padding: 0.3rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+    border: 1px solid var(--gold-deep);
+  }
+  .head-action {
+    margin-top: var(--s-6);
+  }
+
+  /* The three materials, ruled like a spec list. */
+  .materials {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: var(--s-7);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .list {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .list li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .name {
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .short {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-5);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+</style>
