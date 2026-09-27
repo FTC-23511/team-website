@@ -88,8 +88,8 @@ const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public', photo));
     height: 100%;
     object-fit: cover;
     object-position: 55% 45%;
-    /* Lighter than the site duotone: about half the photo's own color comes through, so the panel
-       reads warm and alive rather than muddy. */
+    /* Lighter than the hero's duotone: about half the photo's own color comes through, so the panel reads warm and
+       alive rather than muddy. */
     filter: grayscale(0.5) contrast(1.04) brightness(1.1);
     z-index: -2;
   }
@@ -101,8 +101,8 @@ const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public', photo));
       object-position: 0% 45%;
     }
   }
-  /* The site's Duo Light tint at 40%, held: a backdrop has no hover to return to color.
-     Painted before the shade (same layer, earlier in the tree), so it tints the photo, not the shade. */
+  /* The Duo Light tint at 40%, held: a backdrop has no hover to return to color. Painted before the shade (same layer,
+     earlier in the tree), so it tints the photo, not the shade. */
   .has-photo::before {
     content: '';
     position: absolute;

@@ -28,7 +28,7 @@ const isLead = (role: string) => /\b(Lead|Captain)\b/.test(role);
         people.map((p, i) => (
           <li>
             {p.photo ? (
-              <div class="duo portrait">
+              <div class="duo tinted portrait">
                 <img
                   src={p.photo}
                   alt={p.alt ?? p.name}

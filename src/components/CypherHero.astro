@@ -88,9 +88,9 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
     isolation: isolate;
   }
 
-  /* Slideshow: the team's photos in the same duotone as the photos elsewhere on the site (grayscale
-     under a Duo Light multiply tint). An ink gradient sits only behind the words, so the headline
-     stays crisp while the photos show in full around the sun. */
+  /* Slideshow: the team's photos in the pale duotone (grayscale under a Duo Light multiply tint), which the home page's
+     first two bands keep while photos elsewhere show in color. An ink gradient sits only behind the words, so the
+     headline stays crisp while the photos show in full around the sun. */
   .slides {
     position: absolute;
     inset: 0;
@@ -110,7 +110,7 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
     opacity: 0;
     transition: opacity 1.6s var(--ease-inout);
   }
-  /* The same pale duotone as .duo photos, but held: a backdrop has no hover to return to color. */
+  /* The tint is held: a backdrop has no hover to return to color. */
   .slides::after {
     content: '';
     position: absolute;

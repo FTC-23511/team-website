@@ -72,16 +72,18 @@ Every image has a `.webp.json` next to it that says where it came from, so the n
 { "prompt": "Origin: <where it came from and what was done to it>", "createdAt": "2026-09-27T00:00:00.000Z" }
 ```
 
-Photos show in the site's yellow duotone and come back to color on hover; that's done in CSS, so upload them in
-normal color.
+Photos show in their own colors. The yellow duotone is kept for the Meet the Team portraits (color on hover) and
+the home page's hero and "Who we are" photos; that's all done in CSS, so always upload photos in normal color.
 
 ## Deploying
 
 `npm run build` produces a plain static site in `dist/`. It is hosted on Vercel (the team's `software@` account),
 connected to this repository: every push to `main` publishes the site, and every other branch gets its own preview
 link. `vercel.json` holds the build settings and sends `/page` to `/page/`, since every page is a folder.
-`astro.config.mjs` sets the site address (used for the sitemap, canonical links and share images) and the redirects:
-menu parents without a page of their own (`/about`, `/robots`, `/impact`) and the old Google Site's paths, which the
+`astro.config.mjs` sets the site address (used for the sitemap, canonical links and link previews: on Vercel it is the
+project's production domain, or `SITE_URL` if that environment variable is set) and the redirects:
+menu parents without a page of their own (`/about`, `/robots`), Outreach's old address (`/impact/outreach`, now at
+`/impact`), and the old Google Site's paths, which the
 sponsorship package still links to.
 
 The spinning dot robot on the home page is built from the robot's STL by `tools/pointcloud/` (see its README).

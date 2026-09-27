@@ -148,19 +148,6 @@ const coverSizes = '(max-width: 599px) 112px, (max-width: 1099px) 30vw, 18vw';
   .cover img {
     object-position: 50% 0;
   }
-  /* Reaching for any part of an issue brings its cover back to color, on the duotone's own rhythm. */
-  @media (hover: hover) {
-    .issue:hover .cover img,
-    .issue:focus-within .cover img {
-      filter: grayscale(0) contrast(1) brightness(1);
-      transition-duration: 0.65s, 1.4s;
-    }
-    .issue:hover .cover::after,
-    .issue:focus-within .cover::after {
-      opacity: 0;
-      transition-duration: 0.65s;
-    }
-  }
 
   .words {
     display: flex;

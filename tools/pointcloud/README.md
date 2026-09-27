@@ -10,8 +10,8 @@ python3 -m venv .venv && .venv/bin/pip install numpy trimesh scipy
 
 It prints the dot count and the STL bounds. Put the bounds (`LO`, `EXT`) into
 `src/scripts/cypher.ts` and the count into `POINTS` in `src/components/CypherHero.astro`, then
-regenerate the fallback poster `public/models/cypher-poster-dark.webp` from the page (the share-image template in
-`tools/og` uses it too) and re-crop `public/images/home/hero-poster.webp` from it, following the steps in that
+regenerate the fallback poster `public/models/cypher-poster-dark.webp` from the page and re-crop
+`public/images/home/hero-poster.webp` from it, following the steps in that
 image's `.webp.json` note.
 
 Tuning: the two optional arguments are the edge and surface grid sizes in millimetres (defaults

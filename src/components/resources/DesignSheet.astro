@@ -87,18 +87,6 @@ const { image } = design;
     height: 100%;
     object-fit: contain;
     padding: clamp(1rem, 0.5rem + 2vw, 2.5rem);
-    filter: grayscale(1) contrast(1.05);
-    transition: filter 0.9s var(--ease-inout);
-  }
-  @media (hover: hover) {
-    .sheet:hover .plate img {
-      filter: none;
-      transition-duration: 0.65s;
-    }
-  }
-  .sheet:focus-within .plate img {
-    filter: none;
-    transition-duration: 0.65s;
   }
 
   .strip {

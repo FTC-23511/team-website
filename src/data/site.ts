@@ -22,7 +22,7 @@ export const nav: NavItem[] = [
       { label: 'Join the Team', href: '/apply/' },
     ],
   },
-  { label: 'Impact', href: '/impact/outreach/' },
+  { label: 'Impact', href: '/impact/' },
   {
     label: 'Robots',
     href: '/robots/',
