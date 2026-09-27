@@ -186,7 +186,12 @@ const UNIFORMS = {
   alpha: 'uAlpha', far: 'uFar', haze: 'uHaze',
 } as const;
 
-export function mountCypher(root: HTMLElement): CypherControl {
+export type CypherOptions = {
+  /** Show the robot already built when its dots arrive, with no assembly (the 404 page). */
+  assembled?: boolean;
+};
+
+export function mountCypher(root: HTMLElement, options: CypherOptions = {}): CypherControl {
   const canvas = root.querySelector<HTMLCanvasElement>('canvas')!;
   const controls = root.querySelector<HTMLElement>('.hint');
   const poster = root.querySelector<HTMLImageElement>('img[data-src]');
@@ -444,7 +449,7 @@ export function mountCypher(root: HTMLElement): CypherControl {
   function startBuild() {
     build = 0;
     buildStart = performance.now();
-    building = !reduceMotion.matches;
+    building = !reduceMotion.matches && !options.assembled;
     if (!building || paused) {
       building = false;
       build = 1;

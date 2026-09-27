@@ -41,7 +41,7 @@ export const programs: {
     alt: 'Three kids building a LEGO robot at a class table',
     width: 1400,
     height: 1050,
-    links: [{ label: 'Classes', href: '/classes/' }],
+    links: [{ label: 'Classes', href: '/classes' }],
   },
   {
     title: 'Open-Source Engineering',

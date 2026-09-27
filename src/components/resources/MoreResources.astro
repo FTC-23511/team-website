@@ -11,10 +11,10 @@ interface Props {
 const { current } = Astro.props;
 
 const pages = [
-  { label: 'All resources', href: '/resources/', note: 'SolversLib, CAD, portfolios, code, and videos' },
-  { label: 'Designs', href: '/resources/designs/', note: `${counts.designs} robots and mechanisms in Onshape` },
-  { label: 'Portfolios', href: '/resources/portfolios/', note: `${counts.portfolios} engineering portfolios` },
-  { label: 'Videos & Workshops', href: '/resources/videos/', note: `${counts.videos} videos` },
+  { label: 'All resources', href: '/resources', note: 'SolversLib, CAD, portfolios, code, and videos' },
+  { label: 'Designs', href: '/resources/designs', note: `${counts.designs} robots and mechanisms in Onshape` },
+  { label: 'Portfolios', href: '/resources/portfolios', note: `${counts.portfolios} engineering portfolios` },
+  { label: 'Videos & Workshops', href: '/resources/videos', note: `${counts.videos} videos` },
   { label: 'SolversLib Docs', href: solversLib.docs.href, note: 'docs.seattlesolvers.com', external: true },
 ].filter((p) => p.href !== current);
 ---

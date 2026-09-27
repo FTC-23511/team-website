@@ -35,18 +35,18 @@ const word = (n: number): string | undefined => words[n];
     <ol class="rows" role="list">
       <li class="row">
         <div class="words">
-          <h3><a href="/resources/designs/">Designs</a></h3>
+          <h3><a href="/resources/designs">Designs</a></h3>
           <p>
             {word(counts.designs) ?? <strong>{counts.designs}</strong>} robots and mechanisms from our last{' '}
             {word(designSeasons.length)?.toLowerCase() ?? <strong>{designSeasons.length}</strong>} seasons, public in
             Onshape for any team to open and copy.
           </p>
-          <a class="arrow-link" href="/resources/designs/">
+          <a class="arrow-link" href="/resources/designs">
             <span>Browse designs</span>
             <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
           </a>
         </div>
-        <a class="strip plates" href="/resources/designs/" tabindex="-1" aria-hidden="true">
+        <a class="strip plates" href="/resources/designs" tabindex="-1" aria-hidden="true">
           {
             designPreview.map((img) => (
               <span class="plate">
@@ -68,18 +68,18 @@ const word = (n: number): string | undefined => words[n];
 
       <li class="row">
         <div class="words">
-          <h3><a href="/resources/portfolios/">Portfolios</a></h3>
+          <h3><a href="/resources/portfolios">Portfolios</a></h3>
           <p>
             {word(counts.portfolios) ?? <strong>{counts.portfolios}</strong>} engineering portfolios from our last{' '}
             {word(portfolioSeasons.length)?.toLowerCase() ?? <strong>{portfolioSeasons.length}</strong>} seasons, with
             the awards each one earned.
           </p>
-          <a class="arrow-link" href="/resources/portfolios/">
+          <a class="arrow-link" href="/resources/portfolios">
             <span>Read the portfolios</span>
             <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
           </a>
         </div>
-        <a class="strip covers" href="/resources/portfolios/" tabindex="-1" aria-hidden="true">
+        <a class="strip covers" href="/resources/portfolios" tabindex="-1" aria-hidden="true">
           {
             coverPreview.map((img) => (
               <span class="duo cover">
@@ -101,17 +101,17 @@ const word = (n: number): string | undefined => words[n];
 
       <li class="row">
         <div class="words">
-          <h3><a href="/resources/videos/">Videos &amp; Workshops</a></h3>
+          <h3><a href="/resources/videos">Videos &amp; Workshops</a></h3>
           <p>
             {word(counts.videos) ?? <strong>{counts.videos}</strong>} videos: robot features, workshops for other teams,
             and autonomous routines.
           </p>
-          <a class="arrow-link" href="/resources/videos/">
+          <a class="arrow-link" href="/resources/videos">
             <span>Watch the videos</span>
             <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
           </a>
         </div>
-        <a class="strip stills" href="/resources/videos/" tabindex="-1" aria-hidden="true">
+        <a class="strip stills" href="/resources/videos" tabindex="-1" aria-hidden="true">
           {
             videoPreview.map((v) => (
               <span class="duo still">

@@ -57,7 +57,7 @@ export const ftcSeasons: FtcSeason[] = [
     id: 'decode',
     game: 'DECODE',
     years: '2025-26',
-    robot: { name: 'Cypher', href: '/robots/decode-2025-26/' },
+    robot: { name: 'Cypher', href: '/robots/decode-2025-26' },
     events: [
       {
         name: 'Washington State Tesla League Tournament',
@@ -101,7 +101,7 @@ export const ftcSeasons: FtcSeason[] = [
     id: 'into-the-deep',
     game: 'INTO THE DEEP',
     years: '2024-25',
-    robot: { name: 'Riptide', href: '/robots/into-the-deep-2024-25/' },
+    robot: { name: 'Riptide', href: '/robots/into-the-deep-2024-25' },
     events: [
       {
         name: 'Washington State Pasteur Interleague',

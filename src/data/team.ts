@@ -84,9 +84,14 @@ export const students: Student[] = [
     photo: '/images/team/george.webp',
     alt: 'George in a navy sweater',
   },
-  // Placeholders: add each photo when it is in.
+  // Placeholder: add the photo when it is in.
   { name: 'Sanjay', roles: ['Design Team', 'Build Team', 'Outreach Team'] },
-  { name: 'Brandon', roles: ['Finance Team', 'Programming Team'] },
+  {
+    name: 'Brandon',
+    roles: ['Finance Team', 'Programming Team'],
+    photo: '/images/team/brandon.webp',
+    alt: 'Brandon in a light blue polo shirt',
+  },
 ];
 
 // Former students. Roles are the ones they held on the team.
@@ -191,7 +196,7 @@ export const mentors: Adult[] = [
       'Alumnus of FTC Team 23383, R-\u2060COURT and FRC 2147, CHUCK',
     ],
     photo: '/images/team/mentors/kai.webp',
-    alt: 'Kai in a suit with a green shirt',
+    alt: 'Kai in a black suit, green shirt and dark tie',
   },
   {
     // The Google Site repeated Aaditya's lines here by mistake; the team gave Devyn's own on 2026-09-27.

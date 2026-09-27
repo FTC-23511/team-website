@@ -31,6 +31,7 @@ npm run check     # type-checks every page and data file
 | Resources, Designs, Portfolios | `src/data/resources.ts` |
 | Videos & Workshops | `src/data/videos.ts` |
 | Classes, Class Policies | `src/data/classes.ts` |
+| Plate Manufacturing (Services menu) | `src/pages/services/plate-manufacturing.astro` |
 | Sponsors, Become a Sponsor, Donate | `src/data/sponsors.ts`, logos in `src/data/home.ts`, the PDF in `public/documents/` |
 | Contact | `src/data/contact.ts`, addresses in `src/data/site.ts` |
 | Nav, footer, socials, donate links | `src/data/site.ts` |
@@ -79,7 +80,8 @@ the home page's hero and "Who we are" photos; that's all done in CSS, so always 
 
 `npm run build` produces a plain static site in `dist/`. It is hosted on Vercel (the team's `software@` account),
 connected to this repository: every push to `main` publishes the site, and every other branch gets its own preview
-link. `vercel.json` holds the build settings and sends `/page` to `/page/`, since every page is a folder.
+link. Addresses have no trailing slash (`/about/team`): each page is built as its own file, `vercel.json` serves it at
+the clean address, and a slashed link (`/about/team/`) redirects to it. Internal links are written without the slash.
 `astro.config.mjs` sets the site address (used for the sitemap, canonical links and link previews: on Vercel it is the
 project's production domain, or `SITE_URL` if that environment variable is set) and the redirects:
 menu parents without a page of their own (`/about`, `/robots`), Outreach's old address (`/impact/outreach`, now at

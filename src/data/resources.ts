@@ -108,7 +108,7 @@ export const designSeasons: DesignSeason[] = [
           alt: 'CAD render of Cypher: a swerve robot with a latticed aluminum frame, a turret-mounted launcher, the 23511 number plate, and two game balls',
           small: { src: '/images/resources/design-cypher-480.webp', width: 480 },
         },
-        robot: { name: 'Cypher', href: '/robots/decode-2025-26/' },
+        robot: { name: 'Cypher', href: '/robots/decode-2025-26' },
       },
       {
         name: 'Solvers Shooter',
@@ -164,7 +164,7 @@ export const designSeasons: DesignSeason[] = [
           alt: 'CAD render of Riptide: a black aluminum robot with a claw on an arm, a slide system, and the 23511 number plate',
           small: { src: '/images/resources/design-riptide-480.webp', width: 480 },
         },
-        robot: { name: 'Riptide', href: '/robots/into-the-deep-2024-25/' },
+        robot: { name: 'Riptide', href: '/robots/into-the-deep-2024-25' },
       },
       {
         name: 'Solvers Claw',

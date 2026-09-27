@@ -2,8 +2,9 @@
 import { Icon } from 'astro-icon/components';
 import { nav, socials, cta, team, type NavLink } from '../data/site';
 
-// Paths are compared without a trailing slash, so `/classes` and `/classes/` are the same page.
-const norm = (href: string) => href.replace(/\/$/, '') || '/';
+// Paths are compared without a trailing slash or a built file's extension, so `/classes`, `/classes/` and
+// `/classes.html` are the same page.
+const norm = (href: string) => href.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
 const path = norm(Astro.url.pathname);
 const inSection = (href: string) => (norm(href) === '/' ? path === '/' : path === norm(href) || path.startsWith(`${norm(href)}/`));
 const isActive = (href: string, children?: NavLink[]) =>
