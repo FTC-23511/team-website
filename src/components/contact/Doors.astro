@@ -1,0 +1,93 @@
+---
+// The other ways in, for the people who most often write: sponsors, parents, and other FTC teams.
+import { Icon } from 'astro-icon/components';
+import { cta } from '../../data/site';
+import { tiers, taxNote } from '../../data/sponsors';
+
+const doors = [
+  {
+    title: 'Sponsoring us',
+    body: `Sponsorships start at ${tiers[0].from}. ${taxNote.deductible}`,
+    link: { label: cta.sponsor.label, href: cta.sponsor.href },
+  },
+  {
+    title: 'LEGO robotics classes',
+    body: 'Our LEGO robotics classes are for kids entering grades 4 to 7. Dates, prices, and how to enroll are on the classes page.',
+    link: { label: 'Classes', href: '/classes/' },
+  },
+  {
+    title: 'Open-source resources',
+    body: 'Our CAD, code, portfolios, and SolversLib are open for any team to use and learn from.',
+    link: { label: 'Resources', href: '/resources/' },
+  },
+];
+---
+
+<section class="doors" aria-labelledby="doors-title">
+  <div class="inner">
+    <h2 id="doors-title" class="visually-hidden">Other ways in</h2>
+    <ul class="list" role="list">
+      {
+        doors.map((d) => (
+          <li>
+            <h3>{d.title}</h3>
+            <p>{d.body}</p>
+            <a class="arrow-link" href={d.link.href}>
+              <span>{d.link.label}</span>
+              <span class="ring" aria-hidden="true">
+                <Icon name="ph:arrow-right" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .doors {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6);
+    margin: 0;
+  }
+  .list li {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--line-strong);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  .list p {
+    margin: var(--s-2) 0 var(--s-5);
+    max-width: 38ch;
+    color: var(--ink-3);
+  }
+  .arrow-link {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  @media (max-width: 899px) {
+    .list {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+</style>

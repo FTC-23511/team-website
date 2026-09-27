@@ -1,0 +1,4 @@
+{
+  "prompt": "Origin: static capture of the site's own WebGL hero (rest pose yaw -0.5 pitch 0.2, full hero at 1440 wide), rendering public/models/cypher.bin: 174,728 points built from the team's Cypher.stl by tools/pointcloud/build_cloud.py; yellow edges and haze, team numbers in pale cream. No-WebGL fallback.",
+  "createdAt": "2026-09-27T06:45:08.728Z"
+}

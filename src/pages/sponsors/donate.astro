@@ -1,0 +1,194 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { cta } from '../../data/site';
+import { donateLede, donateOptions, taxNote } from '../../data/sponsors';
+---
+
+<Base
+  title="Donate | Seattle Solvers"
+  description="Donate to Seattle Solvers, FTC Team #23511, through Hack Club HCB or Give Lively. All contributions are 100% tax deductible."
+>
+  <PageHeader title="Donate" lede={donateLede} />
+
+  <section class="give" aria-labelledby="give-title">
+    <div class="inner">
+      <h2 id="give-title" class="visually-hidden">Ways to donate</h2>
+      <ul class="options" role="list">
+        {
+          donateOptions.map((o) => (
+            <li class:list={['option', { preferred: o.preferred }]}>
+              <div class="top">
+                <h3>{o.name}</h3>
+                {o.preferred && <span class="tag">Preferred</span>}
+              </div>
+              <p class="host">{o.host}</p>
+              <a
+                class:list={['btn', o.preferred ? 'btn-primary' : 'btn-outline']}
+                href={o.href}
+                target="_blank"
+                rel="noopener"
+              >
+                <span>{o.label}</span>
+                <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+                <span class="visually-hidden">(opens in a new tab)</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="tax">
+        <Icon name="ph:receipt" aria-hidden="true" />
+        <span>{taxNote.deductible} {taxNote.status}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="larger" aria-labelledby="larger-title">
+    <div class="inner">
+      <div class="copy">
+        <h2 id="larger-title">Giving $100 or more?</h2>
+        <p>
+          Become a sponsor and your logo goes on our robot, team apparel, and website, with more benefits at every
+          tier.
+        </p>
+      </div>
+      <a class="btn btn-primary" href={cta.sponsor.href}>
+        <span>{cta.sponsor.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) var(--s-9);
+  }
+
+  /* Two ways to give, side by side; Hack Club first, as the team prefers. */
+  .options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-5);
+    max-width: 60rem;
+    margin: 0;
+  }
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 15rem;
+    padding: var(--s-6);
+    border: 1px solid var(--line-strong);
+  }
+  /* The preferred way keeps the same hairline, drawn in full cream, beside its tag. */
+  .option.preferred {
+    border-color: var(--ink);
+  }
+  .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-4);
+    width: 100%;
+  }
+  h3 {
+    font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2rem);
+    letter-spacing: -0.02em;
+  }
+  .tag {
+    padding: 0.3rem 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+    border: 1px solid currentColor;
+  }
+  .host {
+    margin: var(--s-2) 0 var(--s-6);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-3);
+  }
+  .option > .btn {
+    margin-top: auto;
+  }
+  /* A label longer than its card wraps inside the button (larger text, narrow cards) instead of running out. */
+  .option .btn {
+    max-width: 100%;
+    height: auto;
+    min-height: 52px;
+    padding-block: var(--s-2);
+    white-space: normal;
+    text-align: left;
+  }
+  .tax {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    margin-top: var(--s-5);
+    max-width: 60rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .tax :global(svg) {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 0.15rem;
+    color: var(--gold-ink);
+  }
+
+  /* The pointer to sponsorship, on the paper-2 step. */
+  .larger {
+    border-block: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .larger .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--s-6) var(--s-8);
+    padding-block: var(--s-8);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.1rem + 1.6vw, 2.5rem);
+  }
+  .copy p {
+    margin-top: var(--s-4);
+    max-width: 48ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  /* One column up to 767px at the default text size; in em, so a larger browser font size stacks the cards sooner. */
+  @media (max-width: 47.9375em) {
+    .options {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .option {
+      min-height: 0;
+      padding: var(--s-5);
+    }
+  }
+  @media (max-width: 479px) {
+    .inner {
+      padding-block: var(--s-7) var(--s-8);
+    }
+    .option .btn,
+    .larger .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

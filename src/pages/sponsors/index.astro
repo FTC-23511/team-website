@@ -1,0 +1,134 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import SponsorRoll from '../../components/sponsors/SponsorRoll.astro';
+import NonprofitFacts from '../../components/NonprofitFacts.astro';
+import { cta } from '../../data/site';
+import { sponsorsIntro, tiers } from '../../data/sponsors';
+---
+
+<Base
+  title="Our Sponsors | Seattle Solvers"
+  description="Seattle Solvers, FTC Team #23511, is a student-led 501(c)(3) nonprofit that fundraises 100% of its money. Meet the sponsors who allow the team to compete and grow."
+>
+  <PageHeader title="Our Sponsors" lede={sponsorsIntro}>
+    <a class="btn btn-primary head-action" href={cta.sponsor.href}>
+      <span>{cta.sponsor.label}</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+    <div class="head-facts"><NonprofitFacts /></div>
+  </PageHeader>
+
+  <!-- The roll and the closing ask sit on a light ground, so every logo shows in its own colors without a plate. -->
+  <div class="ground-light">
+    <SponsorRoll />
+
+    <section class="ask" aria-labelledby="ask-title">
+      <div class="inner">
+        <div class="copy">
+          <h2 id="ask-title">Join our sponsors</h2>
+          <p class="sub">
+            As a self-funded team without membership fees, we rely a lot on the assistance of our sponsors. Without
+            them, our team wouldn’t be able to make it as far as we have come in FIRST Tech Challenge.
+          </p>
+          <p class="note">
+            Sponsorships start at {tiers[0].from}. We are a <span class="nb">501(c)(3)</span> nonprofit, so all
+            contributions are 100% tax deductible.
+          </p>
+          <div class="instead">
+            <h3>Want to help without a sponsorship?</h3>
+            <p>Donate instead! Give any amount online through Hack Club or Give Lively.</p>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href={cta.sponsor.href}>
+            <span>{cta.sponsor.label}</span>
+            <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+          </a>
+          <a class="btn btn-outline" href="/sponsors/donate/">
+            <span>Donate to us</span>
+            <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .head-action {
+    margin-top: var(--s-6);
+  }
+  .head-facts {
+    margin-top: var(--s-5);
+  }
+
+  /* The closing ask, one step darker than the roll. */
+  .ask {
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--s-7) var(--s-9);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-5);
+    max-width: 52ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .note {
+    margin-top: var(--s-4);
+    max-width: 60ch;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+  .nb {
+    white-space: nowrap;
+  }
+  /* The other way to give, set off by a rule. */
+  .instead {
+    margin-top: var(--s-6);
+    padding-top: var(--s-5);
+    max-width: 52ch;
+    border-top: 1px solid var(--line-strong);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  .instead p {
+    margin-top: var(--s-2);
+    color: var(--ink-2);
+  }
+  /* Both ways in, stacked on the right at one width. */
+  .actions {
+    display: grid;
+    gap: var(--s-3);
+    min-width: 17rem;
+  }
+  .actions .btn {
+    justify-content: space-between;
+  }
+
+  @media (max-width: 767px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr);
+      padding-block: var(--s-8);
+    }
+    .actions {
+      min-width: 0;
+      max-width: 22rem;
+    }
+  }
+</style>

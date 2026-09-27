@@ -1,0 +1,292 @@
+---
+import { Icon } from 'astro-icon/components';
+import { rise } from '../../data/impact';
+import { cta } from '../../data/site';
+---
+
+<section class="rise" id="rise" aria-labelledby="rise-title">
+  <div class="inner">
+    <div class="story">
+      <h2 id="rise-title">The RISE School pilot</h2>
+      <p class="statement">{rise.statement}</p>
+      <p class="detail">{rise.detail}</p>
+      <a class="arrow-link" href={cta.sponsor.href}>
+        <span>{cta.sponsor.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+
+    <!-- A drawing title block: the route on top, the record below. -->
+    <div class="block" role="group" aria-label="Pilot details">
+      <div class="route">
+        <div class="track" aria-hidden="true">
+          <span class="pin"></span>
+          <span class="line"></span>
+          <span class="pin end"></span>
+        </div>
+        <dl class="ends">
+          <div class="end end-from">
+            <dt>Home</dt>
+            <dd>{rise.home}</dd>
+          </div>
+          <div class="end end-to">
+            <dt>School</dt>
+            <dd>
+              <a href={rise.school.href} target="_blank" rel="noopener">
+                {rise.school.name}<span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+              <span class="place">{rise.school.place}</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      <dl class="cells">
+        <div class="cell">
+          <dt>Visit</dt>
+          <dd class="text">{rise.visit}</dd>
+        </div>
+        <div class="cell">
+          <dt>On site</dt>
+          <dd class="text">{rise.days} days</dd>
+        </div>
+        <div class="cell">
+          <dt>Teachers trained</dt>
+          <dd class="text">{rise.teachers}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The yellow band, with its own 80px ink grid. */
+  .rise {
+    --soft: color-mix(in srgb, var(--on-band) 80%, var(--band));
+    --grid-ink: color-mix(in srgb, var(--on-band) 9%, transparent);
+    background-color: var(--band);
+    background-image:
+      linear-gradient(to right, var(--grid-ink) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-ink) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--on-band);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--s-8);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+
+  h2 {
+    font-size: var(--step-3);
+  }
+  .statement {
+    margin-top: var(--s-5);
+    max-width: 24ch;
+    font-size: clamp(1.625rem, 1.05rem + 1.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .detail {
+    margin-top: var(--s-5);
+    max-width: 46ch;
+    font-size: var(--step-0);
+    line-height: 1.55;
+    color: var(--soft);
+  }
+  .story .arrow-link {
+    margin-top: var(--s-6);
+    color: var(--on-band);
+  }
+  .story .arrow-link:hover .ring {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .rise a:focus-visible {
+    outline-color: var(--on-band);
+  }
+
+  /* Title block: solid band behind it so the grid stops at its frame. */
+  .block {
+    background: var(--band);
+    border: 1px solid var(--on-band);
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+  dd {
+    margin: 0;
+  }
+
+  .route {
+    padding: var(--s-6) var(--s-5) var(--s-5);
+    border-bottom: 1px solid var(--on-band);
+  }
+  .track {
+    display: flex;
+    align-items: center;
+  }
+  .pin {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid var(--on-band);
+    border-radius: 50%;
+  }
+  .pin.end {
+    background: var(--on-band);
+  }
+  .line {
+    flex: 1;
+    height: 1.5px;
+    background: var(--on-band);
+    transform-origin: left center;
+  }
+  .ends {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-5);
+    margin: var(--s-4) 0 0;
+  }
+  .ends dd {
+    margin-top: 0.3rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .end-to {
+    text-align: right;
+  }
+  .place {
+    display: block;
+    font-weight: 400;
+  }
+  .ends a {
+    color: inherit;
+    text-decoration-thickness: 1.5px;
+  }
+  .ends a:hover {
+    text-decoration-thickness: 2.5px;
+  }
+
+  .cells {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: 9rem;
+    padding: var(--s-4) var(--s-5) var(--s-5);
+  }
+  .cell + .cell {
+    border-left: 1px solid var(--on-band);
+  }
+  .text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  /* The route draws itself in as the block scrolls into view. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .line {
+        animation: rise-route-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 25% cover 45%;
+      }
+      @keyframes rise-route-draw {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    /* The route turns vertical: a pin beside each end, joined by the line. */
+    .route {
+      padding: var(--s-5) var(--s-4);
+    }
+    .track {
+      display: none;
+    }
+    .ends {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+      margin: 0;
+      padding-left: calc(15px + var(--s-4));
+    }
+    .end {
+      position: relative;
+    }
+    .end::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: calc(-15px - var(--s-4));
+      width: 15px;
+      height: 15px;
+      box-sizing: border-box;
+      border: 1.5px solid var(--on-band);
+      border-radius: 50%;
+    }
+    .end-to::before {
+      background: var(--on-band);
+    }
+    .end-from::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: calc(-15px - var(--s-4) + 6.75px);
+      width: 1.5px;
+      height: calc(100% - 15px + var(--s-5));
+      background: var(--on-band);
+    }
+    .end-to {
+      text-align: left;
+    }
+    .cells {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cell {
+      min-height: 7.5rem;
+      padding: var(--s-4);
+    }
+    .cell:first-child {
+      grid-column: 1 / -1;
+      min-height: 0;
+      border-bottom: 1px solid var(--on-band);
+    }
+    /* Outweighs `.cell + .cell`, so the second row's first cell really loses its side rule. */
+    .cell + .cell:nth-child(2) {
+      border-left: 0;
+    }
+  }
+</style>

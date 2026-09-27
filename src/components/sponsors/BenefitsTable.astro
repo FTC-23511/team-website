@@ -1,0 +1,259 @@
+---
+// The full benefits comparison from the sponsorship package (PDF page 5): 14 benefits by 6 tiers.
+// Included benefits are tinted segments, so each tier's column reads as a bar that grows with the tier.
+// The logo row draws the logo size as a growing plate. Wide screens only; TierLadder covers phones.
+import { Icon } from 'astro-icon/components';
+import FootRef from './FootRef.astro';
+import { tiers, benefits, benefitFor } from '../../data/sponsors';
+
+const plateSize: Record<string, string> = { Small: 's', Medium: 'm', Large: 'l', 'Extra large': 'xl' };
+---
+
+<table class="benefits">
+  <caption class="visually-hidden">Benefits at each sponsorship tier</caption>
+  <colgroup>
+    <col class="col-benefit" />
+    {tiers.map(() => <col />)}
+  </colgroup>
+  <thead>
+    <tr>
+      <th scope="col" class="corner"><span class="visually-hidden">Benefit</span></th>
+      {
+        tiers.map((t) => (
+          <th scope="col" class="tier">
+            <span class="node" aria-hidden="true" />
+            <span class="name">{t.name}</span>
+            <span class="from">{t.from}</span>
+            <span class="to">{t.to}</span>
+          </th>
+        ))
+      }
+    </tr>
+  </thead>
+  <tbody>
+    {
+      benefits.map((b) => (
+        <tr>
+          <th scope="row" class="benefit">
+            <span class="label">
+              {b.label}
+              {b.onRequest && <FootRef note="onRequest" />}
+            </span>{' '}
+            {b.customizable && (
+              <span class="custom">
+                Customizable
+                <FootRef note="customizable" />
+              </span>
+            )}
+          </th>
+          {tiers.map((t) => {
+            const cell = benefitFor(b, t.id);
+            if (!cell.included) {
+              return (
+                <td class="no">
+                  <span class="dot" aria-hidden="true" />
+                  <span class="visually-hidden">Not included</span>
+                </td>
+              );
+            }
+            return (
+              <td class="yes">
+                <span class="mark">
+                  {b.kind === 'logo' && cell.detail ? (
+                    <span class:list={['plate', `plate-${plateSize[cell.detail]}`]} aria-hidden="true" />
+                  ) : (
+                    <Icon name="ph:check-bold" class="check" aria-hidden="true" />
+                  )}
+                  <span class="visually-hidden">Included{cell.detail ? ':' : ''}</span>
+                  {cell.detail && <span class="detail">{cell.detail}</span>}
+                </span>
+              </td>
+            );
+          })}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .benefits {
+    /* A tier's tinted bar: Solvers Yellow mixed into the page ground. */
+    --bar: color-mix(in srgb, var(--gold) 24%, var(--paper));
+    --bar-hover: color-mix(in srgb, var(--gold) 44%, var(--paper));
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    font-variant-numeric: tabular-nums;
+  }
+  .col-benefit {
+    width: 34%;
+  }
+
+  /* Footnote marks in the rows scroll into view below the sticky tier row (about 137px), not under it. */
+  tbody :global(.fn) {
+    scroll-margin-top: calc(var(--header-h) + 9rem);
+  }
+
+  /* Tier headers stay in view under the sticky nav while the rows scroll. */
+  thead th {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 1;
+    padding: var(--s-5) var(--s-1) var(--s-4);
+    vertical-align: bottom;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .tier {
+    text-align: center;
+    font-weight: 400;
+  }
+  .node {
+    display: block;
+    width: 13px;
+    height: 13px;
+    margin: 0 auto var(--s-3);
+    border: 1px solid var(--gold-deep);
+    border-radius: 50%;
+  }
+  .name {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .from {
+    display: block;
+    margin-top: var(--s-2);
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--gold-ink);
+  }
+  .to {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  tbody th,
+  tbody td {
+    border-bottom: 1px solid var(--line);
+  }
+  .benefit {
+    padding: var(--s-4) var(--s-6) var(--s-4) 0;
+    text-align: left;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .label {
+    display: block;
+    text-wrap: pretty;
+  }
+  .custom {
+    display: block;
+    margin-top: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* Cells: the tint fills the content box, leaving a gap between tier columns. */
+  td {
+    padding: 0 var(--s-1);
+    text-align: center;
+    vertical-align: middle;
+  }
+  .yes {
+    background: var(--bar);
+    background-clip: content-box;
+    transition: background-color 0.2s var(--ease);
+  }
+  .mark {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    padding: var(--s-3) var(--s-1);
+  }
+  .yes :global(.check) {
+    width: 18px;
+    height: 18px;
+  }
+  .detail {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .dot {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin-inline: auto;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+
+  /* Logo size: a small plate that grows with the tier. */
+  .plate {
+    display: block;
+    border: 1.5px solid currentColor;
+  }
+  .plate-s {
+    width: 16px;
+    height: 9px;
+  }
+  .plate-m {
+    width: 22px;
+    height: 12px;
+  }
+  .plate-l {
+    width: 28px;
+    height: 15px;
+  }
+  .plate-xl {
+    width: 34px;
+    height: 18px;
+  }
+
+  /* Follow a row across the tiers. */
+  tbody tr:hover .yes {
+    background-color: var(--bar-hover);
+  }
+  tbody tr:hover .benefit .label {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: var(--line-strong);
+  }
+
+  @media (max-width: 1099px) {
+    .col-benefit {
+      width: 30%;
+    }
+    .benefit {
+      padding-right: var(--s-4);
+      font-size: 0.875rem;
+    }
+    .name {
+      font-size: 0.6875rem;
+      letter-spacing: 0.04em;
+    }
+    .from {
+      font-size: 1.125rem;
+    }
+  }
+</style>

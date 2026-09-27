@@ -1,0 +1,68 @@
+---
+// A robot cut out of its background, in the site duotone: grayscale under the Duo Light multiply tint, easing to full
+// color when reached for (hover-capable devices), on the same 0.65s / 0.9s rhythm as the duotone photos. The tint is
+// masked by the image's own alpha, so it never shows as a rectangle over the ground or a sun behind the robot.
+import type { Img } from '../../data/robots';
+
+interface Props {
+  img: Img;
+  eager?: boolean;
+  class?: string;
+}
+const { img, eager = false, class: className } = Astro.props;
+---
+
+<span class:list={['cutout', className]} style={`--cut: url(${img.src})`}>
+  <img
+    src={img.src}
+    alt={img.alt}
+    width={img.width}
+    height={img.height}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchpriority={eager ? 'high' : undefined}
+  />
+</span>
+
+<style>
+  .cutout {
+    position: relative;
+    display: block;
+    isolation: isolate;
+  }
+  .cutout img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: grayscale(1) contrast(1.04) brightness(1.08);
+    transition: filter 0.9s var(--ease-inout);
+  }
+  .cutout::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--duo-light);
+    mix-blend-mode: multiply;
+    -webkit-mask: var(--cut) center / 100% 100% no-repeat;
+    mask: var(--cut) center / 100% 100% no-repeat;
+    pointer-events: none;
+    transition: opacity 0.9s var(--ease-inout);
+  }
+  /* A CSS mask downloads its image as soon as the box is laid out, which would defeat the img's lazy loading.
+     Until the image itself has arrived (Base.astro marks it .is-loaded), the tint waits unmasked and invisible. */
+  .cutout:not(:has(> img.is-loaded, > img[loading='eager']))::after {
+    -webkit-mask: none;
+    mask: none;
+    opacity: 0;
+  }
+  @media (hover: hover) {
+    .cutout:hover img {
+      filter: grayscale(0) contrast(1) brightness(1);
+      transition-duration: 0.65s;
+    }
+    .cutout:hover::after {
+      opacity: 0;
+      transition-duration: 0.65s;
+    }
+  }
+</style>

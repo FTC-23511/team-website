@@ -1,0 +1,165 @@
+---
+import { Icon } from 'astro-icon/components';
+import { programs } from '../../data/impact';
+
+const arrow = (href: string, external?: boolean) =>
+  external ? 'ph:arrow-up-right' : href.startsWith('#') ? 'ph:arrow-down' : 'ph:arrow-right';
+---
+
+<section class="programs grid-paper" aria-labelledby="programs-title">
+  <div class="inner">
+    <h2 id="programs-title">Programs</h2>
+
+    <ol class="rows" role="list">
+      {
+        programs.map((p) => (
+          <li class="row">
+            <h3>{p.title}</h3>
+            <p class="figure">
+              <span class="value">{p.value}</span>
+              <span class="unit">{p.unit}</span>
+            </p>
+            <p class="body">{p.body}</p>
+            <ul class="links" role="list">
+              {p.links.map((l) => (
+                <li>
+                  <a class="arrow-link" href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>
+                    <span>
+                      {l.label}
+                      {l.external && <span class="visually-hidden"> (opens in a new tab)</span>}
+                    </span>
+                    <span class="ring" aria-hidden="true">
+                      <Icon name={arrow(l.href, l.external)} />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div class="duo photo">
+              <img src={p.image} alt={p.alt} width={p.width} height={p.height} loading="lazy" decoding="async" />
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    margin-bottom: var(--s-7);
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+
+  /* A ledger: the figure column reads down like a dial, the photo closes each row. */
+  .rows {
+    margin: 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 4fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'figure title photo'
+      'figure body photo'
+      'figure links photo';
+    column-gap: var(--s-7);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .figure {
+    grid-area: figure;
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+  }
+  .value {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.2rem + 1.1vw, 2.375rem);
+    font-weight: 500;
+    line-height: 0.9;
+    color: var(--gold-ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .unit {
+    max-width: 22ch;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  h3 {
+    grid-area: title;
+    font-size: var(--step-2);
+  }
+  .body {
+    grid-area: body;
+    margin-top: var(--s-3);
+    max-width: 46ch;
+    color: var(--ink-2);
+  }
+  .links {
+    grid-area: links;
+    align-self: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+    margin: var(--s-5) 0 0;
+  }
+
+  .photo {
+    grid-area: photo;
+    aspect-ratio: 4 / 3;
+  }
+  /* The CAD render has a transparent ground: show the whole robot rather than crop it. */
+  .row:nth-child(2) .photo img {
+    object-fit: contain;
+    padding: 6%;
+  }
+  /* A tall photo in a 4:3 frame: held near its top so both faces stay whole. */
+  .row:nth-child(3) .photo img {
+    object-position: 50% 4%;
+  }
+
+  @media (max-width: 1099px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto auto auto 1fr;
+      grid-template-areas:
+        'photo title'
+        'photo figure'
+        'photo body'
+        'photo links';
+      column-gap: var(--s-6);
+    }
+    .figure {
+      margin-top: var(--s-4);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .row {
+      grid-template-columns: 1fr;
+      grid-template-rows: none;
+      grid-template-areas: 'photo' 'title' 'figure' 'body' 'links';
+      padding-block: var(--s-5) var(--s-6);
+    }
+    .photo {
+      margin-bottom: var(--s-5);
+    }
+  }
+</style>

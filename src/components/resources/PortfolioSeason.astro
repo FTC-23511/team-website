@@ -1,0 +1,291 @@
+---
+// One season of portfolios. Documents with their own covers stand on a shelf at one height, each as wide as its
+// page; editions that share a cover show it once, beside a ruled list of the editions and what each one won.
+import { Icon } from 'astro-icon/components';
+import type { PortfolioDoc, PortfolioSeason } from '../../data/resources';
+
+interface Props {
+  season: PortfolioSeason;
+  /** The page's first season: its covers are in the first screen, so they load at once (the first one first). */
+  first?: boolean;
+}
+const { season, first = false } = Astro.props;
+const shelf = !season.sharedCover;
+const ar = (w: number, h: number) => (w / h).toFixed(4);
+const loading = first ? 'eager' : 'lazy';
+---
+
+<section class:list={['portfolios', shelf ? 'is-shelf' : 'is-editions']} id={season.id} aria-labelledby={`${season.id}-title`}>
+  <div class="inner">
+    <div class="head">
+      <h2 id={`${season.id}-title`}>{season.game}</h2>
+      <p class="years">{season.years}</p>
+    </div>
+
+    {
+      shelf ? (
+        <ul class="shelf" role="list">
+          {season.docs.map((d, i) => (
+            <li style={d.cover ? `--ar: ${ar(d.cover.width, d.cover.height)}` : undefined}>
+              {d.cover && (
+                <a class="duo cover" href={d.href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+                  <img
+                    src={d.cover.src}
+                    alt=""
+                    width={d.cover.width}
+                    height={d.cover.height}
+                    loading={loading}
+                    decoding="async"
+                    fetchpriority={first && i === 0 ? 'high' : undefined}
+                  />
+                </a>
+              )}
+              <div class="doc">
+                <h3>{d.title}</h3>
+                {d.note && <p class="note">{d.note}</p>}
+                {d.awards.length > 0 && (
+                  <ul class="awards" role="list">
+                    {d.awards.map((a) => (
+                      <li>
+                        <span class="award">{a.title}</span>
+                        <span class="event">{a.event}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <a class="arrow-link" href={d.href} target="_blank" rel="noopener">
+                  <span>
+                    Read on Canva<span class="visually-hidden">: {d.title} (opens in a new tab)</span>
+                  </span>
+                  <span class="ring" aria-hidden="true">
+                    <Icon name="ph:arrow-up-right" />
+                  </span>
+                </a>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="editions">
+          {season.sharedCover && (
+            <figure class="duo cover" style={`--ar: ${ar(season.sharedCover.width, season.sharedCover.height)}`}>
+              <img
+                src={season.sharedCover.src}
+                alt={season.sharedCover.alt}
+                width={season.sharedCover.width}
+                height={season.sharedCover.height}
+                loading={loading}
+                decoding="async"
+                fetchpriority={first ? 'high' : undefined}
+              />
+            </figure>
+          )}
+          <ol class="list" role="list">
+            {season.docs.map((d: PortfolioDoc) => (
+              <li>
+                <h3>{d.title}</h3>
+                <ul class="awards" role="list">
+                  {d.awards.map((a) => (
+                    <li>
+                      <span class="award">{a.title}</span>
+                      <span class="event">{a.event}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a class="arrow-link" href={d.href} target="_blank" rel="noopener">
+                  <span>
+                    Read on Canva<span class="visually-hidden">: {d.title} (opens in a new tab)</span>
+                  </span>
+                  <span class="ring" aria-hidden="true">
+                    <Icon name="ph:arrow-up-right" />
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .portfolios + .portfolios {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-2) var(--s-5);
+    margin-bottom: var(--s-7);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .years {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--gold-ink);
+  }
+
+  /* Shared pieces: the cover is a page, awards read like the Awards page (title, then the event in mono). */
+  .cover {
+    display: block;
+    aspect-ratio: var(--ar);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  .awards {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0;
+  }
+  .awards li {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .award {
+    font-weight: 600;
+    color: var(--sun);
+  }
+  .event {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* The shelf: every cover stands at one height, each as wide as its own page shape. */
+  .shelf {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-7);
+    margin: 0;
+  }
+  .shelf > li {
+    flex: var(--ar, 0.77) 1 0;
+    min-width: 0;
+  }
+  .doc {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-3);
+    padding-top: var(--s-5);
+  }
+  .note {
+    max-width: 36ch;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .doc .awards {
+    padding-top: var(--s-3);
+    margin-top: var(--s-1);
+    border-top: 1px solid var(--line);
+    justify-self: stretch;
+  }
+  .doc .arrow-link {
+    margin-top: var(--s-2);
+  }
+
+  /* Editions: one cover, the list beside it. */
+  .editions {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--s-8);
+    align-items: start;
+  }
+  .editions .cover {
+    max-width: 420px;
+  }
+  .list {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .list > li {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 5fr) auto;
+    align-items: center;
+    gap: var(--s-3) var(--s-6);
+    padding-block: var(--s-5);
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 1099px) {
+    .list > li {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .list .awards {
+      grid-column: 1;
+    }
+    .list .arrow-link {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+  }
+  @media (max-width: 899px) {
+    .shelf {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-7) var(--s-5);
+    }
+    .editions {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--s-6);
+    }
+  }
+  /* Two covers to a row: an odd last document takes the whole row, its cover in the first column and its words
+     in the second, so no row is left half empty. */
+  @media (min-width: 600px) and (max-width: 899px) {
+    .shelf > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-5);
+      align-items: start;
+    }
+    .shelf > li:last-child:nth-child(odd) .doc {
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .editions {
+      grid-template-columns: 1fr;
+    }
+    .editions .cover {
+      max-width: 300px;
+    }
+  }
+  @media (max-width: 599px) {
+    .shelf {
+      grid-template-columns: 1fr;
+    }
+    .shelf .cover {
+      max-width: 340px;
+    }
+    .list > li {
+      grid-template-columns: 1fr;
+    }
+    .list .arrow-link {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+</style>

@@ -1,0 +1,527 @@
+@import '@fontsource-variable/orbitron/wght.css';
+@import '@fontsource-variable/inter/opsz.css';
+@import '@fontsource/azeret-mono/latin-400.css';
+@import '@fontsource/azeret-mono/latin-500.css';
+@import '@fontsource/azeret-mono/latin-600.css';
+
+/* Until Inter arrives, a local face scaled to Inter's metrics sets the text, so lines break the same way before and
+   after the swap and nothing below jumps. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+@import 'lenis/dist/lenis.css';
+
+/* Solvers Dark Theme (coolors.co/u/seattle_solvers). The site is dark only. */
+:root {
+  color-scheme: dark;
+  --paper: #0b0a06;
+  --paper-2: #14130c;
+  --paper-3: #1d1b10;
+  --sun: #ffe75c;
+  --gold: #f2ce00;
+  --gold-deep: #b99d00;
+  --gold-ink: #ffe75c;
+  --ink: #fcf9de;
+  --ink-2: #d8d2ae;
+  --ink-3: #a69f7c;
+  --line: rgb(252 249 222 / 0.13);
+  --line-strong: rgb(252 249 222 / 0.3);
+  --grid: rgb(255 231 92 / 0.06);
+  --sun-disk: #3a320c;
+  --sun-disk-edge: #262109;
+  --sun-rim: #f2ce00;
+  --plate: #e9e3c3;
+  --on-plate: #3a3726;
+  --night: #16150d;
+  --night-2: #1f1d12;
+  --on-night: #fcf9de;
+  --on-night-2: #a69f7c;
+  --band: #f2ce00;
+  --on-band: #0b0a06;
+  --dot-far: #7c6d1f;
+  --dot-haze: 0.18;
+  --dot-alpha: 1;
+  --cursor-fill: #ffe75c;
+  --cursor-halo: #0b0a06;
+  --duo-light: #ffed9c;
+  --shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7);
+
+  --font-display: 'Orbitron Variable', 'Orbitron', sans-serif;
+  --font-body: 'Inter Variable', 'Inter', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Azeret Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem);
+  --step-3: clamp(2rem, 1.3rem + 2.4vw, 3.5rem);
+  --step-4: clamp(2.75rem, 1.2rem + 5vw, 6rem);
+  --step-page-title: clamp(2.75rem, 1.4rem + 4.2vw, 5rem);
+
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+
+  --gutter: clamp(1rem, 0.4rem + 2.6vw, 3rem);
+  --header-h: 72px;
+  /* Motion: one family of long, soft ease-outs so every surface settles the same way. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-inout: cubic-bezier(0.45, 0, 0.2, 1);
+  --dur-quick: 0.22s;
+  --dur: 0.45s;
+  --dur-slow: 0.9s;
+
+  --z-nav: 50;
+  --z-menu: 60;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* `hidden` always wins, even over components that set their own display (buttons, arrow links). */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: var(--gold-deep) var(--paper-2);
+}
+
+/* Anything scrolled into view (an anchor target, a focused control) stops clear of the sticky header. The margin
+   sits on the content rather than as scroll padding on the page, so focusing a header control never scrolls. */
+main,
+main *,
+.site-footer * {
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--gold-deep);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--sun);
+  color: #0b0a06;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper-2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold-deep);
+  border: 3px solid var(--paper-2);
+}
+
+img,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition:
+    color var(--dur-quick) var(--ease-soft),
+    text-decoration-color var(--dur-quick) var(--ease-soft),
+    text-underline-offset var(--dur) var(--ease);
+}
+a:hover {
+  text-underline-offset: 0.3em;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 3px;
+  transition: outline-offset var(--dur-quick) var(--ease);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: calc(var(--z-menu) + 1);
+  padding: var(--s-3) var(--s-4);
+  background: var(--band);
+  color: var(--on-band);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.skip-link:focus {
+  top: var(--s-3);
+}
+
+/* Mono data label: numbers, seasons, places. Not a heading costume. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Circle-arrow link, the world's one text action. */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  min-height: 44px;
+}
+.arrow-link .ring {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition:
+    transform var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+.arrow-link .ring svg {
+  width: 14px;
+  height: 14px;
+}
+.arrow-link:hover .ring {
+  transform: translateX(4px);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Buttons: the solid Solvers-yellow block is the primary action; the outline is its quiet twin. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-4);
+  height: 52px;
+  padding: 0 var(--s-3) 0 var(--s-5);
+  border: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform var(--dur-quick) var(--ease);
+}
+.btn .ring {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: transform var(--dur) var(--ease);
+}
+.btn .ring svg {
+  width: 14px;
+  height: 14px;
+}
+.btn:hover .ring {
+  transform: translateX(4px);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--band);
+  color: var(--on-band);
+}
+.btn-primary:hover {
+  background: var(--sun);
+}
+.btn-primary:focus-visible {
+  outline-color: var(--ink);
+}
+.btn-outline {
+  background: transparent;
+  color: currentColor;
+  border-color: currentColor;
+}
+.btn-outline:hover {
+  background: var(--band);
+  color: var(--on-band);
+  border-color: var(--band);
+}
+
+/* A light ground, for the Sponsors page's roll, where the logos sit on it in their own colors. The ink tokens flip to
+   dark and the gold darkens to keep its contrast (Ink 3 6.2:1, gold 6.2:1 on the cream), so components inside follow
+   without rules of their own. The focus ring reads the darkened gold. */
+.ground-light {
+  --paper: #fcf9de;
+  --paper-2: #f3eed3;
+  --paper-3: #e9e3c3;
+  --ink: #0b0a06;
+  --ink-2: #3a3726;
+  --ink-3: #625d47;
+  --gold-ink: #6f5b00;
+  --gold-deep: #6f5b00;
+  --line: rgb(11 10 6 / 0.14);
+  --line-strong: rgb(11 10 6 / 0.32);
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+/* Duotone photo: ink shadows to Solvers yellow highlights; original color on hover. */
+.duo {
+  position: relative;
+  background: var(--paper-2);
+  overflow: hidden;
+  isolation: isolate;
+}
+.duo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04) brightness(1.08);
+  /* Leaving hover: the color drains back out slowly. */
+  transition:
+    filter 0.9s var(--ease-inout),
+    transform 1.4s var(--ease);
+}
+/* The tint is an overlay so it can fade: blend modes can't animate, opacity can. */
+.duo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--duo-light);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  transition: opacity 0.9s var(--ease-inout);
+}
+@media (hover: hover) {
+  /* Entering hover: the color comes back a little quicker, on the same curve, tint and grayscale together. */
+  .duo:hover img,
+  .duo:focus-within img {
+    filter: grayscale(0) contrast(1) brightness(1);
+    transition-duration: 0.65s, 1.4s;
+  }
+  .duo:hover::after,
+  .duo:focus-within::after {
+    opacity: 0;
+    transition-duration: 0.65s;
+  }
+}
+
+/* Sponsor logos rest in monochrome and cross-fade to their own colors when reached for. With a mouse,
+   .is-lit (set in Base.astro) holds the color a moment after the pointer passes, so a sweep across
+   the wall leaves a short trail. Two stacked
+   copies of the same file (one request): opacity fades stay smooth, while a filter animating
+   through invert() would flash gray halfway. Wrap the pair in any .logo-hover element (a link or
+   a span) to trigger it. */
+.logo-fade {
+  position: relative;
+  display: block;
+}
+.logo-fade img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.logo-fade .lf-mono {
+  filter: grayscale(1) contrast(1.08);
+  opacity: 0.8;
+  transition: opacity 0.9s var(--ease-inout);
+}
+.logo-fade .lf-color {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-inout);
+}
+.logo-hover.is-lit .lf-color,
+.logo-hover:focus-visible .lf-color {
+  opacity: 1;
+  transition-duration: 0.65s;
+}
+.logo-hover.is-lit .lf-mono,
+.logo-hover:focus-visible .lf-mono {
+  opacity: 0;
+  transition-duration: 0.65s;
+}
+@media (hover: hover) {
+  .logo-hover:hover .lf-color {
+    opacity: 1;
+    transition-duration: 0.65s;
+  }
+  .logo-hover:hover .lf-mono {
+    opacity: 0;
+    transition-duration: 0.65s;
+  }
+}
+
+/* Lazy images fade in as they arrive instead of popping. An animation, not a transition, so it never
+   overrides the transition lists that components (like .duo) set on their images. */
+@keyframes img-in {
+  from {
+    opacity: 0;
+  }
+}
+html.js img[loading='lazy']:not(.is-loaded) {
+  opacity: 0;
+}
+html.js img[loading='lazy'].is-loaded {
+  animation: img-in var(--dur-slow) var(--ease-soft);
+}
+
+/* Page to page: a soft cross-fade, with the header held still. Reduced motion gets a plain page change. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: var(--ease-soft);
+}
+
+.grid-paper {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 112px 112px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Printing (a parent keeping the class policies, say): browsers drop the ink ground by default and leave pale text on
+   white, so the page prints as designed, without the controls that only work on screen. */
+@media print {
+  html {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .skip-link,
+  .cursor,
+  .menu-btn,
+  .copy-wrap,
+  .slides-toggle,
+  [data-cypher] .hint,
+  .play {
+    display: none !important;
+  }
+}

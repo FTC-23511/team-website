@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import interFont from '@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2?url';
+import orbitronFont from '@fontsource-variable/orbitron/files/orbitron-latin-wght-normal.woff2?url';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Cursor from '../components/Cursor.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Social share image, a 1200 × 630 file under public/, and what it shows. */
+  image?: string;
+  imageAlt?: string;
+  /** Keep the page out of search results (members-only tools, the 404). */
+  noindex?: boolean;
+  /** Pages with no address of their own (the 404) leave out the canonical link. */
+  canonical?: boolean;
+}
+
+const {
+  title = 'Seattle Solvers | FTC Team #23511',
+  description = 'Seattle Solvers, FIRST Tech Challenge Team #23511: a student-led nonprofit robotics team from Sammamish, Washington, bringing STEM to everyone.',
+  image = '/og/default.jpg',
+  imageAlt = 'Seattle Solvers, FTC Team #23511, a student-led nonprofit robotics team from Sammamish, Washington. Inspire Award, 2nd Place, at the 2026 FIRST World Championship.',
+  noindex = false,
+  canonical: withCanonical = true,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="preload" href={interFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={orbitronFont} as="font" type="font/woff2" crossorigin />
+    <meta name="description" content={description} />
+    {withCanonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0b0a06" />
+    <meta name="color-scheme" content="dark" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {withCanonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:site_name" content="Seattle Solvers" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      // Lazy images fade in once they have arrived (or failed). Listening here, before any image is parsed, catches
+      // every image's load or error event, so the photos never wait on a later script.
+      (function () {
+        function done(e) {
+          if (e.target instanceof HTMLImageElement) e.target.classList.add('is-loaded');
+        }
+        document.addEventListener('load', done, true);
+        document.addEventListener('error', done, true);
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <Cursor />
+    <script>
+      import Lenis from 'lenis';
+
+      // Smooth, weighted page scrolling. Reduced-motion visitors keep native scrolling.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        (window as unknown as { lenis?: Lenis }).lenis = new Lenis({
+          lerp: 0.09,
+          autoRaf: true,
+          // In-page links land clear of the sticky header through the content's scroll-margin-top.
+          anchors: true,
+        });
+      }
+
+      // Sponsor logos: once the pointer touches one, it stays in color for at least 0.6s, and 0.35s
+      // after the pointer leaves, so sweeping across the wall leaves a short trail of color.
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        const MIN_ON = 600, LINGER = 350;
+        document.querySelectorAll<HTMLElement>('.logo-hover').forEach((el) => {
+          let litAt = 0, timer = 0;
+          el.addEventListener('pointerenter', () => {
+            window.clearTimeout(timer);
+            if (!el.classList.contains('is-lit')) litAt = performance.now();
+            el.classList.add('is-lit');
+          });
+          el.addEventListener('pointerleave', () => {
+            const wait = Math.max(LINGER, MIN_ON - (performance.now() - litAt));
+            timer = window.setTimeout(() => el.classList.remove('is-lit'), wait);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

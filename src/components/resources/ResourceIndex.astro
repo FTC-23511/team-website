@@ -1,0 +1,349 @@
+---
+// The hub's index: each kind of open resource on one ruled row, its words on the left and a strip of the real
+// thing on the right (renders on drawing plates, portfolio covers, video stills, repository names).
+import { Icon } from 'astro-icon/components';
+import { counts, designSeasons, portfolioSeasons, robotCode, type Picture } from '../../data/resources';
+import { videos } from '../../data/videos';
+
+const designPreview = designSeasons
+  .flatMap((s) => s.designs)
+  .filter((d) => d.preview)
+  .map((d) => d.image);
+
+const covers = portfolioSeasons.flatMap((s) => [
+  ...s.docs.filter((d) => d.cover && d.kind === 'Engineering portfolio').map((d) => d.cover!),
+  ...(s.sharedCover ? [s.sharedCover] : []),
+]);
+const coverPreview = covers.slice(0, 3);
+
+const videoPreview = videos.filter((v) => !v.vertical).slice(0, 3);
+
+// Each strip tile is about a third of the right column (a third of the page once the row stacks), so phones
+// and 1x screens take the small copies.
+const sizes = '(max-width: 1099px) 30vw, (max-width: 1679px) 19vw, 320px';
+const srcset = (img: Picture) => (img.small ? `${img.small.src} ${img.small.width}w, ${img.src} ${img.width}w` : undefined);
+
+// Small counts are written as words ("Seven videos", "our last two seasons"): a lone Orbitron digit at body size
+// reads as a glyph. Past nine the count is a figure again, in Orbitron and Sun like every inline figure.
+const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+const word = (n: number): string | undefined => words[n];
+---
+
+<section class="index" aria-labelledby="index-title">
+  <div class="inner">
+    <h2 id="index-title">Everything we publish</h2>
+    <ol class="rows" role="list">
+      <li class="row">
+        <div class="words">
+          <h3><a href="/resources/designs/">Designs</a></h3>
+          <p>
+            {word(counts.designs) ?? <strong>{counts.designs}</strong>} robots and mechanisms from our last{' '}
+            {word(designSeasons.length)?.toLowerCase() ?? <strong>{designSeasons.length}</strong>} seasons, public in
+            Onshape for any team to open and copy.
+          </p>
+          <a class="arrow-link" href="/resources/designs/">
+            <span>Browse designs</span>
+            <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+          </a>
+        </div>
+        <a class="strip plates" href="/resources/designs/" tabindex="-1" aria-hidden="true">
+          {
+            designPreview.map((img) => (
+              <span class="plate">
+                <img
+                  src={img.src}
+                  srcset={srcset(img)}
+                  sizes={img.small && sizes}
+                  alt=""
+                  width={img.width}
+                  height={img.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            ))
+          }
+        </a>
+      </li>
+
+      <li class="row">
+        <div class="words">
+          <h3><a href="/resources/portfolios/">Portfolios</a></h3>
+          <p>
+            {word(counts.portfolios) ?? <strong>{counts.portfolios}</strong>} engineering portfolios from our last{' '}
+            {word(portfolioSeasons.length)?.toLowerCase() ?? <strong>{portfolioSeasons.length}</strong>} seasons, with
+            the awards each one earned.
+          </p>
+          <a class="arrow-link" href="/resources/portfolios/">
+            <span>Read the portfolios</span>
+            <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+          </a>
+        </div>
+        <a class="strip covers" href="/resources/portfolios/" tabindex="-1" aria-hidden="true">
+          {
+            coverPreview.map((img) => (
+              <span class="duo cover">
+                <img
+                  src={img.src}
+                  srcset={srcset(img)}
+                  sizes={img.small && sizes}
+                  alt=""
+                  width={img.width}
+                  height={img.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            ))
+          }
+        </a>
+      </li>
+
+      <li class="row">
+        <div class="words">
+          <h3><a href="/resources/videos/">Videos &amp; Workshops</a></h3>
+          <p>
+            {word(counts.videos) ?? <strong>{counts.videos}</strong>} videos: robot features, workshops for other teams,
+            and autonomous routines.
+          </p>
+          <a class="arrow-link" href="/resources/videos/">
+            <span>Watch the videos</span>
+            <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+          </a>
+        </div>
+        <a class="strip stills" href="/resources/videos/" tabindex="-1" aria-hidden="true">
+          {
+            videoPreview.map((v) => (
+              <span class="duo still">
+                <img
+                  src={v.thumb}
+                  srcset={v.thumbSmall && `${v.thumbSmall} 480w, ${v.thumb} 1280w`}
+                  sizes={v.thumbSmall && sizes}
+                  alt=""
+                  width="1280"
+                  height="720"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            ))
+          }
+        </a>
+      </li>
+
+      <li class="row">
+        <div class="words">
+          <h3>Robot code</h3>
+          <p>Our robot code for these seasons is public on GitHub, written with SolversLib.</p>
+        </div>
+        <ul class="repos" role="list">
+          {
+            robotCode.map((r) => (
+              <li>
+                <a href={r.href} target="_blank" rel="noopener">
+                  <span class="repo">{r.repo}</span>
+                  <span class="season">
+                    {r.season} <span class="years">{r.years}</span>
+                  </span>
+                  <span class="ring" aria-hidden="true">
+                    <Icon name="ph:arrow-up-right" />
+                  </span>
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+    margin-bottom: var(--s-7);
+    /* Only breaks inside a word if a reader's own text spacing makes it wider than the line. */
+    overflow-wrap: anywhere;
+  }
+
+  .rows {
+    margin: 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--s-5) var(--s-8);
+    align-items: start;
+    padding-block: var(--s-7);
+    border-top: 1px solid var(--line-strong);
+  }
+  .words {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-4);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  h3 a {
+    text-decoration: none;
+  }
+  h3 a:hover {
+    color: var(--sun);
+  }
+  .words p {
+    max-width: 40ch;
+    color: var(--ink-2);
+  }
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The strip: three real pieces of each resource, side by side. */
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-3);
+    text-decoration: none;
+  }
+  /* Renders on their light drawing plates, gray at rest, in color when the strip is reached for. */
+  .plate {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--plate);
+    overflow: hidden;
+  }
+  .plate img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    filter: grayscale(1) contrast(1.05);
+    transition: filter 0.9s var(--ease-inout);
+  }
+  @media (hover: hover) {
+    .plates:hover .plate img {
+      filter: none;
+      transition-duration: 0.65s;
+    }
+  }
+  .cover {
+    aspect-ratio: 800 / 1036;
+  }
+  .still {
+    aspect-ratio: 16 / 9;
+  }
+  .plate,
+  .cover,
+  .still {
+    display: block;
+  }
+
+  /* Repositories, set in mono because they are names you type. */
+  .repos {
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .repos li {
+    border-bottom: 1px solid var(--line);
+  }
+  .repos a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--s-2) var(--s-5);
+    min-height: 64px;
+    padding-block: var(--s-3);
+    text-decoration: none;
+  }
+  .repo {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    overflow-wrap: anywhere;
+  }
+  .season {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .years {
+    color: var(--gold-ink);
+  }
+  .ring {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transition:
+      transform var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+  .ring :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+  .repos a:hover .repo {
+    color: var(--sun);
+  }
+  .repos a:hover .ring {
+    transform: translateX(4px);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  @media (max-width: 1099px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+    }
+    /* Stacked, the list runs full width: the ledger's own closing rule ends it. */
+    .repos li:last-child {
+      border-bottom: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .row {
+      padding-block: var(--s-6);
+    }
+  }
+  @media (max-width: 479px) {
+    .repos a {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'repo ring' 'season ring';
+      row-gap: 0.2rem;
+    }
+    .repo {
+      grid-area: repo;
+    }
+    .season {
+      grid-area: season;
+    }
+    .ring {
+      grid-area: ring;
+    }
+  }
+</style>

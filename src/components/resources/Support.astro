@@ -1,0 +1,64 @@
+---
+// The hub's close: one ask to support the team behind the resources, its heading, line and actions in one column.
+import { Icon } from 'astro-icon/components';
+import { cta } from '../../data/site';
+import { fundraising } from '../../data/resources';
+---
+
+<section class="support" aria-labelledby="support-title">
+  <div class="inner">
+    <h2 id="support-title">Support the team</h2>
+    <p>{fundraising}</p>
+    <div class="actions">
+      <a class="btn btn-primary" href={cta.sponsor.href}>
+        <span>{cta.sponsor.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+      <a class="arrow-link" href="/sponsors/donate/">
+        <span>Donate</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .support {
+    border-block: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.1rem + 1.6vw, 2.5rem);
+  }
+  p {
+    margin-top: var(--s-5);
+    max-width: 44ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-6);
+    margin-top: var(--s-6);
+  }
+
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 479px) {
+    .actions .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

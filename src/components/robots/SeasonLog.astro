@@ -1,0 +1,558 @@
+---
+// The season, stop by stop: robot versions and events on one thread, dates and places in a rail at the left.
+// Robot stops carry the team's own write-up (and, from the second version on, what changed); events carry their
+// results from awards.ts. The thread draws itself in as it scrolls into view; under reduced motion it is simply there.
+import { Icon } from 'astro-icon/components';
+import Rich from './Rich.astro';
+import Cutout from './Cutout.astro';
+import RevisionTable from './RevisionTable.astro';
+import type { Img, Season, Stop } from '../../data/robots';
+
+interface Props {
+  season: Season;
+}
+const { season } = Astro.props;
+
+const version = (title: string) => title.split(' ').pop() ?? title;
+// The robot version before each robot stop, for the revision table's first column.
+const previousRobot = (i: number) =>
+  season.log
+    .slice(0, i)
+    .reverse()
+    .find((s): s is Extract<Stop, { kind: 'robot' }> => s.kind === 'robot');
+const ar = (img: Img) => (img.width / img.height).toFixed(4);
+const titleOf = (s: Stop) => (s.kind === 'robot' ? s.title : s.kind === 'event' ? s.name : s.title);
+// A gallery photo's slot, so a photo with a small copy loads it only where it is drawn small. The lead spans the row;
+// the rest share the row beneath it, two to a row on phones (where an even count's last photo spans the row). From
+// 768px up the photos' column is about three quarters of the page.
+const gallerySizes = (j: number, n: number) => {
+  const spans = j === 0 || (j === n - 1 && n % 2 === 0);
+  const wide = j === 0 ? 75 : Math.round(75 / Math.min(n - 1, 3));
+  return `(max-width: 767px) ${spans ? 88 : 44}vw, ${wide}vw`;
+};
+---
+
+<section class="season-log" aria-labelledby={`${season.id}-log`}>
+  <div class="inner">
+    <div class="head">
+      <h2 id={`${season.id}-log`}>The season</h2>
+      {season.logLede && <p class="sub">{season.logLede}</p>}
+    </div>
+
+    <ol class="log" role="list">
+      {
+        season.log.map((stop, i) => {
+          // An event reads as a quiet line only when it has nothing else to show: no results, photos, links or standing.
+          const quiet =
+            stop.kind === 'play' ||
+            (stop.kind === 'event' &&
+              stop.awards.length === 0 &&
+              !stop.photos?.length &&
+              !stop.links?.length &&
+              !stop.standing);
+          const prev = stop.kind === 'robot' ? previousRobot(i) : undefined;
+          return (
+            <li
+              class:list={[
+                'stop',
+                `is-${stop.kind}`,
+                { quiet, peak: stop.kind === 'event' && stop.peak },
+              ]}
+            >
+              <span class="node" aria-hidden="true" />
+              <h3 class="title">{titleOf(stop)}</h3>
+              <p class="when">
+                <span class="date">{stop.when}</span>
+                {stop.kind === 'event' && <span>{stop.place}</span>}
+                {stop.kind === 'event' && stop.type && <span>{stop.type}</span>}
+              </p>
+
+              {stop.kind === 'robot' && (
+                <div class:list={['rest', 'robot-rest', { 'has-figure': !!stop.image }]}>
+                  <div class="text">
+                    {stop.debut && <p class="debut">{stop.debut}</p>}
+                    {stop.paras.map((p) => (
+                      <p>
+                        <Rich para={p} />
+                      </p>
+                    ))}
+                    {stop.revisions && prev && (
+                      <div class="rev-wrap" role="region" aria-labelledby={`${season.id}-rev-${i}`} tabindex="0">
+                        <RevisionTable
+                          revisions={stop.revisions}
+                          from={stop.compare?.from ?? version(prev.title)}
+                          to={stop.compare?.to ?? version(stop.title)}
+                          captionId={`${season.id}-rev-${i}`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {stop.image &&
+                    (stop.image.cutout ? (
+                      <div class="figure cut">
+                        <Cutout img={stop.image} />
+                      </div>
+                    ) : (
+                      <figure class="figure duo" style={`--ar: ${ar(stop.image)}`}>
+                        <img
+                          src={stop.image.src}
+                          alt={stop.image.alt}
+                          width={stop.image.width}
+                          height={stop.image.height}
+                          loading="lazy"
+                          decoding="async"
+                          style={stop.image.focus ? `object-position: ${stop.image.focus}` : undefined}
+                        />
+                      </figure>
+                    ))}
+                </div>
+              )}
+
+              {stop.kind === 'event' && !quiet && (
+                <div class:list={['rest', 'event-rest', { 'has-figure': stop.photos?.length === 1 }]}>
+                  <div class="text">
+                    {stop.awards.length > 0 && (
+                      <ul class="results" role="list">
+                        {stop.awards.map((a) => (
+                          <li>
+                            {a.title}
+                            {a.recipient && <span class="who"> ({a.recipient})</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {stop.standing && <p class="standing">{stop.standing}</p>}
+                    {stop.links && (
+                      <ul class="links" role="list">
+                        {stop.links.map((l) => (
+                          <li>
+                            <a class="arrow-link" href={l.href} target="_blank" rel="noopener">
+                              <span>
+                                {l.label}
+                                <span class="visually-hidden"> (opens in a new tab)</span>
+                              </span>
+                              <span class="ring" aria-hidden="true">
+                                <Icon name="ph:arrow-up-right" />
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  {stop.photos && stop.photos.length === 1 && (
+                    <figure class="figure photo duo" style={`--ar: ${ar(stop.photos[0])}`}>
+                      <img
+                        src={stop.photos[0].src}
+                        alt={stop.photos[0].alt}
+                        width={stop.photos[0].width}
+                        height={stop.photos[0].height}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </figure>
+                  )}
+                  {stop.photos && stop.photos.length > 1 && (
+                    <div class="gallery" style={`--rest: ${Math.min(stop.photos.length - 1, 3)}`}>
+                      {stop.photos.map((p, j, all) => (
+                        <figure class="duo">
+                          <img
+                            src={p.src}
+                            srcset={p.small && `${p.small.src} ${p.small.width}w, ${p.src} ${p.width}w`}
+                            sizes={p.small && gallerySizes(j, all.length)}
+                            alt={p.alt}
+                            width={p.width}
+                            height={p.height}
+                            loading="lazy"
+                            decoding="async"
+                            style={p.focus ? `object-position: ${p.focus}` : undefined}
+                          />
+                        </figure>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {stop.kind === 'play' && (
+                <div class="rest">
+                  <ul class="plays" role="list">
+                    {stop.events.map((e) => (
+                      <li>
+                        <span class="p-date">{e.date}</span>
+                        <span class="p-name">{e.name}</span>
+                        <span class="p-place">
+                          {e.place}
+                          {e.type && `, ${e.type.toLowerCase()}`}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+          );
+        })
+      }
+    </ol>
+
+    <a class="arrow-link" href={`/about/awards/#${season.id}`}>
+      <span>Every award by season</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .season-log {
+    --rail: 12rem;
+    --node: 21px;
+    --node-top: 0.3rem;
+    --row: var(--s-8);
+    --thread: color-mix(in srgb, var(--ink) 28%, transparent);
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr);
+    gap: var(--s-4) var(--s-7);
+    align-items: end;
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    max-width: 46ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  /* One row per stop: the date rail, the node on the thread, then the stop itself. */
+  .log {
+    margin: var(--s-8) 0 var(--s-7);
+  }
+  .stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--rail) var(--node) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'when node title'
+      'when node rest';
+    column-gap: var(--s-5);
+    padding-bottom: var(--row);
+  }
+  .stop.quiet {
+    padding-bottom: var(--s-6);
+  }
+  .stop:last-child {
+    padding-bottom: 0;
+  }
+  /* The thread runs from under this node to just above the next one. */
+  .stop:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--rail) + var(--s-5) + var(--node) / 2 - 0.5px);
+    top: calc(var(--node-top) + var(--node) + 4px);
+    bottom: calc(4px - var(--node-top));
+    width: 1px;
+    background: var(--thread);
+    transform-origin: top;
+  }
+
+  .node {
+    grid-area: node;
+    width: var(--node);
+    height: var(--node);
+    margin-top: var(--node-top);
+    border: 1px solid var(--sun);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  /* A robot version: a ring holding a Sun dot. */
+  .is-robot .node {
+    background: radial-gradient(circle, var(--sun) 0 3.5px, var(--paper) 4px);
+  }
+  /* Scrimmages, league meets and events without results sit on the thread as small quiet dots. */
+  .quiet .node {
+    width: 11px;
+    height: 11px;
+    margin: calc(var(--node-top) + 5px) 0 0 5px;
+    border-color: var(--ink-3);
+  }
+  /* The season's peak: filled, with a second ring around it. */
+  .peak .node {
+    background: var(--sun);
+    outline: 1px solid var(--thread);
+    outline-offset: 4px;
+  }
+
+  .when {
+    grid-area: when;
+    display: grid;
+    align-content: start;
+    justify-items: end;
+    gap: 0.2rem;
+    padding-top: calc(var(--node-top) + 0.15rem);
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .date {
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--gold-ink);
+  }
+
+  .title {
+    grid-area: title;
+    font-size: 1.375rem;
+  }
+  .is-robot .title,
+  .peak .title {
+    font-size: var(--step-2);
+  }
+  .quiet .title {
+    font-size: 1.0625rem;
+    color: var(--ink-2);
+  }
+
+  .rest {
+    grid-area: rest;
+    margin-top: var(--s-4);
+    min-width: 0;
+  }
+  .quiet .rest {
+    margin-top: var(--s-2);
+  }
+
+  /* Robot versions: the write-up beside the robot. */
+  .robot-rest.has-figure {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: start;
+  }
+  .text {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .text p {
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+  .text :global(a) {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
+  .text :global(a:hover) {
+    color: var(--gold-ink);
+    text-decoration-color: currentColor;
+  }
+  .text .debut {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+  /* A table too wide for a narrow screen (widened letter spacing, say) scrolls in its own frame, not the page. */
+  .rev-wrap {
+    margin-top: var(--s-3);
+    max-width: 44rem;
+    overflow-x: auto;
+  }
+  .figure {
+    margin: 0;
+  }
+  .figure.duo {
+    aspect-ratio: var(--ar);
+  }
+  .figure.cut {
+    justify-self: center;
+    width: min(100%, 22rem);
+  }
+
+  /* Events: results in Sun, one per line, and a photo when the event has one. */
+  .event-rest.has-figure {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: start;
+  }
+  .results {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+  }
+  .results li {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--gold-ink);
+  }
+  .who {
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  .text .standing {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+    margin: 0;
+  }
+  /* One photo beside a short list of results: kept small so it sits with them instead of towering. */
+  .photo {
+    justify-self: start;
+    width: min(100%, calc(15rem * var(--ar)));
+    max-height: 15rem;
+  }
+
+  /* A lead photo across the top, the rest sharing the row beneath it evenly. */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(var(--rest, 3), minmax(0, 1fr));
+    gap: var(--s-3);
+    margin-top: var(--s-6);
+  }
+  .gallery figure {
+    aspect-ratio: 4 / 3;
+  }
+  .gallery figure:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+
+  /* League play: a compact list, date, name, place. */
+  .plays {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+  }
+  .plays li {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+    gap: var(--s-4);
+    align-items: baseline;
+    max-width: 40rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .p-date,
+  .p-place {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .p-place {
+    text-align: right;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .stop:not(:last-child)::after {
+        animation: season-thread-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 50%;
+      }
+      @keyframes season-thread-draw {
+        from {
+          transform: scaleY(0);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1099px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+    /* minmax(0, ...) so a wide table scrolls in its frame instead of stretching the column past the screen. */
+    .robot-rest.has-figure,
+    .event-rest.has-figure {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-5);
+    }
+    .figure.duo {
+      max-width: 36rem;
+    }
+    .figure.cut {
+      justify-self: start;
+    }
+  }
+  /* Phones: the rail folds under each title, so dates never sit above a heading. */
+  @media (max-width: 767px) {
+    .season-log {
+      --row: var(--s-7);
+    }
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .log {
+      margin-top: var(--s-7);
+    }
+    .stop {
+      grid-template-columns: var(--node) minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas:
+        'node title'
+        'node when'
+        'node rest';
+      column-gap: var(--s-4);
+    }
+    .stop:not(:last-child)::after {
+      left: calc(var(--node) / 2 - 0.5px);
+    }
+    .when {
+      display: flex;
+      flex-wrap: wrap;
+      justify-items: start;
+      gap: 0 var(--s-3);
+      padding-top: var(--s-2);
+      text-align: left;
+    }
+    .title,
+    .is-robot .title,
+    .peak .title {
+      font-size: 1.25rem;
+    }
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: var(--s-5);
+    }
+    .gallery figure:last-child:nth-child(even) {
+      grid-column: 1 / -1;
+    }
+    .plays li {
+      grid-template-columns: 3.75rem minmax(0, 1fr);
+    }
+    .p-place {
+      grid-column: 2;
+      text-align: left;
+    }
+  }
+</style>

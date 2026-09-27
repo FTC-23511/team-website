@@ -1,0 +1,219 @@
+---
+import { Icon } from 'astro-icon/components';
+import { nav, socials, team, emails, linktree, donate, cta } from '../data/site';
+
+const year = new Date().getFullYear();
+const explore = [
+  { label: 'Meet the Team', href: '/about/team/' },
+  { label: 'Awards', href: '/about/awards/' },
+  { label: 'Newsletters', href: '/about/newsletters/' },
+  { label: 'Outreach', href: '/impact/outreach/' },
+  { label: 'Robots', href: nav.find((n) => n.label === 'Robots')!.children![0].href },
+  { label: 'Resources', href: '/resources/' },
+];
+const involved = [
+  { label: 'LEGO Robotics Classes', href: '/classes/' },
+  { label: 'Join the Team', href: '/apply/' },
+  { label: 'Contact', href: '/contact/' },
+];
+---
+
+<footer class="site-footer">
+  <div class="inner">
+    <div class="sign">
+      <a href="/" class="logo-link" aria-label={`${team.name}, FTC Team #${team.number}, home`}>
+        <img src="/brand/logo-name-white.png" alt="" width="163" height="84" />
+      </a>
+      <p class="about">A student-led, 501(c)(3) nonprofit robotics team from {team.place}.</p>
+    </div>
+
+    <nav class="cols" aria-label="Footer">
+      <div class="col">
+        <p class="col-h mono" id="footer-explore">Explore</p>
+        <ul role="list" aria-labelledby="footer-explore">
+          {
+            explore.map((n) => (
+              <li>
+                <a href={n.href}>{n.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="col">
+        <p class="col-h mono" id="footer-involved">Get involved</p>
+        <ul role="list" aria-labelledby="footer-involved">
+          {
+            involved.map((n) => (
+              <li>
+                <a href={n.href}>{n.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="col">
+        <p class="col-h mono" id="footer-support">Support</p>
+        <ul role="list" aria-labelledby="footer-support">
+          <li><a href={cta.sponsor.href}>Become a Sponsor</a></li>
+          <li><a href="/sponsors/">Our Sponsors</a></li>
+          <li>
+            <a href={donate.hcb} target="_blank" rel="noopener"
+              >Donate with Hack Club<span class="visually-hidden"> (opens in a new tab)</span></a
+            >
+          </li>
+          <li>
+            <a href={donate.giveLively} target="_blank" rel="noopener"
+              >Donate with Give Lively<span class="visually-hidden"> (opens in a new tab)</span></a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="col">
+        <p class="col-h mono" id="footer-connect">Connect</p>
+        <ul role="list" aria-labelledby="footer-connect">
+          <li><a href={`mailto:${emails.team}`}>{emails.team}</a></li>
+          {
+            socials.map((s) => (
+              <li>
+                <a href={s.href} target="_blank" rel="noopener" class="social">
+                  <Icon name={s.icon} aria-hidden="true" />
+                  {s.label}
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href={linktree} target="_blank" rel="noopener"
+              >Linktree<span class="visually-hidden"> (opens in a new tab)</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="base">
+    <p class="mono">© {year} {team.name}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--night);
+    color: var(--on-night);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: var(--s-8);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter) var(--s-8);
+  }
+  .sign {
+    display: grid;
+    align-content: start;
+    gap: var(--s-4);
+  }
+  .logo-link {
+    display: inline-block;
+    justify-self: start;
+  }
+  .about {
+    max-width: 26ch;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .sign img {
+    width: auto;
+    height: 84px;
+  }
+  /* In forced colors the white logo keeps its own dark ground, so the wordmark shows on a light theme too. */
+  @media (forced-colors: active) {
+    .sign img {
+      forced-color-adjust: none;
+      background: var(--paper);
+    }
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.2fr);
+    gap: var(--s-6);
+  }
+  .col-h {
+    color: var(--sun);
+    margin-bottom: var(--s-4);
+  }
+  .col ul {
+    display: grid;
+    gap: var(--s-2);
+    margin: 0;
+  }
+  .col a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 32px;
+    text-decoration: none;
+    color: var(--on-night);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+  .col a:hover {
+    color: var(--sun);
+    text-decoration: underline;
+  }
+  .social svg {
+    width: 17px;
+    height: 17px;
+  }
+  .base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-5) var(--gutter);
+    border-top: 1px solid rgb(252 249 222 / 0.14);
+    color: var(--on-night-2);
+  }
+  .base .mono {
+    font-size: 0.6875rem;
+    text-transform: none;
+    letter-spacing: 0.03em;
+  }
+  a:focus-visible {
+    outline-color: var(--sun);
+  }
+
+  /* Narrower screens: the logo sits above the four columns, so no address has to break. */
+  @media (max-width: 1279px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+  }
+  @media (max-width: 899px) {
+    .inner {
+      padding-top: var(--s-8);
+    }
+    .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: var(--s-7);
+    }
+  }
+  /* Phones: Explore runs down the left beside Get involved and Support; Connect, with the long
+     address, takes the full width below. */
+  @media (max-width: 599px) {
+    .col:first-child {
+      grid-row: span 2;
+    }
+    .col:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Orbitron;src:url(../../node_modules/@fontsource-variable/orbitron/files/orbitron-latin-wght-normal.woff2) format('woff2');font-weight:400 900}
+@font-face{font-family:Inter;src:url(../../node_modules/@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2) format('woff2');font-weight:100 900}
+@font-face{font-family:Azeret;src:url(../../node_modules/@fontsource/azeret-mono/files/azeret-mono-latin-600-normal.woff2) format('woff2');font-weight:600}
+*{margin:0;box-sizing:border-box}
+html,body{width:1200px;height:630px;background:#0b0a06;overflow:hidden}
+.frame{position:relative;width:1200px;height:630px;overflow:hidden;isolation:isolate}
+.sun{position:absolute;left:640px;top:70px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle at 50% 42%,#3a320c 0 58%,#262109 100%);box-shadow:inset 0 0 0 2px #f2ce00;z-index:-1}
+.robot{position:absolute;left:590px;top:60px;width:700px;height:570px;background:url(../../public/models/cypher-poster-dark.webp) no-repeat;background-size:1260px auto;background-position:-470px -80px;mix-blend-mode:screen}
+.logo{position:absolute;left:64px;top:56px;height:64px}
+.words{position:absolute;left:64px;top:210px;width:600px}
+h1{font-family:Orbitron;font-weight:500;font-size:84px;line-height:.98;letter-spacing:.01em;color:#fcf9de;text-transform:uppercase}
+.num{margin-top:22px;font-family:Orbitron;font-weight:600;font-size:34px;letter-spacing:.04em;color:#ffe75c}
+.line{margin-top:26px;font-family:Inter;font-size:24px;line-height:1.4;color:#d8d2ae;max-width:26ch}
+.foot{position:absolute;left:64px;bottom:48px;display:flex;gap:28px;font-family:Azeret;font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:#a69f7c}
+.foot b{color:#ffe75c;font-weight:600}
+</style></head><body><div class="frame">
+<div class="sun"></div><div class="robot"></div>
+<img class="logo" src="../../public/brand/logo-name-white.png">
+<div class="words"><h1>Seattle Solvers</h1><p class="num">FTC Team #23511</p><p class="line">A student-led robotics team from Sammamish, Washington.</p></div>
+<p class="foot"><span><b>Inspire Award, 2nd Place</b></span><span>2026 FIRST World Championship</span></p>
+</div></body></html>

@@ -1,0 +1,26 @@
+---
+// Running text with inline links, from the robots data. Outside links open in a new tab and say so; a link to a
+// sponsor is marked rel="sponsored", as on the Sponsors page.
+import type { Para } from '../../data/robots';
+
+interface Props {
+  para: Para;
+}
+const { para } = Astro.props;
+const external = (href: string) => /^https?:\/\//.test(href);
+---
+
+{
+  para.map((seg) =>
+    typeof seg === 'string' ? (
+      seg
+    ) : external(seg.href) ? (
+      <a href={seg.href} target="_blank" rel={seg.sponsored ? 'sponsored noopener' : 'noopener'}>
+        {seg.text}
+        <span class="visually-hidden"> (opens in a new tab)</span>
+      </a>
+    ) : (
+      <a href={seg.href}>{seg.text}</a>
+    ),
+  )
+}

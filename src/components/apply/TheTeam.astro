@@ -1,0 +1,97 @@
+---
+// What joining means: who can join, in one sentence under the heading, then the subteams as a ruled ledger.
+import { Icon } from 'astro-icon/components';
+import { joining, subteams } from '../../data/apply';
+---
+
+<section class="team" aria-labelledby="team-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="team-title">The team</h2>
+      <p class="sub">{joining}</p>
+      <a class="arrow-link" href="/about/team/">
+        <span>Meet the team</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+
+    <div class="body">
+      <h3 class="list-title" id="subteams-title">Subteams</h3>
+      <dl class="subteams">
+        {
+          subteams.map((s) => (
+            <div class="row">
+              <dt>{s.name}</dt>
+              <dd>{s.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Content starts on the page's 34% rail, as on Become a Sponsor. */
+  .inner {
+    display: grid;
+    grid-template-columns: calc(34% - var(--s-7)) minmax(0, 1fr);
+    gap: var(--s-7);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 30ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .head .arrow-link {
+    margin-top: var(--s-5);
+  }
+
+  .list-title {
+    font-size: 1.25rem;
+  }
+  .subteams {
+    margin: var(--s-4) 0 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  /* A ruled ledger: the subteam in the margin, what it does beside it. */
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+    gap: var(--s-5);
+    align-items: baseline;
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .subteams dt {
+    font-weight: 600;
+  }
+  .subteams dd {
+    margin: 0;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--s-1);
+    }
+  }
+</style>

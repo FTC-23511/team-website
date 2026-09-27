@@ -1,0 +1,124 @@
+---
+// A small outline button that copies a value (an email address, a code) to the clipboard. It stays hidden
+// where the clipboard API is missing, and announces the result to screen readers.
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  text: string;
+  /** Visible label, e.g. "Copy". */
+  label?: string;
+  /** What is being copied, for the accessible name and the announcement ("email address"). */
+  what?: string;
+  class?: string;
+}
+const { text, label = 'Copy', what = 'text', class: className } = Astro.props;
+// Short values (an address, a code) are read out in the button's name; long ones (a script) are not.
+const name = text.length <= 64 ? `Copy ${what} ${text}` : `Copy ${what}`;
+---
+
+<span class:list={['copy-wrap', className]}>
+  <button type="button" class="copy" data-copy-text={text} data-copy-label={label} aria-label={name} hidden>
+    <Icon name="ph:copy" class="i-copy" aria-hidden="true" />
+    <Icon name="ph:check" class="i-done" aria-hidden="true" />
+    <Icon name="ph:x" class="i-failed" aria-hidden="true" />
+    <span class="copy-state">{label}</span>
+  </button>
+  <span class="visually-hidden" aria-live="polite" data-copy-announce></span>
+</span>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-text]').forEach((button) => {
+    if (!navigator.clipboard) return;
+    const state = button.querySelector<HTMLElement>('.copy-state');
+    const announce = button.parentElement?.querySelector<HTMLElement>('[data-copy-announce]');
+    let timer: number | undefined;
+    button.hidden = false;
+    // Both outcomes show for 2.4 s: a check or a cross beside the new label (the icon alone on phones, where
+    // the label is hidden), and a line for screen readers.
+    const show = (outcome: 'done' | 'failed', text: string, said: string) => {
+      button.classList.remove('is-done', 'is-failed');
+      button.classList.add(`is-${outcome}`);
+      if (state) state.textContent = text;
+      if (announce) announce.textContent = said;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        button.classList.remove(`is-${outcome}`);
+        if (state) state.textContent = button.dataset.copyLabel ?? 'Copy';
+        if (announce) announce.textContent = '';
+      }, 2400);
+    };
+    button.addEventListener('click', async () => {
+      const copied = button.dataset.copyText ?? '';
+      try {
+        await navigator.clipboard.writeText(copied);
+      } catch {
+        show('failed', 'Copy failed', 'Could not copy. Select the text and copy it by hand.');
+        return;
+      }
+      show('done', 'Copied', copied.length <= 64 ? `Copied ${copied}` : 'Copied');
+    });
+  });
+</script>
+
+<style>
+  .copy-wrap {
+    display: inline-flex;
+  }
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding: 0 var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease),
+      border-color var(--dur-quick) var(--ease),
+      transform var(--dur-quick) var(--ease);
+  }
+  .copy[hidden] {
+    display: none;
+  }
+  .copy :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .copy:hover {
+    background: var(--band);
+    color: var(--on-band);
+    border-color: var(--band);
+  }
+  .copy:active {
+    transform: translateY(1px);
+  }
+  .copy :global(.i-done),
+  .copy :global(.i-failed),
+  .copy.is-done :global(.i-copy),
+  .copy.is-failed :global(.i-copy) {
+    display: none;
+  }
+  .copy.is-done :global(.i-done),
+  .copy.is-failed :global(.i-failed) {
+    display: inline;
+  }
+  .copy.is-done {
+    color: var(--gold-ink);
+    border-color: var(--gold-deep);
+    background: transparent;
+  }
+  .copy.is-failed {
+    color: var(--ink-2);
+    border-color: var(--line-strong);
+    background: transparent;
+  }
+</style>

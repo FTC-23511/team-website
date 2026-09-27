@@ -1,0 +1,39 @@
+---
+// The one-line enrollment status with its marker, as on the timelines: hollow while closed, filled Sun while sign-up
+// is open. Used under the page title and again beside the closing action. The page script (applyLiveStatus in
+// status.ts) rewrites the line and the marker on load from today's date.
+import type { Enrollment } from './status';
+
+interface Props {
+  state: Enrollment;
+}
+const { state } = Astro.props;
+---
+
+<p class="state">
+  <span class:list={['marker', { 'is-open': state.open }]} data-enrollment-marker aria-hidden="true"></span>
+  <span data-enrollment-line>{state.line}</span>
+</p>
+
+<style>
+  .state {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+  .marker {
+    flex: none;
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--ink-3);
+    border-radius: 50%;
+  }
+  .marker.is-open {
+    border-color: var(--sun);
+    background: var(--sun);
+  }
+</style>

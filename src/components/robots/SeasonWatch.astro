@@ -1,0 +1,135 @@
+---
+// The season's robot on video: every video in videos.ts tagged with this season, click to play in place.
+// Landscape videos sit three to a row under the heading. Upright Shorts take the Videos page's layout instead:
+// the heading and channel link on the left, the players side by side at phone proportions on the right.
+import { Icon } from 'astro-icon/components';
+import VideoFacade from '../VideoFacade.astro';
+import { channel, videos } from '../../data/videos';
+import type { Season } from '../../data/robots';
+
+interface Props {
+  season: Season;
+}
+const { season } = Astro.props;
+const list = videos.filter((v) => v.season === season.id);
+const vertical = list.length > 0 && list.every((v) => v.vertical);
+---
+
+{
+  list.length > 0 && (
+    <section class:list={['watch', { vertical }]} aria-labelledby={`${season.id}-watch`}>
+      <div class="inner">
+        <div class="head">
+          <h2 id={`${season.id}-watch`}>{season.watchTitle}</h2>
+          <a class="arrow-link" href={channel.href} target="_blank" rel="noopener">
+            <span>
+              {channel.label}
+              <span class="visually-hidden"> (opens in a new tab)</span>
+            </span>
+            <span class="ring" aria-hidden="true">
+              <Icon name="ph:arrow-up-right" />
+            </span>
+          </a>
+        </div>
+        <ul class="videos" role="list">
+          {list.map((v) => (
+            <li>
+              <VideoFacade video={v} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .watch {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-4) var(--s-7);
+    margin-bottom: var(--s-7);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .videos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-7) var(--s-5);
+    margin: 0;
+  }
+
+  /* Shorts: words on the left, the upright players side by side on the right. */
+  .vertical .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-7);
+    align-items: start;
+  }
+  .vertical .head {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+  .vertical .videos {
+    display: flex;
+    gap: var(--s-5);
+  }
+  .vertical .videos > li {
+    flex: 0 1 300px;
+    min-width: 0;
+  }
+  /* Two Shorts share a phone's width, so with widened letter spacing a long title word breaks instead of pushing
+     past the screen edge. At the default spacing every title word fits, so nothing changes there. */
+  .vertical .videos :global(.title) {
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 1099px) {
+    .videos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    /* An odd count leads with the first video across the row, so the last row is never half empty. */
+    .watch:not(.vertical) .videos > li:first-child:nth-last-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 1023px) {
+    .vertical .inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-6);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .head {
+      margin-bottom: var(--s-6);
+    }
+  }
+  @media (max-width: 599px) {
+    .videos {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+    .vertical .videos {
+      gap: var(--s-4);
+    }
+    .vertical .videos > li {
+      flex: 1 1 0;
+    }
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+import { Icon } from 'astro-icon/components';
+import { cta } from '../../data/site';
+---
+
+<section class="statement" aria-labelledby="statement-title">
+  <div class="band">
+    <h2 id="statement-title" class="visually-hidden">Why sponsors matter</h2>
+    <p class="quote">We charge zero membership fees, so any motivated student can join.</p>
+    <p class="detail">
+      Sponsors and grants cover our robot parts, event travel, tools, outreach supplies, and registration fees.
+    </p>
+    <a class="arrow-link" href={cta.sponsor.href}>
+      <span>Support us</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+  </div>
+  <figure class="duo plate">
+    <img
+      src="/images/home/team-zero-fees.webp"
+      alt="The Seattle Solvers in team jackets with their robot in a school gym at a competition"
+      width="2000"
+      height="1333"
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+</section>
+
+<style>
+  .statement {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 520px;
+  }
+  .band {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--s-9) var(--gutter) var(--s-9) max(var(--gutter), calc((100vw - 1680px) / 2 + var(--gutter) + 3rem));
+    background-color: var(--band);
+    background-image:
+      linear-gradient(to right, rgb(11 10 6 / 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(11 10 6 / 0.09) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--on-band);
+  }
+  .quote {
+    max-width: 17ch;
+    font-family: var(--font-body);
+    font-size: clamp(2rem, 1.2rem + 2.4vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .detail {
+    margin-top: var(--s-5);
+    max-width: 44ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--on-band) 80%, var(--band));
+  }
+  .arrow-link {
+    margin-top: var(--s-6);
+    align-self: flex-start;
+    color: var(--on-band);
+  }
+  .arrow-link:hover :global(.ring) {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .arrow-link:focus-visible {
+    outline-color: var(--on-band);
+  }
+  /* Anchored near the top so every head stays in frame as the plate gets wider and shorter. */
+  .plate img {
+    position: absolute;
+    inset: 0;
+    object-position: 50% 10%;
+  }
+
+  @media (max-width: 899px) {
+    .statement {
+      grid-template-columns: 1fr;
+    }
+    .band {
+      padding: var(--s-8) var(--gutter);
+    }
+    .plate {
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+  }
+</style>

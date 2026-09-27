@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import RecruitingNotice from '../components/contact/RecruitingNotice.astro';
+import Inboxes from '../components/contact/Inboxes.astro';
+import Chat from '../components/contact/Chat.astro';
+import Doors from '../components/contact/Doors.astro';
+import { lede } from '../data/contact';
+import { team } from '../data/site';
+---
+
+<Base
+  title="Contact | Seattle Solvers"
+  description="Contact Seattle Solvers, FTC Team #23511: the right email for general questions, sponsorships, classes, and our subteams, plus our public Discord server."
+>
+  <PageHeader title="Contact" lede={lede}>
+    <p class="place">{team.place}</p>
+    <RecruitingNotice />
+  </PageHeader>
+  <Inboxes />
+  <Chat />
+  <Doors />
+</Base>
+
+<style>
+  .place {
+    margin-top: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+</style>

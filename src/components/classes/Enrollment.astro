@@ -1,0 +1,79 @@
+---
+// Where enrollment stands, under the page title: one line of status, what to do next, and the action. The line
+// and the open or closed parts come from enrollmentState() in status.ts, at build time here and again in the
+// visitor's browser (the page runs applyLiveStatus), so a stale deploy never points families at a past session.
+import { Icon } from 'astro-icon/components';
+import StatusLine from './StatusLine.astro';
+import { allSessions, forms } from '../../data/classes';
+import { enrollmentState, signUpHref, todayInSeattle } from './status';
+
+const state = enrollmentState(allSessions, todayInSeattle());
+const signUp = signUpHref(allSessions, state);
+---
+
+<div class="enrol">
+  <StatusLine state={state} />
+
+  <p class="next" data-when="open" hidden={!state.open}>
+    Pick a session below. The sign-up form has you sign a separate liability form, then takes payment through PayPal.
+  </p>
+  <p class="next" data-when="closed" hidden={state.open}>
+    Fill out the interest form and we will let you know when spots open for the class you choose. It takes no
+    payment.
+  </p>
+
+  <div class="actions">
+    {
+      signUp && (
+        <a
+          class="btn btn-primary"
+          data-when="open"
+          data-enrollment-signup
+          hidden={!state.open}
+          href={signUp}
+          target="_blank"
+          rel="noopener"
+        >
+          <span>Sign up</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+          <span class="visually-hidden">(opens the sign-up form in a new tab)</span>
+        </a>
+      )
+    }
+    <a class="btn btn-primary" data-when="closed" hidden={state.open} href={forms.interest.href} target="_blank" rel="noopener">
+      <span>{forms.interest.label}</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+      <span class="visually-hidden">(opens the interest form in a new tab)</span>
+    </a>
+    <a class="arrow-link" href="/classes/policies/">
+      <span>Class policies</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+  </div>
+</div>
+
+<style>
+  .enrol {
+    margin-top: var(--s-6);
+    max-width: 44rem;
+  }
+  .next {
+    margin-top: var(--s-2);
+    max-width: 48ch;
+    color: var(--ink-3);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-6);
+    margin-top: var(--s-5);
+  }
+
+  @media (max-width: 479px) {
+    .actions .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

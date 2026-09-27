@@ -1,0 +1,34 @@
+---
+// One page per robot season, built from src/data/robots.ts. Adding a season there adds its page.
+import Base from '../../layouts/Base.astro';
+import SeasonHeader from '../../components/robots/SeasonHeader.astro';
+import TitleBlock from '../../components/robots/TitleBlock.astro';
+import SeasonLog from '../../components/robots/SeasonLog.astro';
+import SeasonWatch from '../../components/robots/SeasonWatch.astro';
+import Offseason from '../../components/robots/Offseason.astro';
+import SeasonPager from '../../components/robots/SeasonPager.astro';
+import SeasonClose from '../../components/robots/SeasonClose.astro';
+import { seasons, type Season } from '../../data/robots';
+
+export function getStaticPaths() {
+  return seasons.map((season) => ({ params: { slug: season.slug }, props: { season } }));
+}
+
+interface Props {
+  season: Season;
+}
+const { season } = Astro.props;
+---
+
+<Base
+  title={`${season.game} ${season.years}: ${season.robot.name} | Seattle Solvers`}
+  description={season.description}
+>
+  <SeasonHeader season={season} />
+  <TitleBlock id={season.id} name={season.robot.name} summary={season.robot.summary} specs={season.robot.specs} />
+  <SeasonLog season={season} />
+  <SeasonWatch season={season} />
+  {season.offseason && <Offseason robot={season.offseason} />}
+  <SeasonPager slug={season.slug} />
+  <SeasonClose />
+</Base>

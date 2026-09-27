@@ -1,0 +1,40 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import VideoGroup from '../../components/resources/VideoGroup.astro';
+import MoreResources from '../../components/resources/MoreResources.astro';
+import { videoGroups } from '../../data/resources';
+import { channel } from '../../data/videos';
+
+// Each group can point at the robot page its videos come from.
+const links: Record<string, { label: string; href: string }> = {
+  features: { label: 'Meet Cypher', href: '/robots/decode-2025-26/' },
+  autonomous: { label: 'Meet Riptide', href: '/robots/into-the-deep-2024-25/' },
+};
+---
+
+<Base
+  title="Videos & Workshops | Seattle Solvers"
+  description="Videos of Seattle Solvers, FTC Team #23511: our DECODE robot Cypher on RoboFTC and the FUN Robotics Network, our workshops, and autonomous routines."
+>
+  <PageHeader
+    title="Videos & Workshops"
+    lede="Our robots on camera, the workshops we have given for other teams, and our autonomous routines."
+  >
+    <a class="arrow-link" href={channel.href} target="_blank" rel="noopener">
+      <span>Our YouTube channel<span class="visually-hidden"> (opens in a new tab)</span></span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+    </a>
+  </PageHeader>
+
+  {videoGroups.map((g) => <VideoGroup group={g} link={links[g.id]} />)}
+
+  <MoreResources current="/resources/videos/" />
+</Base>
+
+<style>
+  .arrow-link {
+    margin-top: var(--s-5);
+  }
+</style>

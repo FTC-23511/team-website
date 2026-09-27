@@ -1,0 +1,167 @@
+---
+// The season before the current one: its photos as a diptych beside a ruled ledger of events and results.
+import { Icon } from 'astro-icon/components';
+import type { FtcSeason } from '../../../data/awards';
+
+interface Props {
+  season: FtcSeason;
+}
+const { season } = Astro.props;
+---
+
+<section class="ledger-season" id={season.id} aria-labelledby={`${season.id}-title`}>
+  <div class="inner">
+    <div class="photos">
+      {
+        season.photos.map((p) => (
+          <figure class="duo" style={`--ar: ${(p.width / p.height).toFixed(4)}`}>
+            <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading="lazy" decoding="async" />
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="body">
+      <h2 id={`${season.id}-title`}>{season.game}</h2>
+      <p class="meta">
+        <span class="years">{season.years}</span>
+        {season.robot && <span>{season.robot.name}</span>}
+      </p>
+
+      <ol class="ledger" role="list">
+        {
+          season.events.map((e) => (
+            <li>
+              <ul class="titles" role="list">
+                {e.awards.map((a) => (
+                  <li>
+                    <h3>{a.title}</h3>
+                  </li>
+                ))}
+              </ul>
+              <p class="event">{e.name}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      {
+        season.robot && (
+          <a class="arrow-link" href={season.robot.href}>
+            <span>Meet {season.robot.name}</span>
+            <span class="ring" aria-hidden="true">
+              <Icon name="ph:arrow-right" />
+            </span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-8);
+    align-items: start;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+
+  /* Photos share one height whatever their shape: each grows by its own aspect ratio. */
+  .photos {
+    display: flex;
+    gap: var(--s-3);
+  }
+  .photos figure {
+    flex: var(--ar) 1 0;
+    aspect-ratio: var(--ar);
+    min-width: 0;
+  }
+
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .years {
+    color: var(--gold-ink);
+  }
+
+  /* A ruled ledger: where it happened on the left, what we won on the right. */
+  .ledger {
+    margin: var(--s-6) 0 var(--s-6);
+    border-top: 1px solid var(--line-strong);
+  }
+  .ledger > li {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-areas: 'event titles';
+    column-gap: var(--s-5);
+    align-items: baseline;
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .titles {
+    grid-area: titles;
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+  }
+  h3 {
+    font-size: var(--step-1);
+  }
+  .event {
+    grid-area: event;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--s-7);
+    }
+  }
+  @media (max-width: 899px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+    .photos {
+      order: 2;
+      max-width: 720px;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 599px) {
+    .ledger > li {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'titles'
+        'event';
+      row-gap: var(--s-2);
+    }
+  }
+</style>

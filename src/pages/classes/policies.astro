@@ -1,0 +1,223 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CopyButton from '../../components/CopyButton.astro';
+import { policies } from '../../data/classes';
+import { emails } from '../../data/site';
+import { parts } from '../../components/classes/text';
+---
+
+<Base
+  title="Class Policies | Seattle Solvers"
+  description="Attendance, pickup and drop-off, contact, and cancellation policies for every LEGO robotics class run by the Seattle Solvers, FTC Team #23511."
+>
+  <PageHeader title="Class Policies" lede={policies.intro}>
+    <nav class="index" aria-label="Policies">
+      <ol role="list">
+        {
+          policies.items.map((p) => (
+            <li>
+              <a href={`#${p.id}`}>
+                {/* One span child: as flex items, bare text runs would lose the spaces around "drop-off". */}
+                <span>{parts(p.title).map((t) => (t.keep ? <span class="nb">{t.text}</span> : t.text))}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </PageHeader>
+
+  <div class="ledger">
+    {
+      policies.items.map((p) => (
+        <section class="policy" id={p.id} aria-labelledby={`${p.id}-title`}>
+          <h2 id={`${p.id}-title`}>{p.title}</h2>
+          <div class="body">
+            {p.body.map((para) => (
+              <p>
+                {parts(para).map((t) =>
+                  t.email ? (
+                    <a href={`mailto:${t.text}`}>{t.text}</a>
+                  ) : t.keep ? (
+                    <span class="nb">{t.text}</span>
+                  ) : (
+                    t.text
+                  ),
+                )}
+              </p>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <section class="ask" aria-labelledby="ask-title">
+    <div class="inner">
+      <div class="copy">
+        <h2 id="ask-title">Questions or a cancellation?</h2>
+        <p>
+          Email <a href={`mailto:${emails.business}?subject=${encodeURIComponent('LEGO robotics classes')}`}
+            >{emails.business}</a
+          >.
+        </p>
+        <CopyButton text={emails.business} what="email address" />
+      </div>
+      <a class="arrow-link" href="/classes/">
+        <span>Back to the classes</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* The same row of channels as the Awards page's season index, one per policy, kept clear of the sun. */
+  .index {
+    margin-top: var(--s-7);
+    max-width: 48rem;
+  }
+  .nb {
+    white-space: nowrap;
+  }
+  .index ol {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .index li {
+    border-left: 1px solid var(--line);
+  }
+  .index li:first-child {
+    border-left: 0;
+  }
+  .index a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--s-3) var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.3em;
+    color: var(--ink);
+    transition: text-decoration-color var(--dur-quick) var(--ease);
+  }
+  .index li:first-child a {
+    padding-left: 0;
+  }
+  .index a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Heading-left ledger: each policy's name in the margin, its text in a reading column. */
+  .ledger {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) var(--s-9);
+  }
+  .policy {
+    display: grid;
+    grid-template-columns: calc(34% - var(--s-7)) minmax(0, 1fr);
+    gap: var(--s-7);
+    padding-block: var(--s-7);
+    border-top: 1px solid var(--line);
+  }
+  .policy:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .policy h2 {
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    letter-spacing: 0.02em;
+  }
+  .body {
+    display: grid;
+    gap: var(--s-4);
+    max-width: 68ch;
+  }
+  .body p {
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+  .body a {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .body a:hover {
+    color: var(--gold-ink);
+  }
+
+  /* The close, on the paper-2 step. */
+  .ask {
+    background: var(--paper-2);
+    border-block: 1px solid var(--line);
+  }
+  .ask .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-6) var(--s-8);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter);
+  }
+  /* A long word may break rather than run off a narrow screen (widely spaced text at 320px). */
+  .ask h2 {
+    font-size: clamp(1.75rem, 1.1rem + 1.6vw, 2.5rem);
+    overflow-wrap: anywhere;
+  }
+  .ask p {
+    margin: var(--s-4) 0;
+    font-size: var(--step-1);
+    color: var(--ink-2);
+  }
+  .ask p a {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .ask p a:hover {
+    color: var(--gold-ink);
+  }
+
+  @media (max-width: 899px) {
+    .policy {
+      grid-template-columns: 1fr;
+      gap: var(--s-4);
+      padding-block: var(--s-6);
+    }
+  }
+  @media (max-width: 767px) {
+    .index {
+      margin-top: var(--s-6);
+    }
+    .index ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .index li:nth-child(odd) {
+      border-left: 0;
+    }
+    .index li:nth-child(odd) a {
+      padding-left: 0;
+    }
+    .index li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+    .ledger {
+      padding-block: var(--s-6) var(--s-8);
+    }
+    .body p {
+      font-size: 1.0625rem;
+    }
+  }
+</style>

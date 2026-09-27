@@ -1,0 +1,121 @@
+---
+// The newest issue, set large: what it covers as a short contents list beside its cover.
+import { Icon } from 'astro-icon/components';
+import type { Issue } from '../../data/newsletters';
+
+interface Props {
+  issue: Issue;
+}
+const { issue } = Astro.props;
+---
+
+<section class="latest" aria-labelledby="latest-title">
+  <div class="inner">
+    <div class="words">
+      <h2 id="latest-title">{issue.period}</h2>
+      <p class="meta">
+        <span class="now">Latest issue</span>
+        <span>{issue.season}</span>
+      </p>
+
+      <h3 class="visually-hidden">In this issue</h3>
+      <ol class="contents" role="list">
+        {issue.topics.map((t) => <li>{t}</li>)}
+      </ol>
+
+      <a class="btn btn-primary" href={issue.href} target="_blank" rel="noopener">
+        <span>Read the issue</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+        <span class="visually-hidden">(opens in a new tab)</span>
+      </a>
+    </div>
+
+    <a class="cover duo" href={issue.href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <img src={issue.cover} alt="" width="880" height="1140" decoding="async" fetchpriority="high" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--s-8);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    max-width: 14ch;
+    font-size: var(--step-3);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .now {
+    color: var(--gold-ink);
+  }
+
+  /* The issue's contents, ruled like a table of contents. */
+  .contents {
+    margin: var(--s-7) 0 var(--s-7);
+    max-width: 34rem;
+    border-top: 1px solid var(--line-strong);
+  }
+  .contents li {
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .cover {
+    display: block;
+    aspect-ratio: 880 / 1140;
+    width: 100%;
+    max-width: 30rem;
+    justify-self: end;
+  }
+  .cover img {
+    object-position: 50% 0;
+  }
+
+  @media (max-width: 1023px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--s-7);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      grid-template-columns: 1fr;
+      padding-block: var(--s-8);
+    }
+    .cover {
+      grid-row: 1;
+      justify-self: start;
+      max-width: 22rem;
+    }
+    .contents {
+      margin-block: var(--s-6);
+    }
+  }
+  @media (max-width: 479px) {
+    .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

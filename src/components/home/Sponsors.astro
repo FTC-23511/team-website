@@ -1,0 +1,223 @@
+---
+import { Icon } from 'astro-icon/components';
+import { sponsorTiers } from '../../data/home';
+import { cta } from '../../data/site';
+import NonprofitFacts from '../NonprofitFacts.astro';
+
+// One wall, no tiers shown, no plates. Tier still sets each mark's visual area (bigger tier, bigger
+// mark), and each logo's own aspect ratio decides how that area is spent, so a square badge and a
+// long wordmark in the same tier weigh the same.
+const side: Record<string, number> = { xl: 168, l: 118, m: 84, s: 62 };
+const logos = sponsorTiers.flatMap((t) =>
+  t.sponsors.map((s) => {
+    const h = Math.round(side[t.size] / Math.pow(s.ratio, 0.42));
+    return { ...s, h, w: Math.round(h * s.ratio) };
+  }),
+);
+---
+
+<section class="sponsors" aria-labelledby="sponsors-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="sponsors-title">Thanks to our Sponsors!</h2>
+      <p class="sub">whose generosity and support make our team possible!</p>
+      <p class="body">
+        As a self-funded team without join/membership fees, we rely a lot on the assistance of our sponsors. Without
+        them, our team wouldn’t be able to make it as far as we have come in FIRST Tech Challenge.
+      </p>
+      <p class="body">
+        If you are interested in becoming a sponsor for our team, <a href={cta.sponsor.href}>see how to become a sponsor</a>!
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href={cta.sponsor.href}>
+          <span>{cta.sponsor.label}</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+        </a>
+        <a class="arrow-link" href="/sponsors/">
+          <span>All sponsors</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+        </a>
+      </div>
+      <div class="facts"><NonprofitFacts /></div>
+    </div>
+
+    <ul class="wall" role="list">
+      {
+        logos.map((s) => {
+          // Monochrome at rest, the sponsor's own colors on hover (see .logo-fade in global.css).
+          const mark = (
+            <>
+              <span class="logo-fade" style={`--w:${s.w}px;--h:${s.h}px`}>
+                <img class="lf-mono" src={s.logo} alt="" aria-hidden="true" width={s.w} height={s.h} loading="lazy" decoding="async" />
+                <img class="lf-color" src={s.logo} alt={s.caption ? '' : s.name} width={s.w} height={s.h} loading="lazy" decoding="async" />
+              </span>
+              {s.caption && <span class="caption">{s.name}</span>}
+            </>
+          );
+          return (
+            <li class:list={['logo', { opaque: s.opaque }, s.darkMono && `dm-${s.darkMono}`]}>
+              {s.href ? (
+                <a
+                  class="logo-hover"
+                  href={s.href}
+                  target="_blank"
+                  rel="sponsored noopener"
+                  aria-label={s.caption ? `${s.name} (opens in a new tab)` : undefined}
+                >
+                  {mark}
+                  {!s.caption && <span class="visually-hidden"> (opens in a new tab)</span>}
+                </a>
+              ) : (
+                <span class="logo-hover">{mark}</span>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .sponsors {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+    gap: var(--s-8);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-3);
+    font-size: var(--step-1);
+    font-weight: 500;
+    color: var(--gold-ink);
+  }
+  .body {
+    margin-top: var(--s-4);
+    max-width: 46ch;
+    color: var(--ink-2);
+  }
+  .body a {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-4) var(--s-6);
+    margin-top: var(--s-6);
+  }
+  .facts {
+    margin-top: var(--s-5);
+  }
+
+  /* The wall: marks float on the paper, centered on shared lines, spaced generously. */
+  .wall {
+    --k: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-6) var(--s-7);
+    margin: 0;
+  }
+  .logo a,
+  .logo > span {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-2);
+    text-decoration: none;
+    transition: transform var(--dur) var(--ease);
+  }
+  .logo a:hover {
+    transform: translateY(-3px);
+  }
+  .logo .logo-fade {
+    width: calc(var(--w) * var(--k));
+    height: calc(var(--h) * var(--k));
+    max-width: 100%;
+  }
+  /* A light plate fades in behind a lit logo so dark lettering reads in its real colors. */
+  .logo a::before,
+  .logo > span::before {
+    content: '';
+    position: absolute;
+    inset: -0.75rem -1rem;
+    z-index: -1;
+    background: var(--plate);
+    opacity: 0;
+    transition: opacity 0.9s var(--ease-inout);
+  }
+  .caption {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* At rest, marks turn to light monochrome so dark lettering reads on the ink ground.
+     A mark with its own background (Brown Bear) just goes gray. */
+  .logo .lf-mono {
+    filter: grayscale(1) invert(1) brightness(1.08);
+  }
+  .logo.opaque .lf-mono {
+    filter: grayscale(1) contrast(1.05);
+  }
+  .logo.dm-plain .lf-mono {
+    filter: grayscale(1) brightness(1.15);
+  }
+  .logo.dm-silhouette .lf-mono {
+    filter: brightness(0) invert(1);
+  }
+  @media (hover: hover) {
+    /* Scoped under .logo so these outrank the resting `.logo a::before` (opacity 0) rule. */
+    .logo .logo-hover:hover::before,
+    .logo .logo-hover.is-lit::before {
+      opacity: 1;
+      transition-duration: 0.65s;
+    }
+    .logo .logo-hover:hover .caption,
+    .logo .logo-hover.is-lit .caption {
+      color: var(--on-plate);
+    }
+  }
+  .logo .logo-hover:focus-visible::before {
+    opacity: 1;
+  }
+  .logo .logo-hover:focus-visible .caption {
+    color: var(--on-plate);
+  }
+  .caption {
+    transition: color 0.65s var(--ease-inout);
+  }
+
+  @media (max-width: 1023px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .wall {
+      --k: 0.72;
+      gap: var(--s-5);
+    }
+  }
+</style>

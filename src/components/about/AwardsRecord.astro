@@ -1,0 +1,241 @@
+---
+// The current season's record: a night panel whose timeline climbs event by event, beside the season photo.
+import { Icon } from 'astro-icon/components';
+import type { FtcSeason } from '../../data/awards';
+
+interface Props {
+  season: FtcSeason;
+}
+const { season } = Astro.props;
+// The record sits right under the lead band, so on a large desktop screen its photo is the first screen's largest
+// image: it loads at once and paints as it arrives, instead of waiting and fading in like the lazy photos.
+const photo = season.photos[0];
+---
+
+<section class="record-season" id={season.id} aria-labelledby={`${season.id}-title`}>
+  <div class="panel">
+    <h2 id={`${season.id}-title`}>{season.game}</h2>
+    <p class="meta">
+      <span class="years">{season.years}</span>
+      {season.robot && <span>{season.robot.name}</span>}
+    </p>
+
+    <ol class="record" role="list">
+      {
+        season.events.map((e) => (
+          <li class:list={{ peak: e.peak }}>
+            <span class="node" aria-hidden="true" />
+            <div class="what">
+              <ul class="titles" role="list">
+                {e.awards.map((a) => (
+                  <li>
+                    <h3>
+                      {a.title}
+                      {a.recipient && <span class="who"> ({a.recipient})</span>}
+                    </h3>
+                  </li>
+                ))}
+              </ul>
+              <p class="event">{e.name}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    {
+      season.robot && (
+        <a class="arrow-link on-night" href={season.robot.href}>
+          <span>Meet {season.robot.name}</span>
+          <span class="ring" aria-hidden="true">
+            <Icon name="ph:arrow-right" />
+          </span>
+        </a>
+      )
+    }
+  </div>
+  {
+    photo && (
+      <figure class="plate duo">
+        <img
+          src={photo.src}
+          alt={photo.alt}
+          width={photo.width}
+          height={photo.height}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+    )
+  }
+</section>
+
+<style>
+  .record-season {
+    --thread: color-mix(in srgb, var(--on-night) 28%, transparent);
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    min-height: 600px;
+  }
+  .panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-9) var(--gutter) var(--s-8) max(var(--gutter), calc((100vw - 1680px) / 2 + var(--gutter)));
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+  }
+  /* A dim sun rising behind the record, as in the world's night panels. */
+  .panel::before {
+    content: '';
+    position: absolute;
+    right: -30%;
+    bottom: -45%;
+    width: 90%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    pointer-events: none;
+  }
+  .panel > * {
+    position: relative;
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--on-night-2);
+  }
+  .years {
+    color: var(--sun);
+  }
+
+  .record {
+    display: grid;
+    gap: var(--s-6);
+    margin: var(--s-7) 0;
+  }
+  .record > li {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--s-4);
+    position: relative;
+  }
+  /* The line that threads the season together, event to event. */
+  .record > li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 26px;
+    bottom: calc(-1 * var(--s-6) + 3px);
+    width: 1px;
+    background: var(--thread);
+    transform-origin: top;
+  }
+  .node {
+    width: 21px;
+    height: 21px;
+    margin-top: 0.3rem;
+    border: 1px solid var(--sun);
+    border-radius: 50%;
+    background: var(--night);
+  }
+  /* The season's peak: a filled marker with a second ring around it. */
+  .peak .node {
+    background: var(--sun);
+    outline: 1px solid var(--thread);
+    outline-offset: 4px;
+  }
+  .titles {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+  }
+  h3 {
+    font-size: clamp(1.25rem, 1.1rem + 0.45vw, 1.5rem);
+    color: var(--sun);
+  }
+  .who {
+    font-weight: 400;
+    color: var(--on-night-2);
+  }
+  .event {
+    margin-top: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--on-night-2);
+  }
+  .peak .event {
+    color: var(--on-night);
+  }
+
+  .on-night {
+    color: var(--on-night);
+    margin-top: auto;
+    align-self: flex-start;
+  }
+  .on-night:hover :global(.ring) {
+    background: var(--sun);
+    color: var(--night);
+    border-color: var(--sun);
+  }
+  .on-night:focus-visible {
+    outline-color: var(--sun);
+  }
+
+  .plate {
+    min-height: 100%;
+  }
+  .plate img {
+    position: absolute;
+    inset: 0;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .record > li:not(:last-child)::after {
+        animation: awards-thread-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 45%;
+      }
+      @keyframes awards-thread-draw {
+        from {
+          transform: scaleY(0);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 899px) {
+    .record-season {
+      grid-template-columns: 1fr;
+    }
+    .panel {
+      padding: var(--s-8) var(--gutter);
+    }
+    .plate {
+      position: relative;
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

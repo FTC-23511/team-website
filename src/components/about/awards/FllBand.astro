@@ -1,0 +1,170 @@
+---
+// The quiet closing band: our FIRST LEGO League years, before FTC.
+import { fll } from '../../../data/awards';
+
+const seasons = [...new Set(fll.awards.map((a) => a.years))];
+---
+
+<section class="fll" id="fll" aria-labelledby="fll-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="fll-title">FIRST LEGO League</h2>
+      <p class="meta">
+        <span class="team">Team #{fll.team}</span>
+        <span>{seasons.join(', ')}</span>
+      </p>
+    </div>
+
+    <figure class="duo photo">
+      <img
+        src={fll.photo.src}
+        alt={fll.photo.alt}
+        width={fll.photo.width}
+        height={fll.photo.height}
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+
+    <ol class="awards" role="list">
+      {
+        fll.awards.map((a) => (
+          <li>
+            <h3>{a.title}</h3>
+            <p class="game">
+              <span class="years">{a.years}</span>
+              <span>{a.game}</span>
+            </p>
+            <p class="event">{a.event}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* Hairlines on both edges: in dark, paper-2 and the night footer are close in value. */
+  .fll {
+    background: var(--paper-2);
+    border-block: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas:
+      'head photo'
+      'awards awards';
+    gap: var(--s-7) var(--s-8);
+    align-items: end;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    grid-area: head;
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .team {
+    color: var(--gold-ink);
+  }
+  .photo {
+    grid-area: photo;
+    aspect-ratio: 1200 / 619;
+  }
+
+  .awards {
+    grid-area: awards;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .awards li {
+    padding: var(--s-5) var(--s-5) 0;
+    border-left: 1px solid var(--line);
+  }
+  .awards li:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  h3 {
+    font-size: var(--step-1);
+  }
+  .game,
+  .event {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+  .game {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-3);
+    margin-top: var(--s-3);
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .years {
+    color: var(--gold-ink);
+  }
+  .event {
+    margin-top: 0.2rem;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 1099px) {
+    .awards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: var(--s-6);
+    }
+    .awards li:nth-child(odd) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'head'
+        'photo'
+        'awards';
+      gap: var(--s-6);
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 479px) {
+    .awards {
+      grid-template-columns: 1fr;
+      row-gap: 0;
+    }
+    .awards li,
+    .awards li:nth-child(odd) {
+      padding: var(--s-4) 0;
+      border-left: 0;
+    }
+    .awards li + li {
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

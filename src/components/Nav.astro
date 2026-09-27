@@ -1,0 +1,643 @@
+---
+import { Icon } from 'astro-icon/components';
+import { nav, socials, cta, team, type NavLink } from '../data/site';
+
+// Paths are compared without a trailing slash, so `/classes` and `/classes/` are the same page.
+const norm = (href: string) => href.replace(/\/$/, '') || '/';
+const path = norm(Astro.url.pathname);
+const inSection = (href: string) => (norm(href) === '/' ? path === '/' : path === norm(href) || path.startsWith(`${norm(href)}/`));
+const isActive = (href: string, children?: NavLink[]) =>
+  inSection(href) || !!children?.some((c) => !c.external && inSection(c.href));
+// The exact page is "page"; a page inside a menu item's section (Class Policies under Classes) is "true".
+const current = (href: string) => (norm(href) === path ? 'page' : inSection(href) ? 'true' : undefined);
+const newTab = (label: string) => `${label} (opens in a new tab)`;
+---
+
+<div class="nav-sentinel" aria-hidden="true"></div>
+<header class="site-header" data-header>
+  <div class="bar">
+    <a class="brand" href="/" aria-label={`${team.name}, FTC Team #${team.number}, home`}>
+      <img class="logo" src="/brand/logo-name-white.png" alt="" width="101" height="52" />
+    </a>
+
+    <nav class="primary" aria-label="Primary">
+      <ul role="list">
+        {
+          nav.map((item, i) => (
+            <li class="item" data-dropdown={item.children ? '' : undefined}>
+              {item.children ? (
+                <>
+                  <button
+                    type="button"
+                    class:list={['top', { active: isActive(item.href, item.children) }]}
+                    aria-expanded="false"
+                    aria-controls={`menu-${i}`}
+                  >
+                    {item.label}
+                    <Icon name="ph:caret-down" class="caret" aria-hidden="true" />
+                  </button>
+                  <div class="panel" id={`menu-${i}`}>
+                    <ul role="list">
+                      {item.children.map((c) => (
+                        <li>
+                          <a
+                            href={c.href}
+                            {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}
+                            aria-current={!c.external && norm(c.href) === path ? 'page' : undefined}
+                          >
+                            <span class="panel-label">
+                              {c.label}
+                              {c.external && <Icon name="ph:arrow-up-right" class="ext" aria-hidden="true" />}
+                              {c.external && <span class="visually-hidden"> (opens in a new tab)</span>}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <a class:list={['top', { active: isActive(item.href) }]} href={item.href} aria-current={current(item.href)}>
+                  {item.label}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="tools">
+      <ul class="socials" role="list">
+        {
+          socials.map((s) => (
+            <li>
+              <a href={s.href} target="_blank" rel="noopener" aria-label={newTab(s.label)}>
+                <Icon name={s.icon} aria-hidden="true" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="cta" href={cta.sponsor.href}>
+        <span>{cta.sponsor.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+      <button type="button" class="menu-btn" data-menu-open aria-expanded="false" aria-controls="mobile-menu">
+        <span>Menu</span>
+        <Icon name="ph:list" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" data-menu data-lenis-prevent hidden>
+  <div class="mm-head">
+    <a class="brand" href="/" aria-label={`${team.name}, FTC Team #${team.number}, home`}>
+      <img class="logo" src="/brand/logo-name-white.png" alt="" width="101" height="52" />
+    </a>
+    <button type="button" class="menu-btn is-close" data-menu-close>
+      <span>Close</span>
+      <Icon name="ph:x" aria-hidden="true" />
+    </button>
+  </div>
+  <nav aria-label="Mobile">
+    <ul class="mm-list" role="list">
+      {
+        nav.map((item, i) => (
+          <li>
+            {item.children ? (
+              <>
+                <p class="mm-group" id={`mm-group-${i}`}>{item.label}</p>
+                <ul role="list" class="mm-sub" aria-labelledby={`mm-group-${i}`}>
+                  {item.children.map((c) => (
+                    <li>
+                      <a
+                        href={c.href}
+                        {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}
+                        aria-current={!c.external && norm(c.href) === path ? 'page' : undefined}
+                      >
+                        {c.label}
+                        {c.external && <Icon name="ph:arrow-up-right" class="mm-ext" aria-hidden="true" />}
+                        {c.external && <span class="visually-hidden"> (opens in a new tab)</span>}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <a class="mm-top" href={item.href} aria-current={current(item.href)}>
+                {item.label}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="mm-foot">
+    <a class="cta" href={cta.sponsor.href}>
+      <span>{cta.sponsor.label}</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+    <ul class="socials" role="list">
+      {
+        socials.map((s) => (
+          <li>
+            <a href={s.href} target="_blank" rel="noopener" aria-label={newTab(s.label)}>
+              <Icon name={s.icon} aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<style>
+  .nav-sentinel {
+    position: absolute;
+    top: 0;
+    height: 8px;
+    width: 1px;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    view-transition-name: site-header;
+    background: var(--paper);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur) var(--ease);
+  }
+  .site-header.is-scrolled {
+    border-bottom-color: var(--line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    height: var(--header-h);
+    padding-inline: var(--gutter);
+    max-width: 1680px;
+    margin-inline: auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+  .logo {
+    width: auto;
+    height: 52px;
+  }
+
+  .primary {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .primary > ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 0.1rem + 1.1vw, 1.75rem);
+    margin: 0;
+  }
+  .item {
+    position: relative;
+  }
+  .top {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: var(--header-h);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .top::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: currentColor;
+    transform: scale(0);
+    transition: transform var(--dur) var(--ease);
+  }
+  .top.active::after,
+  .top:hover::after,
+  .top[aria-expanded='true']::after {
+    transform: scale(1);
+  }
+  /* Forced colors drop backgrounds, so the dot is painted in the system text color. The new-tab arrows take their
+     link's system color, and the white logo keeps its own dark ground so the wordmark shows on a light theme. */
+  @media (forced-colors: active) {
+    .top::after {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+    .ext,
+    .mm-ext {
+      color: inherit;
+    }
+    .logo {
+      forced-color-adjust: none;
+      background: var(--paper);
+    }
+  }
+  .item[data-dropdown] .top::after {
+    margin-left: -8px;
+  }
+  .caret {
+    flex: none;
+    width: 11px;
+    height: 11px;
+    transition: transform var(--dur) var(--ease);
+  }
+  .top[aria-expanded='true'] .caret {
+    transform: rotate(180deg);
+  }
+
+  .panel {
+    position: absolute;
+    top: calc(var(--header-h) - 6px);
+    left: -1.25rem;
+    min-width: 14rem;
+    padding: var(--s-2);
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity var(--dur-quick) var(--ease),
+      transform var(--dur) var(--ease),
+      visibility 0s linear var(--dur-quick);
+  }
+  .item.open .panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity var(--dur-quick) var(--ease),
+      transform var(--dur) var(--ease),
+      visibility 0s;
+  }
+  .panel ul {
+    margin: 0;
+  }
+  .panel a {
+    display: block;
+    padding: var(--s-3) var(--s-4);
+    text-decoration: none;
+    transition: background-color var(--dur-quick) var(--ease);
+  }
+  .panel a:hover,
+  .panel a:focus-visible {
+    background: var(--paper-2);
+  }
+  .panel a[aria-current='page'] .panel-label {
+    text-decoration: underline;
+  }
+  .panel-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .ext {
+    width: 13px;
+    height: 13px;
+    color: var(--gold-ink);
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex: none;
+  }
+  .socials {
+    display: flex;
+    gap: 0.125rem;
+    margin: 0;
+  }
+  .socials a {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition:
+      color var(--dur-quick) var(--ease),
+      background-color var(--dur-quick) var(--ease);
+  }
+  .socials a:hover {
+    background: var(--paper-2);
+  }
+  .socials svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    height: 48px;
+    padding: 0 var(--s-3) 0 var(--s-4);
+    margin-left: var(--s-2);
+    background: var(--band);
+    color: var(--on-band);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-quick) var(--ease);
+  }
+  .cta .ring {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transition: transform var(--dur) var(--ease);
+  }
+  .cta .ring svg {
+    width: 13px;
+    height: 13px;
+  }
+  .cta:hover {
+    background: var(--sun);
+  }
+  .cta:hover .ring {
+    transform: translateX(3px);
+  }
+  .cta:active {
+    transform: translateY(1px);
+  }
+  .cta:focus-visible {
+    outline-color: var(--ink);
+  }
+
+  .menu-btn {
+    display: none;
+    align-items: center;
+    gap: var(--s-2);
+    height: 44px;
+    padding: 0 var(--s-3);
+    border: 1px solid var(--line-strong);
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .menu-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Keep the bar on one line: the socials yield first, then the menu takes over. The breakpoints are in em (1299px
+     and 1099px at the default 16px), so they move with a larger browser font size as the bar's text does. */
+  @media (max-width: 81.1875em) {
+    .tools .socials {
+      display: none;
+    }
+  }
+  @media (max-width: 68.6875em) {
+    .primary,
+    .tools .cta {
+      display: none;
+    }
+    .bar {
+      justify-content: space-between;
+    }
+    .menu-btn {
+      display: inline-flex;
+    }
+  }
+
+  /* Mobile menu: full-screen night sheet. */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    display: flex;
+    flex-direction: column;
+    background: var(--night);
+    color: var(--on-night);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-menu[hidden] {
+    display: none;
+  }
+  .mm-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    padding-inline: var(--gutter);
+    flex: none;
+  }
+  .mobile-menu .menu-btn {
+    display: inline-flex;
+    color: var(--on-night);
+    border-color: rgb(252 249 222 / 0.3);
+  }
+  .mm-list {
+    display: grid;
+    gap: var(--s-5);
+    padding: var(--s-5) var(--gutter) var(--s-7);
+    margin: 0;
+  }
+  .mm-top,
+  .mm-group {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--on-night);
+    line-height: 1.2;
+  }
+  .mm-group {
+    color: var(--sun);
+  }
+  .mm-sub {
+    display: grid;
+    gap: var(--s-1);
+    margin: var(--s-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mm-sub a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: var(--s-2) 0;
+    font-size: 1.125rem;
+    text-decoration: none;
+    color: var(--on-night);
+  }
+  /* The page you are on, marked as in the desktop panels. */
+  .mm-sub a[aria-current='page'],
+  .mm-top[aria-current] {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+  /* On the night sheet the focus ring is Sun, as on the other night panels. */
+  .mobile-menu :focus-visible {
+    outline-color: var(--sun);
+  }
+  .mobile-menu .cta:focus-visible {
+    outline-color: var(--ink);
+  }
+  .mm-ext {
+    width: 16px;
+    height: 16px;
+    color: var(--sun);
+  }
+  .mm-foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding: var(--s-5) var(--gutter) var(--s-6);
+    border-top: 1px solid rgb(252 249 222 / 0.15);
+  }
+  .mm-foot .cta {
+    margin: 0;
+  }
+  .mm-foot .socials a {
+    width: 44px;
+    height: 44px;
+    color: var(--on-night);
+  }
+  .mm-foot .socials a:hover {
+    background: rgb(252 249 222 / 0.08);
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const sentinel = document.querySelector('.nav-sentinel')!;
+  new IntersectionObserver(([e]) => header.classList.toggle('is-scrolled', !e.isIntersecting)).observe(sentinel);
+
+  // Dropdowns: click or hover to open, Escape or outside click to close.
+  const items = [...document.querySelectorAll<HTMLElement>('.primary [data-dropdown]')];
+  const closeAll = (except?: HTMLElement) =>
+    items.forEach((it) => {
+      if (it === except) return;
+      it.classList.remove('open');
+      it.querySelector('button')!.setAttribute('aria-expanded', 'false');
+    });
+  const setOpen = (it: HTMLElement, open: boolean) => {
+    if (open) closeAll(it);
+    it.classList.toggle('open', open);
+    it.querySelector('button')!.setAttribute('aria-expanded', String(open));
+  };
+  const canHover = matchMedia('(hover: hover)').matches;
+  items.forEach((it) => {
+    const btn = it.querySelector('button')!;
+    let t: number | undefined;
+    let hoverOpenedAt = 0;
+    btn.addEventListener('click', () => {
+      // A click right after hover opened the panel should not close it again.
+      if (performance.now() - hoverOpenedAt < 500) return;
+      setOpen(it, !it.classList.contains('open'));
+    });
+    if (canHover) {
+      it.addEventListener('pointerenter', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        clearTimeout(t);
+        if (!it.classList.contains('open')) hoverOpenedAt = performance.now();
+        setOpen(it, true);
+      });
+      it.addEventListener('pointerleave', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        t = window.setTimeout(() => setOpen(it, false), 160);
+      });
+    }
+    it.addEventListener('focusout', (e) => {
+      if (!it.contains(e.relatedTarget as Node)) setOpen(it, false);
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('.primary [data-dropdown]')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const open = items.find((it) => it.classList.contains('open'));
+    if (open) {
+      setOpen(open, false);
+      // The button is in the sticky header; without preventScroll the browser scrolls the page to "reveal" it.
+      open.querySelector('button')!.focus({ preventScroll: true });
+    }
+  });
+
+  // Mobile menu
+  const menu = document.querySelector<HTMLElement>('[data-menu]')!;
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-menu-close]')!;
+  // While the sheet is open, everything behind it is inert: focus and screen readers stay inside the menu.
+  const behind = ['.skip-link', '[data-header]', '#main', '.site-footer']
+    .map((sel) => document.querySelector<HTMLElement>(sel))
+    .filter((el): el is HTMLElement => !!el);
+  const setMenu = (open: boolean) => {
+    menu.hidden = !open;
+    openBtn.setAttribute('aria-expanded', String(open));
+    behind.forEach((el) => (el.inert = open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    const lenis = (window as unknown as { lenis?: { stop(): void; start(): void } }).lenis;
+    if (open) lenis?.stop();
+    else lenis?.start();
+    // If the window has widened past the phone layout, the Menu button is gone: focus returns to the home link.
+    const back = openBtn.getClientRects().length ? openBtn : document.querySelector<HTMLElement>('[data-header] .brand');
+    (open ? closeBtn : back)?.focus({ preventScroll: true });
+  };
+  openBtn.addEventListener('click', () => setMenu(true));
+  closeBtn.addEventListener('click', () => setMenu(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) setMenu(false);
+  });
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+  // A tablet turned to landscape (or a widened window) leaves the phone layout: close the sheet rather than leave the
+  // desktop page inert under it. Same breakpoint as the CSS above.
+  matchMedia('(max-width: 68.6875em)').addEventListener('change', (e) => {
+    if (!e.matches && !menu.hidden) setMenu(false);
+  });
+</script>

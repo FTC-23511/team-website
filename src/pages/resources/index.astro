@@ -1,0 +1,49 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import SolversLib from '../../components/resources/SolversLib.astro';
+import ResourceIndex from '../../components/resources/ResourceIndex.astro';
+import Support from '../../components/resources/Support.astro';
+import { openSource } from '../../data/resources';
+
+const heads = [openSource.openAlliance, openSource.github];
+---
+
+<Base
+  title="Resources | Seattle Solvers"
+  description="Open resources from Seattle Solvers, FTC Team #23511: SolversLib, our FTC programming library, and our robot CAD, portfolios, robot code, and videos."
+>
+  <PageHeader title="Resources" lede={openSource.statement}>
+    <ul class="heads" role="list">
+      {
+        heads.map((l) => (
+          <li>
+            <a class="arrow-link" href={l.href} target="_blank" rel="noopener">
+              <span>
+                {l.label}
+                <span class="visually-hidden"> (opens in a new tab)</span>
+              </span>
+              <span class="ring" aria-hidden="true">
+                <Icon name="ph:arrow-up-right" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </PageHeader>
+
+  <SolversLib />
+  <ResourceIndex />
+  <Support />
+</Base>
+
+<style>
+  .heads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-6);
+    margin: var(--s-5) 0 0;
+  }
+</style>

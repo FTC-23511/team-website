@@ -1,0 +1,154 @@
+---
+// Sponsorship tiers and their full benefits, from "Sponsorship Package - FTC 23511, 2026.pdf" (page 5).
+// Wide screens get the comparison table; narrow screens get one rung per tier. Each tier adds to the one before.
+import { Icon } from 'astro-icon/components';
+import BenefitsTable from './BenefitsTable.astro';
+import TierLadder from './TierLadder.astro';
+import { benefitNotes, emailUs, sponsorshipPackage } from '../../data/sponsors';
+---
+
+<section class="tiers" id="tiers" aria-labelledby="tiers-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="tiers-title">Sponsorship tiers</h2>
+      <p class="sub">Every tier includes everything in the tier before it.</p>
+    </div>
+
+    <div class="wide">
+      <BenefitsTable />
+    </div>
+    <div class="narrow">
+      <TierLadder />
+    </div>
+
+    <div class="foot">
+      <ol class="notes" role="list" aria-label="Notes">
+        <li id="benefit-note-1">
+          <span class="mark" aria-hidden="true">{benefitNotes.onRequest.mark}</span>
+          <span><span class="visually-hidden">Note 1: </span>{benefitNotes.onRequest.text}</span>
+        </li>
+        <li id="benefit-note-2">
+          <span class="mark" aria-hidden="true">{benefitNotes.customizable.mark}</span>
+          <span>
+            <span class="visually-hidden">Note 2: </span>Customizable content is created by the team by default.{' '}
+            <a href={emailUs.href}>{emailUs.label}</a> to make changes to it!
+          </span>
+        </li>
+      </ol>
+      <p class="package">
+        <a class="arrow-link" href={sponsorshipPackage.href} target="_blank" rel="noopener">
+          <span>{sponsorshipPackage.label}</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+          <span class="visually-hidden">(opens in a new tab)</span>
+        </a>
+        <span class="meta">{sponsorshipPackage.meta}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tiers {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  /* The sub starts on the 34% rail, right above the first tier column. The heading's track still grows to its
+     longest word, so larger or more widely spaced text pushes the sub along instead of printing over it. */
+  .head {
+    display: grid;
+    grid-template-columns: minmax(min-content, calc(34% - var(--s-7))) minmax(0, 1fr);
+    gap: var(--s-4) var(--s-7);
+    align-items: end;
+    margin-bottom: var(--s-7);
+  }
+  /* The vw cap binds only below about 370px, so the longest word, "SPONSORSHIP", still fits a phone's width there,
+     even with wider letter spacing. */
+  h2 {
+    font-size: min(clamp(2.25rem, 1.2rem + 2vw, 3rem), 9.7vw);
+  }
+  .sub {
+    max-width: 44ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .narrow {
+    display: none;
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--s-5) var(--s-7);
+    margin-top: var(--s-6);
+  }
+  .notes {
+    display: grid;
+    gap: var(--s-2);
+    margin: 0;
+    max-width: 62ch;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .notes li {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+  }
+  .notes li:target {
+    color: var(--ink);
+  }
+  .mark {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--gold-ink);
+  }
+  .notes a {
+    color: var(--ink);
+  }
+  .notes a:hover {
+    color: var(--gold-ink);
+  }
+  .package {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 var(--s-4);
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 1099px) {
+    .head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 899px) {
+    .wide {
+      display: none;
+    }
+    .narrow {
+      display: block;
+      max-width: 40rem;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .head {
+      margin-bottom: var(--s-6);
+    }
+  }
+</style>

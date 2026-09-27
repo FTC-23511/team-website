@@ -1,0 +1,102 @@
+---
+// What changed between two versions of a robot, part by part, strictly as the team's own write-up describes it.
+import type { Revision } from '../../data/robots';
+
+interface Props {
+  revisions: Revision[];
+  from: string;
+  to: string;
+  /** The caption's id, so a scrolling wrapper can take the caption as its name. */
+  captionId?: string;
+}
+const { revisions, from, to, captionId } = Astro.props;
+---
+
+<table class="rev">
+  <caption id={captionId}>What changed from {from} to {to}</caption>
+  <thead>
+    <tr>
+      <th scope="col">Part</th>
+      <th scope="col">{from}</th>
+      <th scope="col" class="now">{to}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      revisions.map((r) => (
+        <tr>
+          <th scope="row">{r.part}</th>
+          <td class="was">{r.before}</td>
+          <td class="now">{r.after}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .rev {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  caption {
+    padding-bottom: var(--s-3);
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  thead th {
+    padding: var(--s-2) var(--s-4) var(--s-2) 0;
+    border-bottom: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  thead th.now {
+    color: var(--gold-ink);
+  }
+  tbody th,
+  td {
+    padding: var(--s-3) var(--s-4) var(--s-3) 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  tbody th {
+    width: 22%;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .was {
+    width: 39%;
+    color: var(--ink-3);
+  }
+  td.now {
+    color: var(--ink);
+  }
+
+  @media (max-width: 479px) {
+    tbody th,
+    td {
+      font-size: 0.875rem;
+      padding-right: var(--s-3);
+    }
+  }
+  /* The narrowest phones: tighter gutters between the columns keep the table inside its text column. */
+  @media (max-width: 359px) {
+    thead th,
+    tbody th,
+    td {
+      padding-right: var(--s-2);
+    }
+  }
+</style>

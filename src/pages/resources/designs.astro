@@ -1,0 +1,49 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import DesignSeason from '../../components/resources/DesignSeason.astro';
+import MoreResources from '../../components/resources/MoreResources.astro';
+import { designSeasons, openSource, partUsages } from '../../data/resources';
+---
+
+<Base
+  title="Designs | Seattle Solvers"
+  description="The public Onshape CAD of Seattle Solvers, FTC Team #23511: Cypher, the Solvers Shooter, electronic cases, Riptide, the Solvers Claw, and Octonaut."
+>
+  <PageHeader
+    title="Designs"
+    lede="Every robot and mechanism we design is public in Onshape, free for any team to study, copy, and build on."
+  >
+    <p class="usage">Other teams have used parts from our CAD <strong>{partUsages}</strong> times.</p>
+    <a class="arrow-link" href={openSource.openAlliance.href} target="_blank" rel="noopener">
+      <span>Our Open Alliance page<span class="visually-hidden"> (opens in a new tab)</span></span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+    </a>
+  </PageHeader>
+
+  {designSeasons.map((s, i) => <DesignSeason season={s} first={i === 0} />)}
+
+  <MoreResources current="/resources/designs/" />
+</Base>
+
+<style>
+  .usage {
+    margin-top: var(--s-4);
+    max-width: 52ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .usage strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .arrow-link {
+    margin-top: var(--s-5);
+  }
+</style>

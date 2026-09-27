@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ReachReadout from '../../components/impact/ReachReadout.astro';
+import ImpactPrograms from '../../components/impact/ImpactPrograms.astro';
+import Testimonials from '../../components/impact/Testimonials.astro';
+import RiseSchool from '../../components/impact/RiseSchool.astro';
+import EventsLog from '../../components/impact/EventsLog.astro';
+import { header } from '../../data/impact';
+---
+
+<Base
+  title="Outreach | Seattle Solvers"
+  description="How Seattle Solvers, FTC Team #23511, shares STEM: LEGO robotics classes, open-source engineering, a school pilot in India, and community events."
+>
+  <PageHeader title={header.title} lede={header.lede} />
+  <ReachReadout />
+  <ImpactPrograms />
+  <Testimonials />
+  <RiseSchool />
+  <EventsLog />
+</Base>

@@ -1,0 +1,29 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import MissionBand from '../../components/about/team/MissionBand.astro';
+import Roster from '../../components/about/team/Roster.astro';
+import { students, alumni, mentors, coaches, studentLed } from '../../data/team';
+import { cta } from '../../data/site';
+---
+
+<Base
+  title="Meet the Team | Seattle Solvers"
+  description="Meet the Seattle Solvers, FTC Team #23511: the students, alumni, mentors, and coach of a student-led robotics team from across the Greater Seattle Area."
+>
+  <PageHeader title="Meet the Team" />
+  <MissionBand />
+  <Roster id="students" title="Students" people={students} eager={3}>
+    <Fragment slot="note">
+      <p>{studentLed}</p>
+      <a class="arrow-link" href={cta.sponsor.href}>
+        <span>{cta.sponsor.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </Fragment>
+  </Roster>
+  <Roster id="alumni" title="Alumni" people={alumni} />
+  <Roster id="mentors" title="Mentors" people={mentors} />
+  <Roster id="coach" title={coaches.length > 1 ? 'Coaches' : 'Coach'} people={coaches} />
+</Base>

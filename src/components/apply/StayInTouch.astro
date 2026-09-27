@@ -1,0 +1,154 @@
+---
+// Staying in touch until applications open: a short switchboard of the team's channels, each with what it
+// is for (Google Site, Contact Us page) and one action.
+import { Icon } from 'astro-icon/components';
+import CopyButton from '../CopyButton.astro';
+import { emails, recruitingOpen, socials } from '../../data/site';
+
+const discord = socials.find((s) => s.label === 'Discord')!;
+const instagram = socials.find((s) => s.label === 'Instagram')!;
+---
+
+<section class="touch" aria-labelledby="touch-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="touch-title">Stay in touch</h2>
+      <p class="sub">
+        {recruitingOpen ? 'Questions about applying? Reach us here.' : 'Until applications open, this is where to find us.'}
+      </p>
+    </div>
+
+    <ul class="lines" role="list">
+      <li class="line">
+        <h3>
+          <Icon name={discord.icon} aria-hidden="true" />
+          Discord
+        </h3>
+        <p>Our public server is where we are most active, for quick questions and conversations.</p>
+        <a class="arrow-link" href={discord.href} target="_blank" rel="noopener">
+          <span>Join our Discord<span class="visually-hidden"> (opens in a new tab)</span></span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+        </a>
+      </li>
+      <li class="line">
+        <h3>
+          <Icon name="ph:envelope-simple" aria-hidden="true" />
+          Email
+        </h3>
+        <p>
+          For anything longer, write to <a class="addr" href={`mailto:${emails.team}`}>{emails.team}</a>. We prefer email to
+          social media messages.
+        </p>
+        <CopyButton text={emails.team} what="email address" />
+      </li>
+      <li class="line">
+        <h3>
+          <Icon name={instagram.icon} aria-hidden="true" />
+          Instagram
+        </h3>
+        <p>Follow along with the team through the season.</p>
+        <a class="arrow-link" href={instagram.href} target="_blank" rel="noopener">
+          <span>@ftc23511<span class="visually-hidden"> on Instagram (opens in a new tab)</span></span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .touch {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: calc(34% - var(--s-7)) minmax(0, 1fr);
+    gap: var(--s-7);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 30ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  /* A switchboard: the channel, what it is for, and the one thing to do. The rows share the list's columns
+     (subgrid), so the action column fits its longest label and every row lines up. */
+  .lines {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) auto;
+    column-gap: var(--s-5);
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .line {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-size: 1.25rem;
+  }
+  h3 :global(svg) {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    color: var(--gold-ink);
+  }
+  .line p {
+    max-width: 48ch;
+    color: var(--ink-2);
+  }
+  .addr {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .addr:hover {
+    color: var(--gold-ink);
+  }
+  /* Each row's one action, on the right edge. The copy button's root belongs to CopyButton, hence :global. */
+  .line > .arrow-link,
+  .line > :global(.copy-wrap) {
+    justify-self: end;
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+  }
+  @media (max-width: 767px) {
+    .lines {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .line {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-2);
+      align-items: start;
+    }
+    .line > .arrow-link,
+    .line > :global(.copy-wrap) {
+      justify-self: start;
+      margin-top: var(--s-2);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+</style>

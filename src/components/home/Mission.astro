@@ -1,0 +1,324 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { Icon } from 'astro-icon/components';
+import { stats } from '../../data/home';
+
+// The section's backdrop: the team and mentors at their booth. Falls back to the night ground until the
+// photo is in public/images/home/team-booth.webp.
+const photo = '/images/home/team-booth.webp';
+const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public', photo));
+---
+
+<section class:list={['mission', { 'has-photo': hasPhoto }]} aria-labelledby="mission-title">
+  {
+    hasPhoto && (
+      <img
+        class="backdrop"
+        src={photo}
+        alt="The Seattle Solvers team and mentors at their competition booth, under the team banner"
+        loading="lazy"
+        decoding="async"
+        width="1706"
+        height="1274"
+      />
+    )
+  }
+  <div class="inner">
+    <div class="words">
+      <h2 id="mission-title">Who we are</h2>
+      <p class="lede">
+        We are the Seattle Solvers, a nonprofit team of students from middle and high schools across the area, united by our shared passion
+        for robotics.
+      </p>
+      <p class="body">
+        We do more than compete. Our goal is to spread STEM throughout our community and beyond, making it accessible to
+        all.
+      </p>
+      <blockquote class="purpose">
+        <p>
+          Our mission: to learn new skills, promote STEM in our communities through programs involving engineering and
+          other technical skills, and most importantly, have fun.
+        </p>
+      </blockquote>
+      <a class="btn btn-outline" href="/about/team/">
+        <span>About us</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+
+    <dl class="stats">
+      {
+        stats.map((s) => (
+          <div class="stat">
+            <dt class="label">{s.label}</dt>
+            <dd class="value">{s.value}{s.suffix && <><span class="ord">{s.suffix}</span><span class="visually-hidden"> place</span></>}</dd>
+            <dd class="note">{s.note}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .mission {
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* Without the photo, a dim sun rises under the stats, the night panel's signature. */
+  .mission:not(.has-photo)::before {
+    content: '';
+    position: absolute;
+    right: -12%;
+    bottom: -55%;
+    width: min(70vw, 900px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #211e11;
+    z-index: -1;
+  }
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 55% 45%;
+    /* Lighter than the site duotone: about half the photo's own color comes through, so the panel
+       reads warm and alive rather than muddy. */
+    filter: grayscale(0.5) contrast(1.04) brightness(1.1);
+    z-index: -2;
+  }
+  /* Desktop: a slight zoom anchored at the left edge moves the photo right, so the team banner
+     (46% across the photo) sits at the center of the panel. */
+  @media (min-width: 900px) {
+    .backdrop {
+      width: 108%;
+      object-position: 0% 45%;
+    }
+  }
+  /* The site's Duo Light tint at 40%, held: a backdrop has no hover to return to color.
+     Painted before the shade (same layer, earlier in the tree), so it tints the photo, not the shade. */
+  .has-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--duo-light);
+    mix-blend-mode: multiply;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  /* Shade the photo where words sit: from the left for the copy, from the bottom for the readouts. */
+  .has-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* Held at 0.8 or more all the way across the words column, so every line keeps 4.5:1 over the brightest part
+       of the photo (the team banner), then eased off toward the faces at the right. */
+    background:
+      linear-gradient(90deg, rgb(11 10 6 / 0.9) 0%, rgb(11 10 6 / 0.82) 44%, rgb(11 10 6 / 0.24) 60%, rgb(11 10 6 / 0.06) 72%),
+      linear-gradient(0deg, rgb(11 10 6 / 0.92) 0%, rgb(11 10 6 / 0.55) 24%, rgb(11 10 6 / 0) 48%);
+  }
+  /* Laptops: the words run past half the width, so the shade holds at 0.84 out to the words column's right edge
+     (the gutter plus 34rem) or to 54%, whichever is further, and only then eases off toward the faces. */
+  @media (min-width: 900px) and (max-width: 1279px) {
+    .has-photo::after {
+      --hold: max(54%, calc(var(--gutter) + 34rem));
+      background:
+        linear-gradient(90deg, rgb(11 10 6 / 0.9) 0%, rgb(11 10 6 / 0.84) var(--hold), rgb(11 10 6 / 0.26) calc(var(--hold) + 14%), rgb(11 10 6 / 0.06) calc(var(--hold) + 26%)),
+        linear-gradient(0deg, rgb(11 10 6 / 0.92) 0%, rgb(11 10 6 / 0.55) 24%, rgb(11 10 6 / 0) 48%);
+    }
+  }
+  /* Over the photo the body text is Ink 2, as the ledes are: Ink 3 is too faint against the banner. */
+  .has-photo .body {
+    color: var(--ink-2);
+  }
+
+  .inner {
+    display: grid;
+    gap: var(--s-8);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter) var(--s-7);
+  }
+  /* Photo: words over the shaded left, readouts in a row along the bottom. */
+  .has-photo .inner {
+    min-height: min(92vh, 900px);
+    align-content: space-between;
+  }
+  /* No photo yet: words left, readouts as a 2 by 2 panel on the right. */
+  .mission:not(.has-photo) .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    padding-bottom: var(--s-9);
+  }
+  .mission:not(.has-photo) .stats {
+    --cols: 2;
+    --cell-inset: var(--s-6);
+  }
+  .mission:not(.has-photo) .stat {
+    padding: var(--s-6) var(--s-5) var(--s-6) 0;
+    border-left: 0;
+    border-bottom: 1px solid rgb(252 249 222 / 0.24);
+  }
+  .mission:not(.has-photo) .stat:nth-child(even) {
+    padding-left: var(--s-6);
+    border-left: 1px solid rgb(252 249 222 / 0.24);
+  }
+  .words {
+    max-width: 38rem;
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .lede {
+    margin-top: var(--s-5);
+    max-width: 38ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .body {
+    margin-top: var(--s-4);
+    max-width: 52ch;
+    color: var(--on-night-2);
+  }
+  .purpose {
+    margin: var(--s-6) 0 0;
+    padding-left: var(--s-5);
+    border-left: 1px solid var(--sun);
+    max-width: 48ch;
+  }
+  .purpose p {
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--sun);
+  }
+  .btn {
+    margin-top: var(--s-7);
+    color: var(--on-night);
+  }
+  .btn:focus-visible {
+    outline-color: var(--sun);
+  }
+
+  /* Instrument readouts along the bottom: the number is the interface, the label names the dial.
+     --cols is the row's column count and --cell-inset the widest left padding a cell in it has; the numerals
+     are sized from both (see .value). */
+  .stats {
+    --cols: 4;
+    --cell-inset: var(--s-5);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid rgb(252 249 222 / 0.24);
+    container-type: inline-size;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-5) var(--s-5) var(--s-3) var(--s-5);
+    border-left: 1px solid rgb(252 249 222 / 0.24);
+  }
+  .stat:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .label {
+    order: 2;
+    margin-top: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  /* All four numerals share one size: the numeral token, capped from the row's width so the widest figure,
+     "96.9%" at about 3.66em, ends inside its cell. They never wrap. */
+  .value {
+    --numeral: clamp(2.75rem, 1.6rem + 3vw, 5rem);
+    order: 1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: min(var(--numeral), calc((100cqi / var(--cols) - var(--cell-inset)) / 3.7));
+    font-weight: 500;
+    line-height: 0.9;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  /* A placing's ordinal ending, set small at the numeral's top, as on the Awards page's Worlds lead. */
+  .ord {
+    font-size: 0.3em;
+    vertical-align: top;
+    margin-left: 0.08em;
+    letter-spacing: 0.02em;
+  }
+  .note {
+    order: 3;
+    margin: 0.2rem 0 0;
+    font-size: 0.875rem;
+    color: var(--on-night-2);
+  }
+
+  @media (max-width: 1023px) {
+    .mission:not(.has-photo) .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 899px) {
+    .stats {
+      --cols: 2;
+    }
+    .stat:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .stat:nth-child(n + 3) {
+      border-top: 1px solid rgb(252 249 222 / 0.24);
+    }
+    .has-photo::after {
+      background: linear-gradient(180deg, rgb(11 10 6 / 0.9) 0%, rgb(11 10 6 / 0.82) 60%, rgb(11 10 6 / 0.9) 100%);
+    }
+  }
+  @media (max-width: 479px) {
+    .inner {
+      padding-block: var(--s-8) var(--s-6);
+    }
+    /* Two readouts share a phone's width from 360px, on a smaller numeral token. The cap on .value still keeps
+       "96.9%" inside its cell. */
+    .stats {
+      --cell-inset: var(--s-4);
+    }
+    .value {
+      --numeral: clamp(2.25rem, 9vw, 5rem);
+    }
+    .stat {
+      padding-right: var(--s-3);
+    }
+    .stat:nth-child(even) {
+      padding-left: var(--s-4);
+    }
+  }
+  /* Below 360px the readouts stack one per row, so the numerals keep the token size and "96.9%" still fits
+     when a reader widens the letter spacing. */
+  @media (max-width: 359px) {
+    .has-photo .stats {
+      --cols: 1;
+      --cell-inset: 0px;
+    }
+    .has-photo .stat:nth-child(even) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .has-photo .stat + .stat {
+      border-top: 1px solid rgb(252 249 222 / 0.24);
+    }
+  }
+</style>
