@@ -66,6 +66,7 @@ export type Stop =
       when: string;
       title: string;
       events: { date: string; name: string; place: string; type?: string }[];
+      photos?: Img[];
     };
 
 export type Season = {
@@ -148,8 +149,8 @@ export const seasons: Season[] = [
         { label: 'Chassis', value: 'Aluminum and carbon fiber', note: 'Carbon fiber bellypan, aluminum plates by Fabworks' },
         { label: 'Turret', value: 'Up to 300°' },
         { label: 'Launcher', value: 'Adjustable hood' },
-        // Worlds and Washington portfolios: a Limelight first, then an Arducam, then Pinpoint odometry.
-        { label: 'Localization', value: 'Pinpoint odometry', note: 'After a Limelight, then an Arducam' },
+        // The team (2026-09-27): Pinpoint odometry on v1, an OctoQuad in the upgrade Cypher took to Worlds.
+        { label: 'Localization', value: 'Pinpoint, then OctoQuad', note: 'OctoQuad came with the Worlds upgrade' },
         { label: 'Code', value: 'Java', note: 'Built on SolversLib' },
       ],
     },
@@ -165,7 +166,7 @@ export const seasons: Season[] = [
         title: 'Cypher v1',
         paras: [
           [
-            'Cypher was our first robot of the season. It had a pivoting intake with compliant and vectored wheels, a turret with 270° of rotation, and an adjustable launcher. A ramp carried the balls from the intake to the launcher, and a Limelight camera handled relocalization.',
+            'Cypher was our first robot of the season. It had a pivoting intake with compliant and vectored wheels, a turret with 270° of rotation, and an adjustable launcher. A ramp carried the balls from the intake to the launcher, Pinpoint odometry tracked its position, and a Limelight camera handled relocalization.',
           ],
           [
             'Like last year, we built a custom chassis, now with swerve: pocketed aluminum side plates on a carbon fiber bellypan. Thanks to ',
@@ -190,6 +191,21 @@ export const seasons: Season[] = [
           { date: 'Oct 18', name: 'Rookie Rumble', place: 'Bothell', type: 'Scrimmage' },
           { date: 'Nov 2', name: 'Brattain League Meet 1', place: 'Redmond' },
           { date: 'Nov 23', name: 'Brattain League Meet 2', place: 'Redmond' },
+        ],
+        // The team's own photos: the first is dated November 23, 2025 (League Meet 2); the second is the same gym.
+        photos: [
+          {
+            src: '/images/robots/league-meet-team.webp',
+            alt: 'The Seattle Solvers in their black and yellow jackets around Cypher, in a gym with green padding on the wall',
+            width: 1000,
+            height: 751,
+          },
+          {
+            src: '/images/robots/league-team-coaches.webp',
+            alt: 'The team and two coaches gathered around Cypher, one student holding the robot up in front of them',
+            width: 1000,
+            height: 786,
+          },
         ],
       },
       {
@@ -251,7 +267,7 @@ export const seasons: Season[] = [
             'It traded swerve for a simpler mecanum drivetrain on a single HTD3 belt, and added a spindexer that sorts balls only when it needs to, so rapid fire keeps its speed the rest of the time. A power take-off lets a drive motor lift the whole robot on linear rails to park, and the launcher gained four counterrollers and 96\u00a0mm steel ring flywheels for accuracy from the far zone.',
           ],
           [
-            'In the end, Cypher was the robot we played in Houston. Both robots are in ',
+            'In the end, Cypher was the robot we played in Houston, upgraded for Worlds with an OctoQuad for localization. Both robots are in ',
             { text: 'our Worlds portfolio', href: 'https://canva.link/23511worlds2026port' },
             '.',
           ],
@@ -287,6 +303,13 @@ export const seasons: Season[] = [
         // Cypher played Worlds (the team, 2026-09-27). Its sign is red here because a robot carries its alliance's color
         // match by match.
         photos: [
+          {
+            src: '/images/robots/worlds-cypher-field2.webp',
+            alt: 'Cypher up close on Lovelace Field 2 in Houston, a blue 23511 alliance sign on its Voronoi-cut side plate and a purple ball in its turret',
+            width: 1600,
+            height: 1067,
+            focus: '40% 55%',
+          },
           {
             src: '/images/robots/worlds-field.webp',
             alt: 'Cypher, with a red 23511 alliance sign and its green roller intake, on Lovelace Field 2 at the FIRST World Championship, green and purple balls on the tiles, and an announcer and a volunteer behind the wall',
@@ -333,11 +356,11 @@ export const seasons: Season[] = [
   {
     id: 'into-the-deep',
     slug: 'into-the-deep-2024-25',
-    game: 'Into the Deep',
+    game: 'INTO THE DEEP',
     years: '2024-25',
     lede: 'Riptide was our first robot on a fully aluminum chassis. Across two versions it won the Innovate and Think Awards, then the Design Award, 2nd Place, at the Washington State Championship.',
     description:
-      'Riptide, the Into the Deep 2024-25 robot of Seattle Solvers, FTC Team #23511, on our first fully aluminum chassis. It won the Innovate and Think Awards.',
+      'Riptide, the INTO THE DEEP 2024-25 robot of Seattle Solvers, FTC Team #23511, on our first fully aluminum chassis. It won the Innovate and Think Awards.',
     robot: {
       name: 'Riptide',
       // Designs page, "Riptide", minus its level 3 ascent: the robot page says that was not working by States.
@@ -505,7 +528,7 @@ export const seasons: Season[] = [
       when: 'Offseason 2025',
       paras: [
         [
-          'Octonaut is our robot for the offseason before DECODE, built for Into the Deep gameplay. It runs an Octocanum drivetrain, also called a butterfly drive: eight wheels that toggle between standard wheels and omnidirectional mecanum wheels, a design attempted by fewer than a hundred teams over the years.',
+          'Octonaut is our robot for the offseason before DECODE, built for INTO THE DEEP gameplay. It runs an Octocanum drivetrain, also called a butterfly drive: eight wheels that toggle between standard wheels and omnidirectional mecanum wheels, a design attempted by fewer than a hundred teams over the years.',
         ],
         [
           'Carbon fiber plates save weight, and a power take-off for the level 3 ascent shares its servos with the Octocanum pods.',

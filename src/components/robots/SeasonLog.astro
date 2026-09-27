@@ -27,7 +27,7 @@ const titleOf = (s: Stop) => (s.kind === 'robot' ? s.title : s.kind === 'event' 
 // 768px up the photos' column is about three quarters of the page.
 const gallerySizes = (j: number, n: number) => {
   const spans = j === 0 || (j === n - 1 && n % 2 === 0);
-  const wide = j === 0 ? 75 : Math.round(75 / Math.min(n - 1, 3));
+  const wide = j === 0 ? 75 : Math.round(75 / Math.min(n - 1, 4));
   return `(max-width: 767px) ${spans ? 88 : 44}vw, ${wide}vw`;
 };
 ---
@@ -109,7 +109,7 @@ const gallerySizes = (j: number, n: number) => {
               )}
 
               {stop.kind === 'event' && !quiet && (
-                <div class:list={['rest', 'event-rest', { 'has-figure': stop.photos?.length === 1 }]}>
+                <div class="rest event-rest">
                   <div class="text">
                     {stop.awards.length > 0 && (
                       <ul class="results" role="list">
@@ -153,7 +153,7 @@ const gallerySizes = (j: number, n: number) => {
                     </figure>
                   )}
                   {stop.photos && stop.photos.length > 1 && (
-                    <div class="gallery" style={`--rest: ${Math.min(stop.photos.length - 1, 3)}`}>
+                    <div class="gallery" style={`--rest: ${Math.min(stop.photos.length - 1, 4)}`}>
                       {stop.photos.map((p, j, all) => (
                         <figure class="duo">
                           <img
@@ -188,6 +188,23 @@ const gallerySizes = (j: number, n: number) => {
                       </li>
                     ))}
                   </ul>
+                  {stop.photos && (
+                    <div class="snaps">
+                      {stop.photos.map((p) => (
+                        <figure class="duo">
+                          <img
+                            src={p.src}
+                            alt={p.alt}
+                            width={p.width}
+                            height={p.height}
+                            loading="lazy"
+                            decoding="async"
+                            style={p.focus ? `object-position: ${p.focus}` : undefined}
+                          />
+                        </figure>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </li>
@@ -384,13 +401,7 @@ const gallerySizes = (j: number, n: number) => {
     width: min(100%, 22rem);
   }
 
-  /* Events: results in Sun, one per line, and a photo when the event has one. */
-  .event-rest.has-figure {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: var(--s-7);
-    align-items: start;
-  }
+  /* Events: results in Sun, one per line, and a photo when the event has one, directly under them. */
   .results {
     display: grid;
     gap: 0.35rem;
@@ -416,11 +427,22 @@ const gallerySizes = (j: number, n: number) => {
     gap: 0 var(--s-5);
     margin: 0;
   }
-  /* One photo beside a short list of results: kept small so it sits with them instead of towering. */
+  /* One photo under its results, at its own shape: up to 24rem tall, and never wider than 40rem. */
   .photo {
-    justify-self: start;
-    width: min(100%, calc(15rem * var(--ar)));
-    max-height: 15rem;
+    margin-top: var(--s-5);
+    width: min(100%, 40rem, calc(24rem * var(--ar)));
+  }
+
+  /* League play: the team's photos from those meets, side by side under the list. */
+  .snaps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3);
+    max-width: 44rem;
+    margin-top: var(--s-5);
+  }
+  .snaps figure {
+    aspect-ratio: 4 / 3;
   }
 
   /* A lead photo across the top, the rest sharing the row beneath it evenly. */
@@ -492,8 +514,7 @@ const gallerySizes = (j: number, n: number) => {
       grid-template-columns: 1fr;
     }
     /* minmax(0, ...) so a wide table scrolls in its frame instead of stretching the column past the screen. */
-    .robot-rest.has-figure,
-    .event-rest.has-figure {
+    .robot-rest.has-figure {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--s-5);
     }

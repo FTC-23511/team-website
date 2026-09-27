@@ -1,5 +1,5 @@
 ---
-// The current season's record: a night panel whose timeline climbs event by event, beside the season photo.
+// The current season's record: a night panel whose timeline climbs event by event, beside the season's photos.
 import { Icon } from 'astro-icon/components';
 import type { FtcSeason } from '../../data/awards';
 
@@ -7,9 +7,10 @@ interface Props {
   season: FtcSeason;
 }
 const { season } = Astro.props;
-// The record sits right under the lead band, so on a large desktop screen its photo is the first screen's largest
-// image: it loads at once and paints as it arrives, instead of waiting and fading in like the lazy photos.
-const photo = season.photos[0];
+// The record sits right under the lead band, so on a large desktop screen its first photo is the first screen's largest
+// image: it loads at once and paints as it arrives, instead of waiting and fading in like the lazy photos. A second
+// photo stacks under it.
+const photos = season.photos.slice(0, 2);
 ---
 
 <section class="record-season" id={season.id} aria-labelledby={`${season.id}-title`}>
@@ -55,18 +56,22 @@ const photo = season.photos[0];
     }
   </div>
   {
-    photo && (
-      <figure class="plate duo">
-        <img
-          src={photo.src}
-          alt={photo.alt}
-          width={photo.width}
-          height={photo.height}
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-        />
-      </figure>
+    photos.length > 0 && (
+      <div class="plates" style={`--n: ${photos.length}`}>
+        {photos.map((p, i) => (
+          <figure class="plate duo">
+            <img
+              src={p.src}
+              alt={p.alt}
+              width={p.width}
+              height={p.height}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : undefined}
+              decoding="async"
+            />
+          </figure>
+        ))}
+      </div>
     )
   }
 </section>
@@ -200,8 +205,14 @@ const photo = season.photos[0];
     outline-color: var(--sun);
   }
 
+  .plates {
+    display: grid;
+    grid-template-rows: repeat(var(--n, 1), minmax(0, 1fr));
+    gap: 4px;
+  }
   .plate {
-    min-height: 100%;
+    position: relative;
+    min-height: 0;
   }
   .plate img {
     position: absolute;
@@ -233,8 +244,10 @@ const photo = season.photos[0];
     .panel {
       padding: var(--s-8) var(--gutter);
     }
+    .plates {
+      grid-template-rows: none;
+    }
     .plate {
-      position: relative;
       aspect-ratio: 4 / 3;
     }
   }
