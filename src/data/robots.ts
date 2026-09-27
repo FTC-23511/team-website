@@ -121,12 +121,12 @@ export const seasons: Season[] = [
     game: 'DECODE',
     years: '2025-26',
     // Cypher ranked 1st at the State Championship and qualified us for Worlds (FTCScout; the Worlds portfolio, page 9:
-    // "rank 1st at the state championship and qualify for worlds"). For Worlds we also built Enigma (Worlds portfolio,
-    // pages 9 to 14, and the Worlds judging banners). Which robot played in Houston is still to be confirmed with the
-    // team (PRODUCT.md), so neither line names it.
-    lede: 'Cypher, our first robot on coaxial swerve, qualified us for the World Championship in Houston. For Worlds we also built a second robot, Enigma.',
+    // "rank 1st at the state championship and qualify for worlds"), and it is the robot that played in Houston (the
+    // team, 2026-09-27). Enigma was built for Worlds alongside it (Worlds portfolio, pages 9 to 14, and the judging
+    // banners).
+    lede: 'Cypher, our first robot on coaxial swerve, took us to the World Championship in Houston, where we won the Inspire Award, 2nd Place. For Worlds we also built a second robot, Enigma.',
     description:
-      'Cypher and Enigma, the DECODE 2025-26 robots of Seattle Solvers, FTC Team #23511: the swerve robot that took us to Worlds, and a second built for it.',
+      'Cypher, the DECODE 2025-26 swerve robot of Seattle Solvers, FTC Team #23511, that played the World Championship, and Enigma, a second robot built for it.',
     robot: {
       name: 'Cypher',
       // Designs page, "Cypher".
@@ -250,7 +250,11 @@ export const seasons: Season[] = [
           [
             'It traded swerve for a simpler mecanum drivetrain on a single HTD3 belt, and added a spindexer that sorts balls only when it needs to, so rapid fire keeps its speed the rest of the time. A power take-off lets a drive motor lift the whole robot on linear rails to park, and the launcher gained four counterrollers and 96\u00a0mm steel ring flywheels for accuracy from the far zone.',
           ],
-          ['Both robots are in ', { text: 'our Worlds portfolio', href: 'https://canva.link/23511worlds2026port' }, '.'],
+          [
+            'In the end, Cypher was the robot we played in Houston. Both robots are in ',
+            { text: 'our Worlds portfolio', href: 'https://canva.link/23511worlds2026port' },
+            '.',
+          ],
         ],
         // The Worlds portfolio's cover photo: only Enigma has the rail lift, so this is Enigma whatever its sign color.
         image: {
@@ -280,19 +284,19 @@ export const seasons: Season[] = [
         place: 'Houston',
         ...results('decode', 'FIRST World Championship, Lovelace Division'),
         standing: `Ranked ${ordinal(headline.divisionRank).value}${ordinal(headline.divisionRank).suffix} in the ${headline.division}`,
-        // Robots carry their alliance's color on their signs, match by match, and the Worlds portfolio called the competing
-        // robot "not yet final" on April 6, so these photos describe the robot without naming it.
+        // Cypher played Worlds (the team, 2026-09-27). Its sign is red here because a robot carries its alliance's color
+        // match by match.
         photos: [
           {
             src: '/images/robots/worlds-field.webp',
-            alt: 'A robot with a red 23511 alliance sign and a green roller intake on Lovelace Field 2 at the FIRST World Championship, green and purple balls on the tiles, and an announcer and a volunteer behind the wall',
+            alt: 'Cypher, with a red 23511 alliance sign and its green roller intake, on Lovelace Field 2 at the FIRST World Championship, green and purple balls on the tiles, and an announcer and a volunteer behind the wall',
             width: 1568,
             height: 1045,
             focus: '45% 55%',
           },
           {
             src: '/images/robots/worlds-drive-team.webp',
-            alt: 'The Seattle Solvers drive team in yellow and black at the field edge in Houston, their robot on the tiles in front of them',
+            alt: 'The Seattle Solvers drive team in yellow and black at the field edge in Houston, Cypher on the tiles in front of them',
             width: 1400,
             height: 933,
             focus: '55% 60%',
@@ -300,7 +304,7 @@ export const seasons: Season[] = [
           },
           {
             src: '/images/robots/worlds-pit.webp',
-            alt: 'Team members in yellow jerseys working on the robot on the floor of their Houston pit, beside a Design Philosophy slide and an Iterations board',
+            alt: 'Team members in yellow jerseys working on Cypher on the floor of their Houston pit, a second robot on the table behind them, beside a Design Philosophy slide and an Iterations board',
             width: 1400,
             height: 933,
             small: { src: '/images/robots/worlds-pit-600.webp', width: 600 },

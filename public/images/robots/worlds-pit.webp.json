@@ -1,4 +1,4 @@
 {
-  "prompt": "Origin: the team's own photo of the Seattle Solvers pit at the 2026 FIRST World Championship (members working on the robot, a Design Philosophy slide, an Iterations board), from the live seattlesolvers.com site (assets/about/story-2.png), fetched 2026-09-27; resized to 1400px wide, levels stretched (0.5%) and gamma-lifted 1.12 for the site duotone, webp q80. The robot is not named: the Worlds portfolio called the competing robot 'not yet final' on April 6, and a robot's sign color follows its alliance for each match, so the photo alone cannot tell Cypher from Enigma.",
+  "prompt": "Origin: the team's own photo of the Seattle Solvers pit at the 2026 FIRST World Championship (members working on the robot, a Design Philosophy slide, an Iterations board), from the live seattlesolvers.com site (assets/about/story-2.png), fetched 2026-09-27; resized to 1400px wide, levels stretched (0.5%) and gamma-lifted 1.12 for the site duotone, webp q80. The robot is Cypher, which the team confirmed played at Worlds (2026-09-27).",
   "createdAt": "2026-09-27T07:30:30.000Z"
 }
