@@ -230,14 +230,6 @@ const word = (n: number): string | undefined => words[n];
     height: 100%;
     object-fit: contain;
     padding: 8%;
-    filter: grayscale(1) contrast(1.05);
-    transition: filter 0.9s var(--ease-inout);
-  }
-  @media (hover: hover) {
-    .plates:hover .plate img {
-      filter: none;
-      transition-duration: 0.65s;
-    }
   }
   .cover {
     aspect-ratio: 800 / 1036;

@@ -41,7 +41,7 @@ export const students: Student[] = [
   },
   {
     name: 'Viraj',
-    roles: ['Outreach Team', 'Design Team'],
+    roles: ['CAD Lead', 'Outreach Team'],
     photo: '/images/team/viraj.webp',
     alt: 'Viraj in the team jacket',
   },

@@ -375,7 +375,7 @@ button {
   color-scheme: light;
 }
 
-/* Duotone photo: ink shadows to Solvers yellow highlights; original color on hover. */
+/* Photo frame: the photo fills it in its own colors, on a Ground 2 backing while it loads. */
 .duo {
   position: relative;
   background: var(--paper-2);
@@ -386,6 +386,11 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 1.4s var(--ease);
+}
+/* Duotone, kept for the Meet the Team portraits only: ink shadows to Solvers yellow highlights, and each person's own
+   colors on hover. */
+.duo.tinted img {
   filter: grayscale(1) contrast(1.04) brightness(1.08);
   /* Leaving hover: the color drains back out slowly. */
   transition:
@@ -393,7 +398,7 @@ button {
     transform 1.4s var(--ease);
 }
 /* The tint is an overlay so it can fade: blend modes can't animate, opacity can. */
-.duo::after {
+.duo.tinted::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -404,13 +409,13 @@ button {
 }
 @media (hover: hover) {
   /* Entering hover: the color comes back a little quicker, on the same curve, tint and grayscale together. */
-  .duo:hover img,
-  .duo:focus-within img {
+  .duo.tinted:hover img,
+  .duo.tinted:focus-within img {
     filter: grayscale(0) contrast(1) brightness(1);
     transition-duration: 0.65s, 1.4s;
   }
-  .duo:hover::after,
-  .duo:focus-within::after {
+  .duo.tinted:hover::after,
+  .duo.tinted:focus-within::after {
     opacity: 0;
     transition-duration: 0.65s;
   }

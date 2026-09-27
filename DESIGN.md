@@ -271,7 +271,7 @@ Seattle Solvers is the neo-mirai world set in the team's own Solvers Dark palett
 
 The site is dark. There is one token set on `:root`, `color-scheme: dark`, one `color-scheme` meta and one `theme-color` meta. No light theme, no toggle, no system-preference switch. There is exactly one sanctioned light surface: the `.ground-light` scope on the Our Sponsors page, which carries the sponsor roll and the closing ask. The team asked for it on 2026-09-27 so every sponsor's logo shows in its own colors without a plate. The role names in the stylesheet are historical: `--paper` is the ground and `--ink` is the text. Components are written against those roles, never against raw hex, which is why they work unchanged inside the light scope.
 
-Motion is one family of long, soft ease-outs. Scrolling is weighted (Lenis), pages cross-fade with the header held still, lazy images fade in as they arrive, and photographs sit in a pale duotone that eases back to full color when reached for. Sponsor marks on the home wall rest in light monochrome and cross-fade to their own colors on the same rhythm. Everything becomes still under reduced motion, the page cross-fade included.
+Motion is one family of long, soft ease-outs. Scrolling is weighted (Lenis), pages cross-fade with the header held still, lazy images fade in as they arrive, and the Meet the Team portraits sit in a pale duotone that eases back to full color when reached for. Sponsor marks on the home wall rest in light monochrome and cross-fade to their own colors on the same rhythm. Everything becomes still under reduced motion, the page cross-fade included.
 
 **Key Characteristics:**
 - Dark, with one sanctioned light ground: the Our Sponsors roll and closing ask.
@@ -281,7 +281,7 @@ Motion is one family of long, soft ease-outs. Scrolling is weighted (Lenis), pag
 - Solid Solvers Yellow action blocks with a circle-arrow ring, and an outline twin.
 - Night panels one step above the ground and a yellow band as full-bleed section breaks.
 - Drawing grammar: ruled ledgers, title blocks of mono labels over plain values, dimension lines.
-- Pale duotone photos (grayscale under a multiply tint), full color on hover.
+- Photos in their own colors. The pale duotone (grayscale under a multiply tint) is kept for the Meet the Team portraits (full color on hover) and the home page's hero and "Who we are" backdrops (held), and monochrome for the home sponsor wall.
 - Flat surfaces; hairlines and tonal steps instead of shadows.
 - Cypher, the stipple robot, as the home page's signature.
 
@@ -298,12 +298,12 @@ A single-hue world on a night ground: warm near-black steps, cream text, and yel
 
 ### Neutral
 - **Ink Ground** (`paper`): the page, nav bar and dropdown ground, and the text color on yellow.
-- **Ground 2 / Ground 3** (`paper-2`, `paper-3`): hover fills in the nav and dropdowns, closing sections one step off the ground (robot pages, How to sponsor, Classes policies), the duotone's resting ground behind photos, the scrollbar track.
+- **Ground 2 / Ground 3** (`paper-2`, `paper-3`): hover fills in the nav and dropdowns, closing sections one step off the ground (robot pages, How to sponsor, Classes policies), the resting ground behind photos while they load, the scrollbar track.
 - **Solvers Paper** (`ink`): primary text on every dark surface (also `--on-night` and Cypher's accent dots). **Ink 2** (`ink-2`) for ledes, the nonprofit facts and the hero controls; **Ink 3** (`ink-3`) for notes, captions and secondary text on night panels (`--on-night-2`).
 - **Night** (`night`, `night-2`): night panels (Who we are fallback, Awards record, reach runs, SolversLib, testimonials, the Discord panel, the footer, the mobile menu) sit one step above the ground so they still separate from it; the dim sun rising inside a night panel is `night-2`.
 - **Sun Disk** (`sun-disk`, edged `sun-disk-edge`): the dim ochre disk behind Cypher and in every page header, a radial from disk to edge, ringed in Solvers Yellow.
 - **Plate** (`plate`) with **On Plate** (`on-plate`): the light drawing plate behind CAD renders (Designs sheets, the Resources hub strip), and the plate that fades in behind a lit mark on the home sponsor wall, where a caption turns On Plate so it reads on it.
-- **Duo Light** (`duo-light`): the pale multiply tint over duotone photos. Light enough that faces stay readable.
+- **Duo Light** (`duo-light`): the pale multiply tint over the Meet the Team portraits and the home page's two backdrop photos. Light enough that faces stay readable.
 - **Dot Far** (`dot-far`): the color the far side of Cypher recedes toward.
 - **Lines**: hairlines are cream at 13% (`--line`), strong lines at 30% (`--line-strong`); on night panels rules are cream at 24%. The roster's ruled grid, whose cards share edges, uses the hairline flattened onto the ground (`#2a2922`). The 112px paper grid is Sun at 6% (`--grid`); yellow bands carry an 80px ink grid at 9%.
 
@@ -332,7 +332,7 @@ Solvers Yellow, Sun as a fill, and the yellow blocks are unchanged inside it.
 **Loading:** Inter and Orbitron are preloaded (the Latin woff2 files). Until Inter arrives, 'Inter Fallback' sets the text: local Arial scaled to Inter's metrics (size-adjust 107.12%, ascent 90.44%, descent 22.52%, no line gap), so lines break the same way before and after the swap and nothing below jumps.
 
 ### Hierarchy
-- **Display** (Orbitron 500, up to 6rem, 0.98): the home H1 and the 404 title, uppercase.
+- **Display** (Orbitron 500, up to 6rem, 0.98): the home H1 and the 404 title ("Out of bounds"), uppercase.
 - **Page title** (Orbitron 500, up to 5rem, 1.0, `--step-page-title`): the H1 of every inner page header and every robot season header, capped at 16ch. Its size is also capped by `titleFit`: the width of the title's longest word (measured Orbitron capital advances, plus 8% air) sets `--fit`, and the size never exceeds the line divided by it, so a long word such as "Newsletters" fits a phone.
 - **Headline** (Orbitron 500, up to 3.5rem): H2 on split, band and night panels. **Section headline** (up to 3rem) for heading-left sections, the most used heading on the site. **Closing headline** (up to 2.5rem) for the quieter closes (Resources' other resources and support, the Classes policies close). **Row headline** (up to 2.25rem) for sponsor tier names, policy names and the season pager. Always uppercase, balanced.
 - **Accent** (Orbitron 600, up to 1.875rem, 0.04em): the hero's Sun "FTC Team #23511" line.
@@ -352,7 +352,7 @@ Solvers Yellow, Sun as a fill, and the yellow blocks are unchanged inside it.
 
 **The No Kicker Rule.** Headings stand alone. No eyebrow or category label is placed above an H1, H2 or H3; a season's years or an issue's date sit in a mono meta line under the heading.
 
-**The Big Numeral Rule.** Stand-alone display numerals are reserved for the home "Who we are" readouts and the Awards Worlds lead band. The Outreach programs ledger's figure column is the one recorded exception, held to the figure-column size (at most 2.375rem). Everywhere else a figure is set inline in its sentence, in Orbitron and gold, and a title block's values are set as text, not numerals (the RISE pilot's cells).
+**The Big Numeral Rule.** Stand-alone display numerals are reserved for the home "Who we are" readouts and the Awards Worlds lead band. The Outreach programs ledger's figure column is a recorded exception, held to the figure-column size (at most 2.375rem), and so is the 404 page's "404" across its sun. Everywhere else a figure is set inline in its sentence, in Orbitron and gold, and a title block's values are set as text, not numerals (the RISE pilot's cells).
 
 **The Words Under Ten Rule.** Counts under ten are written as words ("Seven videos", "our last two seasons"): a lone Orbitron digit at body size reads as a glyph. From ten up the count is an inline figure again.
 
@@ -362,7 +362,7 @@ The page is a stack of full-bleed sections whose content caps at 1680px, inset b
 
 Recurring grammars:
 - **Page header**: every inner page opens with an Orbitron title, an optional lede and slot (actions, facts), and a sun disk, over a bottom hairline. From 1100px the sun rises from the right edge, `min(46vw, 560px)` across, and the words reserve its column so the rim never crosses them. From 768 to 1099px the sun sits in the top-right corner (36vw) and the title keeps to the left of the disk. Below 768px a smaller sun (`min(48vw, 13rem)`) rises from the top corner and the words start below its lowest point.
-- **Split band**: a colored panel beside a full-height duotone photo, 1fr/1fr (the zero-fees band). Collapses to one column under 900px with the photo as a 4:3 plate.
+- **Split band**: a colored panel beside a full-height photo, 1fr/1fr (the zero-fees band). Collapses to one column under 900px with the photo as a 4:3 plate.
 - **Heading-left ledger**: a heading column (H2, lede, actions) against wider content (the home sponsor wall at 1fr/1.7fr, sponsor tiers at 1fr/3fr, programs, policies, testimonials). Collapses under 1024 to 1100px.
 - **Ruled ledger and title block**: rows under strong hairlines with a label in the margin; title blocks are a frame of strong hairlines with cells of a mono caption over a plainly set value. Shared edges draw once: the first cell of each row drops its side rule and later rows gain a top rule.
 - **Roster**: Meet the Team's four groups share one card grid, 5 / 4 / 3 / 2 columns at 1280 / 900 / 600px, so every portrait is the same size. Cards are separated by a 1px gap under a 1px opaque ring, so shared edges draw once and a short last row simply ends. A person without a photo yet gets a Ground 2 tile with their initial in Orbitron at the sun-disk color.
@@ -438,10 +438,10 @@ One row of two facts with Phosphor icons in gold: "501(c)(3) nonprofit" and "All
 ### Cursor
 On fine pointers only, a 30px circle (1.5px ring) with a 6px dot in its center, both in Sun (`--cursor-fill`) with an ink halo (`--cursor-halo`), written straight from pointer events with no easing lag. Over links and buttons the circle opens wider (scale 1.45) and the dot shrinks; pressing tightens the circle. Over selectable text the circle gives way to a slim text bar, and over form fields it hides for the native caret. Only on the robot itself, inside its sun disk or while dragging, it hides and the native grab hand takes over. In forced colors the drawn cursor is off and the system pointer stays.
 
-### Duotone Photo
-Photos rest in grayscale under a Duo Light multiply overlay on a Ground 2 backing. On hover or focus-within (hover-capable devices) the overlay fades out and the grayscale eases to full color together, on `--ease-inout`: 0.65s coming in, 0.9s draining back out. Robot cutouts take the same duotone with the tint masked by the image's own alpha. Lazy images fade in with a keyframe animation, never a `transition`, so they can't overwrite a component's transition list. Images in the first screen load eagerly and paint as they arrive, without the fade: the Designs and Portfolios first season, the Classes course photos, the first three roster portraits, the Awards record photo, and the first two sponsor tiers.
+### Photos
+Photos show in their own colors, filling a frame (`.duo`) on a Ground 2 backing while they load. Robot cutouts and CAD renders are in color too. The one exception is Meet the Team: its portraits (`.duo.tinted`) rest in grayscale under a Duo Light multiply overlay, and on hover or focus-within (hover-capable devices) the overlay fades out and the grayscale eases to full color together, on `--ease-inout`: 0.65s coming in, 0.9s draining back out. Lazy images fade in with a keyframe animation, never a `transition`, so they can't overwrite a component's transition list. Images in the first screen load eagerly and paint as they arrive, without the fade: the Designs and Portfolios first season, the Classes course photos, the first three roster portraits, the Awards record photo, and the first two sponsor tiers.
 
-Backdrop photos (the hero slideshow and the "Who we are" photo) take the same grayscale and Duo Light tint but hold it: they sit behind words, shaded with ink gradients where the words are, and never return to color on hover. The "Who we are" backdrop is lighter: grayscale at 50% under the Duo Light tint at 40%.
+The home page's two backdrop photos keep a held tint: the hero slideshow in the full duotone (grayscale under Duo Light), and the "Who we are" photo lighter (grayscale at 50% under Duo Light at 40%). They sit behind words, shaded with ink gradients where the words are, and never return to color on hover. The zero-fees band's photo below them is in color.
 
 ### Drawing Plate
 The light plate is a deliberate island: renders of black aluminum and carbon need a light ground to read. Designs sheets are one strong hairline frame around a 16:10 plate and a title strip (the season's robot taller, filling its column); the Resources hub strip uses square plates. The render rests in gray and eases to its own colors when the sheet is reached for, on the 0.65s / 0.9s rhythm.
@@ -464,7 +464,7 @@ The closing ask sits one step darker (Light Ground 2): "Join our sponsors", the 
 The closing ask of Become a Sponsor only (How to sponsor): a 13rem yellow square holding a 1.5px circle, an Orbitron 700 label and an arrow ring. On hover the fill turns Sun, the circle turns -8 degrees and the arrow slides. A full-width row on phones. It does not close the Our Sponsors page or the robot pages.
 
 ### Video Facade
-A YouTube video that costs nothing until it is played: the local thumbnail in the site duotone, 16:9 (9:16 for Shorts), with the play ring at its center, linking to YouTube; with JavaScript, pressing it swaps in the privacy-enhanced player in place. A still whose title fills its middle sets `playAt` to move the ring into the plain band below the title, sized from the still's width (44 to 64px). Under it: the title in the Title style, a caption-mono meta line (the type in gold, the channel), and an Ink 3 note. In a section already grouped by type (`grouped`), the type tag is dropped and the channel shows only when it is not the team's.
+A YouTube video that costs nothing until it is played: the local thumbnail in color, 16:9 (9:16 for Shorts), with the play ring at its center, linking to YouTube; with JavaScript, pressing it swaps in the privacy-enhanced player in place. A still whose title fills its middle sets `playAt` to move the ring into the plain band below the title, sized from the still's width (44 to 64px). Under it: the title in the Title style, a caption-mono meta line (the type in gold, the channel), and an Ink 3 note. In a section already grouped by type (`grouped`), the type tag is dropped and the channel shows only when it is not the team's.
 
 ### Robot Season Page
 - **Season header:** the page-header grammar with the season's robot standing on the bottom hairline in front of a sun rising from it; a mono meta line (years, robot name) under the title and arrow links to CAD, code and portfolio.
@@ -491,7 +491,7 @@ Recruiting status on a night panel. While closed, only the heading and one sente
 A recruiting notice first; then the four inboxes ruled like a directory (what each is for, the address, and a copy button in one right-hand column shared by every row, icon only on phones); a Discord panel with a dim sun rising from the lower left, the slower platforms after it; and doors for sponsors, parents and other teams.
 
 ### Newsletters
-The newest issue set large: its period as the heading, a mono meta line, its contents ruled like a table of contents beside the cover, and a Read the issue button. Back issues sit in an archive of five columns, each season marked by a dimension line (a hairline with end ticks, the season named beneath), covers in the duotone returning to color when any part of the issue is reached for. A sponsor ask closes the page.
+The newest issue set large: its period as the heading, a mono meta line, its contents ruled like a table of contents beside the cover, and a Read the issue button. Back issues sit in an archive of five columns, each season marked by a dimension line (a hairline with end ticks, the season named beneath), covers in their own colors. A sponsor ask closes the page.
 
 ### Testimonials
 "In their words" on a night panel: the first quote large in the panel statement size at 500, with hung typographer's quotes; the rest follow under a shared rule. One person's quotes stack in one column under a single caption, so a name never repeats.
@@ -500,7 +500,7 @@ The newest issue set large: its period as the heading, a mono meta line, its con
 The programs ledger on the 112px Sun grid: a figure column in Orbitron gold (the figure-column size) with a mono unit under it, the title and body, and a photo closing each row. The RISE School pilot sits on a yellow band with a title block on solid band: a route with two pins (Home to School) that draws in on scroll, then cells whose values are set as text. Community events are a brick log of photo frames.
 
 ### 404
-The display title "Page not found" beside a sun, a one-line lede, and one arrow link per audience. Noindex, no canonical link; on phones the sun rises from the top corner as in the page headers.
+"Out of bounds": a square of field tape (a 1px dashed cream line at 30% with 2px Ink 3 corner marks) with a sun disk rolling two thirds out of it, bottom right, and "404" in Orbitron Solvers Yellow across the disk (up to 10rem). Beside it, the display title (with a visually hidden "Page not found:" for screen readers), a lede that names the missing address in a dashed mono chip, one arrow link per audience in two columns, and an Ink 3 line inviting a report of the broken link. Below 900px the field sits above the words at 62% width. Noindex, no canonical link.
 
 ### Hero Controls and Slideshow
 Behind everything, the team's own photos crossfade (1.6s, `--ease-inout`) every 7 seconds on a slow drift (scale 1.02 to 1.09), in the held duotone. An ink gradient sits only behind the headline (90% at the left edge, 80% at 32%, gone by 66%; top-down on phones, gone by 72%). The control group (Turn left, Turn right, View from below, then the "Drag to rotate" hint in caption mono) sits on an ink backing at 86%. On wide screens it sits outside the disk's lower left, its top right corner on the disk's 45 degree radius just past the rim; below 1024px it sits above the robot at the right. The controls stay hidden, and the canvas stays out of the tab order, until the robot is live. The Pause motion button pauses the photos and the robot's turn; the slideshow also pauses off screen and in a hidden tab and holds the first photo under reduced motion.
@@ -534,7 +534,7 @@ The team's robot as 174,728 dots, packed 32 bits each by `tools/pointcloud/build
 - **Do** show sponsor logos in full color, without plates, on the Our Sponsors light ground, and rest them in light monochrome on the home wall with the shared 0.65s / 0.9s `--ease-inout` crossfade.
 - **Do** set the nonprofit facts wherever the site asks for support.
 - **Do** time transitions with the motion tokens (`--ease`, `--ease-soft`, `--ease-inout`, `--dur-quick`, `--dur`, `--dur-slow`).
-- **Do** duotone every photograph and let it ease to color on hover; load first-screen images eagerly so they paint without the fade.
+- **Do** show photographs in their own colors, keeping the duotone for the Meet the Team portraits and the home page's two backdrops; load first-screen images eagerly so they paint without the fade.
 - **Do** make every animated piece still under reduced motion, the page cross-fade included, and keep native scrolling there.
 - **Do** clear the sticky header with `scroll-margin-top` on content, and set header breakpoints in em.
 - **Do** give forced colors a system color wherever a state lives in a fill.
@@ -545,7 +545,7 @@ The team's robot as 174,728 dots, packed 32 bits each by `tools/pointcloud/build
 - **Don't** use a serif, anywhere.
 - **Don't** put an eyebrow or kicker label above a heading.
 - **Don't** use Azeret Mono for headings.
-- **Don't** set a stand-alone big numeral outside the home readouts and the Awards Worlds lead band (the Outreach figure column is held at 2.375rem).
+- **Don't** set a stand-alone big numeral outside the home readouts, the Awards Worlds lead band and the 404 sun (the Outreach figure column is held at 2.375rem).
 - **Don't** round rectangle corners; circles are only for arrow rings, step, pause and play buttons, markers, the cursor and suns.
 - **Don't** draw a side rule thicker than 1px.
 - **Don't** set text in Deep Gold on the dark ground, or small text in Solvers Yellow on the ground.

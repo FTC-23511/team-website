@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
-import { nav } from '../data/site';
+import { nav, emails } from '../data/site';
 
 // The places most visitors are looking for, one per audience. Robots is the current season (the menu's first entry).
 const ways = [
@@ -20,92 +20,207 @@ const ways = [
   noindex
   canonical={false}
 >
-  <section class="missing" aria-labelledby="missing-title">
-    <div class="sun" aria-hidden="true"></div>
-    <h1 id="missing-title">Page not found</h1>
-    <p class="lede">There is no page at this address. It may have moved when our site was rebuilt.</p>
-    <nav class="ways" aria-label="Where to go instead">
-      <ul role="list">
-        {
-          ways.map((w) => (
-            <li>
-              <a class="arrow-link" href={w.href}>
-                <span>{w.label}</span>
-                <span class="ring" aria-hidden="true">
-                  <Icon name="ph:arrow-right" />
-                </span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+  <section class="lost" aria-labelledby="lost-title">
+    <div class="inner">
+      <!-- A field boundary in tape, and the 404 sun rolling out past it. -->
+      <div class="field" aria-hidden="true">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span
+          class="corner br"></span>
+        <div class="sun"><span class="num">404</span></div>
+      </div>
+
+      <div class="copy">
+        <h1 id="lost-title"><span class="visually-hidden">Page not found: </span>Out of bounds</h1>
+        <p class="lede">
+          There’s no page at <code class="path" data-path>this address</code>. It may have moved when we rebuilt our
+          site, or the address has a typo.
+        </p>
+        <nav class="ways" aria-label="Where to go instead">
+          <ul role="list">
+            {
+              ways.map((w) => (
+                <li>
+                  <a class="arrow-link" href={w.href}>
+                    <span>{w.label}</span>
+                    <span class="ring" aria-hidden="true">
+                      <Icon name="ph:arrow-right" />
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <p class="report">
+          Followed a link on our site to get here? Tell us at <a href={`mailto:${emails.team}`}>{emails.team}</a> and
+          we’ll fix it.
+        </p>
+      </div>
+    </div>
   </section>
 </Base>
 
+<script>
+  // Name the address that wasn't found, so a mistyped link is easy to spot.
+  const path = document.querySelector<HTMLElement>('[data-path]');
+  if (path) {
+    let shown = location.pathname;
+    try {
+      shown = decodeURI(shown);
+    } catch {
+      // keep the raw path
+    }
+    path.textContent = shown.length > 48 ? `${shown.slice(0, 47)}…` : shown;
+  }
+</script>
+
 <style>
-  .missing {
-    position: relative;
+  .lost {
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .inner {
     display: grid;
-    align-content: center;
-    justify-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: 'copy field';
+    align-items: center;
+    gap: var(--s-8);
     min-height: calc(100dvh - var(--header-h));
     max-width: 1680px;
     margin-inline: auto;
     padding: var(--s-8) var(--gutter);
-    overflow: hidden;
-    isolation: isolate;
+  }
+
+  /* The field: a square of tape with corner marks. The sun sits two thirds out of it, bottom right. */
+  .field {
+    grid-area: field;
+    position: relative;
+    justify-self: center;
+    width: min(100%, 34rem);
+    aspect-ratio: 1;
+    border: 1px dashed rgb(252 249 222 / 0.3);
+  }
+  .corner {
+    position: absolute;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 0 solid var(--ink-3);
+  }
+  .tl {
+    top: -1px;
+    left: -1px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+  }
+  .tr {
+    top: -1px;
+    right: -1px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+  }
+  .bl {
+    bottom: -1px;
+    left: -1px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+  }
+  .br {
+    bottom: -1px;
+    right: -1px;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
   }
   .sun {
     position: absolute;
-    right: -18vw;
-    top: 50%;
-    width: min(56vw, 720px);
+    left: 38%;
+    top: 34%;
+    display: grid;
+    place-items: center;
+    width: 78%;
     aspect-ratio: 1;
     border-radius: 50%;
-    transform: translateY(-50%);
     background: radial-gradient(circle at 50% 42%, var(--sun-disk) 0 58%, var(--sun-disk-edge) 100%);
     box-shadow: inset 0 0 0 2px var(--sun-rim);
-    z-index: -1;
+  }
+  .num {
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 2rem + 8vw, 10rem);
+    font-weight: 500;
+    line-height: 0.8;
+    letter-spacing: 0.01em;
+    color: var(--band);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .copy {
+    grid-area: copy;
   }
   h1 {
-    max-width: 12ch;
+    max-width: 10ch;
     font-size: var(--step-4);
     line-height: 0.98;
   }
   .lede {
     margin-top: var(--s-5);
-    max-width: 36ch;
+    max-width: 40ch;
     font-size: var(--step-1);
     line-height: 1.5;
     color: var(--ink-2);
+  }
+  .path {
+    padding: 0.05em 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    color: var(--ink);
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    overflow-wrap: anywhere;
   }
   .ways {
     margin-top: var(--s-6);
   }
   .ways ul {
     display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
     gap: 0 var(--s-7);
     margin: 0;
   }
-  @media (min-width: 1100px) {
-    .ways ul {
-      grid-template-columns: repeat(2, auto);
-    }
+  .report {
+    margin-top: var(--s-6);
+    max-width: 44ch;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+  .report a {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .report a:hover {
+    color: var(--gold-ink);
   }
 
-  /* As in the page headers: on phones the sun rises from the top corner and the words start below its lowest point. */
-  @media (max-width: 767px) {
-    .missing {
-      --d: min(48vw, 13rem);
-      align-content: start;
-      padding-top: max(var(--s-8), calc(var(--d) * 0.44 + var(--s-4)));
+  /* Phones and small tablets: the field above the words, smaller, the sun still rolling out of it. */
+  @media (max-width: 899px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'field' 'copy';
+      align-items: start;
+      gap: var(--s-7);
+      min-height: 0;
+      padding-block: var(--s-7) var(--s-8);
     }
-    .sun {
-      width: var(--d);
-      right: calc(var(--d) * -0.42);
-      top: calc(var(--d) * -0.56);
-      transform: none;
+    .field {
+      justify-self: start;
+      width: min(62%, 17rem);
+    }
+    .num {
+      font-size: clamp(3.25rem, 1.5rem + 9vw, 5.5rem);
+    }
+  }
+  @media (max-width: 479px) {
+    .ways ul {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

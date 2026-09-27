@@ -22,8 +22,8 @@ interface Props {
 const {
   title = 'Seattle Solvers | FTC Team #23511',
   description = 'Seattle Solvers, FIRST Tech Challenge Team #23511: a student-led nonprofit robotics team from Sammamish, Washington, bringing STEM to everyone.',
-  image = '/og/default.jpg',
-  imageAlt = 'Seattle Solvers, FTC Team #23511, a student-led nonprofit robotics team from Sammamish, Washington. Inspire Award, 2nd Place, at the 2026 FIRST World Championship.',
+  image = '/og/logo.png',
+  imageAlt = 'The Seattle Solvers logo: a light bulb with the Space Needle inside it, beside the words FTC #23511 Seattle Solvers.',
   noindex = false,
   canonical: withCanonical = true,
 } = Astro.props;
@@ -52,6 +52,7 @@ const ogImage = new URL(image, Astro.site);
     {withCanonical && <meta property="og:url" content={canonical} />}
     <meta property="og:site_name" content="Seattle Solvers" />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content={image.endsWith('.png') ? 'image/png' : 'image/jpeg'} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={imageAlt} />
