@@ -145,7 +145,7 @@ export const designSeasons: DesignSeason[] = [
   },
   {
     id: 'into-the-deep',
-    game: 'Into the Deep',
+    game: 'INTO THE DEEP',
     years: '2024-25',
     designs: [
       {
@@ -153,7 +153,7 @@ export const designSeasons: DesignSeason[] = [
         lead: true,
         preview: true,
         description: [
-          'Our robot for the Into the Deep 2024‑25 season.',
+          'Our robot for the INTO THE DEEP 2024‑25 season.',
           'A 12.25 × 11.5 inch robot able to complete sample or specimen cycles, with an active intake and level 3 ascent capability.',
         ],
         href: 'https://cad.onshape.com/documents/ae5ff79658ff2a51ece82558/w/1babafd80652d7e5216f214c/e/548f3b6bbedc29b9264b1a15',
@@ -169,7 +169,7 @@ export const designSeasons: DesignSeason[] = [
       {
         name: 'Solvers Claw',
         description: [
-          'Our open-sourced claws for the Into the Deep 2024‑25 season.',
+          'Our open-sourced claws for the INTO THE DEEP 2024‑25 season.',
           'The intake claw can grab a sample from either the inside or the outside, and has a wrist and a color sensor for automated rejection of the wrong color.',
         ],
         href: 'https://cad.onshape.com/documents/1c128ca169fe30eeb09acb36/w/48d3d3a7c87b50dc03cf4462/e/936cb1734f091fbe3f39750a?configuration=List_JL4N66W3G85Pwc%3DOffset_Sonic_Hub&renderMode=0&uiState=67ea1b9dee01c868998a4190',
@@ -183,7 +183,7 @@ export const designSeasons: DesignSeason[] = [
       {
         name: 'Octonaut',
         description: [
-          'Our offseason robot heading into 2025‑26, made for Into the Deep gameplay.',
+          'Our offseason robot heading into 2025‑26, made for INTO THE DEEP gameplay.',
           'A 13.5 × 12 inch robot on an Octocanum (butterfly) drivetrain, with carbon fiber plates to save weight. A PTO for level 3 ascent shares the same servos as the Octocanum pods.',
         ],
         // The document's "Full" assembly, like Cypher's and Riptide's links (the Google Site links a part studio).
@@ -287,13 +287,13 @@ export const portfolioSeasons: PortfolioSeason[] = [
   },
   {
     id: 'into-the-deep',
-    game: 'Into the Deep',
+    game: 'INTO THE DEEP',
     years: '2024-25',
     sharedCover: {
       src: '/images/resources/portfolio-into-the-deep.webp',
       width: 800,
       height: 1036,
-      alt: 'Cover of the Into the Deep engineering portfolio: "Riptide" in gold script over a line drawing of the robot',
+      alt: 'Cover of the INTO THE DEEP engineering portfolio: "Riptide" in gold script over a line drawing of the robot',
       small: { src: '/images/resources/portfolio-into-the-deep-360.webp', width: 360 },
     },
     docs: [
@@ -345,7 +345,7 @@ export const videoGroups: VideoGroup[] = [
   {
     id: 'autonomous',
     title: 'Autonomous',
-    sub: 'Riptide v2, our Into the Deep robot.',
+    sub: 'Riptide v2, our INTO THE DEEP robot.',
     videos: videos.filter((v) => v.kind === 'Autonomous'),
     layout: 'shorts',
   },

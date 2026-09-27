@@ -6,6 +6,7 @@ import AwardsRecord from '../../components/about/AwardsRecord.astro';
 import SeasonLedger from '../../components/about/awards/SeasonLedger.astro';
 import SeasonStrip from '../../components/about/awards/SeasonStrip.astro';
 import FllBand from '../../components/about/awards/FllBand.astro';
+import Collection from '../../components/about/awards/Collection.astro';
 import { ftcSeasons, fll } from '../../data/awards';
 
 // Seasons are laid out by position, newest first: timeline, then ledger, then strips.
@@ -46,6 +47,7 @@ const index = [
   {previous && <SeasonLedger season={previous} />}
   {older.map((s) => <SeasonStrip season={s} />)}
   <FllBand />
+  <Collection />
 </Base>
 
 <style>

@@ -81,6 +81,7 @@ export const ftcSeasons: FtcSeason[] = [
         peak: true,
       },
     ],
+    // The season's plaques with Cypher, then the team's own photo of the team with Cypher (2026-09-27).
     photos: [
       {
         src: '/images/home/decode-awards.webp',
@@ -88,11 +89,17 @@ export const ftcSeasons: FtcSeason[] = [
         width: 1280,
         height: 1066,
       },
+      {
+        src: '/images/awards/decode-team.webp',
+        alt: 'The Seattle Solvers in their black and yellow jackets with Cypher in front of them, in a gym at a competition',
+        width: 1400,
+        height: 1050,
+      },
     ],
   },
   {
     id: 'into-the-deep',
-    game: 'Into the Deep',
+    game: 'INTO THE DEEP',
     years: '2024-25',
     robot: { name: 'Riptide', href: '/robots/into-the-deep-2024-25/' },
     events: [
@@ -110,7 +117,7 @@ export const ftcSeasons: FtcSeason[] = [
     photos: [
       {
         src: '/images/awards/riptide-trophies.webp',
-        alt: 'Riptide, the Into the Deep robot, between its Pasteur Interleague Finalist Alliance and Innovate Award trophies',
+        alt: 'Riptide, the INTO THE DEEP robot, between its Pasteur Interleague Finalist Alliance and Innovate Award trophies',
         width: 1200,
         height: 1200,
       },

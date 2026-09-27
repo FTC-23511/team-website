@@ -28,7 +28,7 @@ export const nav: NavItem[] = [
     href: '/robots/',
     children: [
       { label: 'DECODE', href: '/robots/decode-2025-26/' },
-      { label: 'Into the Deep', href: '/robots/into-the-deep-2024-25/' },
+      { label: 'INTO THE DEEP', href: '/robots/into-the-deep-2024-25/' },
     ],
   },
   {
