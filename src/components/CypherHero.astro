@@ -1,0 +1,481 @@
+---
+import { Icon } from 'astro-icon/components';
+import { cta, team } from '../data/site';
+import { heroSlides } from '../data/home';
+
+// 174,728 dots, one packed uint32 each, built from the team's Cypher STL by tools/pointcloud/build_cloud.py.
+const POINTS = 174728;
+// The robot at rest, cropped to its sun: shown instead of the live robot when that can't run.
+const POSTER = '/images/home/hero-poster.webp';
+const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <!-- Background slideshow of the team's photos, behind the robot and the words. -->
+  <div class="slides" data-slides aria-hidden="true">
+    {
+      heroSlides.map((s, i) => (
+        <img
+          class:list={['slide', { 'is-active': i === 0 }]}
+          src={i === 0 ? s.src : undefined}
+          data-src={s.src}
+          alt=""
+          width={s.w}
+          height={s.h}
+          decoding="async"
+          fetchpriority={i === 0 ? 'high' : undefined}
+          style={`--focus: ${s.focus}`}
+        />
+      ))
+    }
+  </div>
+  <div class="wash" aria-hidden="true"></div>
+
+  <div class="stage" data-cypher data-src="/models/cypher.bin" data-count={POINTS}>
+    <div class="sun" aria-hidden="true"></div>
+    <!-- Loaded only when the live robot can't run: no WebGL, no model, or a lost graphics context. -->
+    <img class="poster" data-src={POSTER} alt={POSTER_ALT} width="766" height="766" decoding="async" />
+    <noscript>
+      <img class="poster" src={POSTER} alt={POSTER_ALT} width="766" height="766" />
+    </noscript>
+    <!-- The script names the canvas, makes it focusable and shows the controls once the robot can be turned. -->
+    <canvas data-label="Cypher, the team's robot, drawn in dots. Drag or use the arrow keys to rotate it."></canvas>
+    <div class="hint" role="group" aria-label="Rotate the robot" hidden>
+      <button type="button" class="turn" data-turn="-1" aria-label="Turn left">
+        <Icon name="ph:arrow-counter-clockwise" aria-hidden="true" />
+      </button>
+      <button type="button" class="turn" data-turn="1" aria-label="Turn right">
+        <Icon name="ph:arrow-clockwise" aria-hidden="true" />
+      </button>
+      <button type="button" class="turn" data-tilt aria-pressed="false" aria-label="View from below">
+        <Icon name="ph:arrow-u-right-up" aria-hidden="true" />
+      </button>
+      <span class="hint-text" aria-hidden="true">
+        <Icon name="ph:hand-grabbing" />
+        <span>Drag to rotate</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="copy">
+    <h1 id="hero-title">Seattle<br />Solvers</h1>
+    <p class="accent">FTC Team #{team.number}</p>
+    <p class="lede">
+      A student-led nonprofit robotics team from Sammamish, Washington, spreading STEM through competition, classes, and
+      open&#8209;source code.
+    </p>
+    <a class="btn-sponsor" href={cta.sponsor.href}>
+      <span>{cta.sponsor.label}</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+  </div>
+
+  <!-- Shown by the slideshow while it runs. -->
+  <button class="slides-toggle" type="button" data-slides-toggle aria-pressed="false" aria-label="Pause motion" hidden>
+    <Icon name="ph:pause" class="i-pause" aria-hidden="true" />
+    <Icon name="ph:play" class="i-play" aria-hidden="true" />
+  </button>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: calc(100dvh - var(--header-h));
+    max-height: 1040px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Slideshow: the team's photos in the same duotone as the photos elsewhere on the site (grayscale
+     under a Duo Light multiply tint). An ink gradient sits only behind the words, so the headline
+     stays crisp while the photos show in full around the sun. */
+  .slides {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--paper-2);
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus, 50% 50%);
+    filter: grayscale(1) contrast(1.04) brightness(1.08);
+    opacity: 0;
+    transition: opacity 1.6s var(--ease-inout);
+  }
+  /* The same pale duotone as .duo photos, but held: a backdrop has no hover to return to color. */
+  .slides::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--duo-light);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .slide.is-active {
+    opacity: 1;
+  }
+  /* A slow drift that carries on through the crossfade (same animation on entering and leaving). */
+  @media (prefers-reduced-motion: no-preference) {
+    .slide.is-active,
+    .slide.is-leaving {
+      animation: slide-drift 9.5s linear both;
+    }
+    .slides.is-paused .slide {
+      animation-play-state: paused;
+    }
+  }
+  @keyframes slide-drift {
+    from {
+      transform: scale(1.02);
+    }
+    to {
+      transform: scale(1.09);
+    }
+  }
+  .wash {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      rgb(11 10 6 / 0.9) 0%,
+      rgb(11 10 6 / 0.8) 32%,
+      rgb(11 10 6 / 0.3) 52%,
+      rgb(11 10 6 / 0) 66%
+    );
+  }
+  .slides-toggle {
+    position: absolute;
+    left: max(var(--gutter), calc((100% - 1680px) / 2 + var(--gutter)));
+    bottom: var(--s-5);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .slides-toggle:hover {
+    border-color: var(--ink);
+    background: var(--paper);
+  }
+  .slides-toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+  .slides-toggle .i-play,
+  .slides-toggle[aria-pressed='true'] .i-pause {
+    display: none;
+  }
+  .slides-toggle[aria-pressed='true'] .i-play {
+    display: block;
+  }
+
+  /* The stage spans the whole hero so the dots can travel behind the words. It sets no z-index: a stacking context of
+     its own would keep the poster's screen blend off the photos. */
+  .stage {
+    --robot-x: 0.28;
+    --robot-y: 0.1;
+    --robot-s: 0.68;
+    --robot-fit: 0.98;
+    /* Beside the words, the script keeps the sun clear of them (see layout() in cypher.ts). */
+    --clear-copy: 1;
+    /* The sun's centre and diameter. The script writes --sun-cx, --sun-cy and --sun-d; until it has (and without
+       JavaScript) the same geometry comes from here: 0.925 of the hero's height across, slid right and shrunk only
+       as far as it must to clear the words (the gutter, the wider of the 5.7em headline and the 26.6rem lede, then
+       28px) while the robot still fits on screen. */
+    --words: calc(max(var(--gutter), 50vw - 840px + var(--gutter)) + max(5.7 * var(--step-4), 26.6rem) + 28px);
+    --fit: calc((99vw - var(--words)) * 0.944);
+    --d: var(--sun-d, min(92.5%, var(--fit)));
+    /* The same diameter in viewport units, for lengths across the hero (a percentage there is of its width). */
+    --d-across: var(--sun-d, min(0.925 * max(100dvh - var(--header-h), 33rem), var(--fit)));
+    --cx: var(--sun-cx, max(64%, var(--words) + var(--d-across) / 2));
+    --cy: var(--sun-cy, calc(45% + 0.0368 * min(92.5%, var(--fit))));
+    position: absolute;
+    inset: 0;
+  }
+  .sun,
+  .poster {
+    position: absolute;
+    left: var(--cx);
+    top: var(--cy);
+    width: auto;
+    height: var(--d);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+  }
+  .sun {
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 42%, var(--sun-disk) 0 58%, var(--sun-disk-edge) 100%);
+    box-shadow: inset 0 0 0 2px var(--sun-rim);
+  }
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: pan-y;
+  }
+  /* Only the robot itself (inside the sun) is draggable. */
+  .stage.is-over-robot canvas {
+    cursor: grab;
+  }
+  canvas:focus-visible {
+    outline: 2px solid var(--gold-deep);
+    outline-offset: -6px;
+  }
+  .stage.is-dragging canvas {
+    cursor: grabbing;
+  }
+  /* The robot at rest, screened over the sun, when the live one can't run. The canvas keeps its box (the script
+     still measures it) but no longer shows or takes the pointer. */
+  .poster {
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+  .stage:not(.is-fallback) > .poster {
+    display: none;
+  }
+  .stage.is-fallback canvas {
+    visibility: hidden;
+  }
+
+  /* Step buttons turn the robot, and tilt it to show its underside, for anyone who can't drag. The script shows them
+     only while the robot can be turned. Just outside the disk, lower left: the group's top right corner sits on the
+     disk's 45 degree radius, 12px past the rim, on open ground between the words and the robot. */
+  .hint {
+    position: absolute;
+    left: calc(var(--cx) - (var(--d-across) / 2 + var(--s-3)) * 0.7071);
+    top: calc(var(--cy) + (var(--d) / 2 + var(--s-3)) * 0.7071);
+    translate: -100% 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin: 0;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .turn {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease),
+      border-color var(--dur-quick) var(--ease);
+  }
+  .turn:hover,
+  .turn[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  @media (forced-colors: active) {
+    .turn[aria-pressed='true'] {
+      forced-color-adjust: none;
+      background: SelectedItem;
+      border-color: SelectedItem;
+      color: SelectedItemText;
+    }
+  }
+  .turn svg {
+    width: 14px;
+    height: 14px;
+  }
+  .hint-text {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-left: var(--s-1);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hint-text svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Copy sits above the dots. Only the words and the button take the pointer (so text can be
+     selected); the rest of the band lets the pointer through to the robot's canvas. */
+  .copy {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter);
+    pointer-events: none;
+  }
+  .copy a {
+    pointer-events: auto;
+  }
+  .copy :is(h1, p) {
+    width: fit-content;
+    pointer-events: auto;
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 0.98;
+  }
+  .accent {
+    margin-top: var(--s-5);
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 0.9rem + 1.1vw, 1.875rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--gold-ink);
+  }
+  .lede {
+    margin-top: var(--s-4);
+    max-width: 34ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .btn-sponsor {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-4);
+    height: 56px;
+    margin-top: var(--s-7);
+    padding: 0 var(--s-3) 0 var(--s-5);
+    background: var(--band);
+    color: var(--on-band);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-quick) var(--ease);
+  }
+  .btn-sponsor .ring {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transition: transform var(--dur) var(--ease);
+  }
+  .btn-sponsor .ring svg {
+    width: 14px;
+    height: 14px;
+  }
+  .btn-sponsor:hover {
+    background: var(--sun);
+  }
+  .btn-sponsor:hover .ring {
+    transform: translateX(4px);
+  }
+  .btn-sponsor:active {
+    transform: translateY(1px);
+  }
+  .btn-sponsor:focus-visible {
+    outline-color: var(--ink);
+  }
+
+  /* Short laptop windows, where the words set the hero's height: room under the Sponsor us block for the pause
+     control, taken from the top padding. */
+  @media (min-width: 1024px) and (max-height: 700px) {
+    .hero .copy {
+      padding-block: var(--s-6) calc(var(--s-5) * 2 + 36px);
+    }
+  }
+
+  /* Phones and tablets: words on top, the robot in its own space below the button. */
+  @media (max-width: 1023px) {
+    .hero {
+      align-items: flex-start;
+      min-height: max(calc(100svh - var(--header-h)), 860px);
+      max-height: none;
+    }
+    .stage {
+      --robot-x: 0;
+      --robot-y: -0.5;
+      --robot-s: 0.4;
+      --robot-fit: 0.98;
+      --clear-copy: 0;
+      /* Centred under the words: 0.877 of the hero's width across, at most 0.544 of its height. */
+      --cx: var(--sun-cx, 50%);
+      --cy: var(--sun-cy, calc(75% + min(2%, 3.22vw)));
+      --d: var(--sun-d, min(54.4%, 87.7vw));
+    }
+    /* The hint sits above the robot, at the right, on clear paper, with room to spare above the rim. */
+    .hint {
+      left: auto;
+      right: var(--gutter);
+      top: calc(var(--cy) - var(--d) * 0.5 - 3.25rem);
+      translate: none;
+    }
+    .copy {
+      padding: var(--s-6) var(--gutter);
+    }
+    .btn-sponsor {
+      margin-top: var(--s-5);
+    }
+    /* Phones: words on top, so the wash is strongest at the top and eases toward the robot. */
+    .wash {
+      background: linear-gradient(
+        180deg,
+        rgb(11 10 6 / 0.9) 0%,
+        rgb(11 10 6 / 0.82) 50%,
+        rgb(11 10 6 / 0.2) 64%,
+        rgb(11 10 6 / 0) 72%
+      );
+    }
+  }
+</style>
+
+<script>
+  import { mountCypher } from '../scripts/cypher';
+  import { mountSlides } from '../scripts/slideshow';
+  const stage = document.querySelector<HTMLElement>('[data-cypher]');
+  const robot = stage ? mountCypher(stage) : undefined;
+  const slides = document.querySelector<HTMLElement>('[data-slides]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-slides-toggle]');
+  if (slides) mountSlides(slides, toggle);
+  // One control pauses all of the hero's motion: the photos (handled in slideshow.ts) and the robot's turn.
+  toggle?.addEventListener('click', () => robot?.setPaused(toggle.getAttribute('aria-pressed') === 'true'));
+  stage?.querySelectorAll<HTMLButtonElement>('[data-turn]').forEach((b) =>
+    b.addEventListener('click', () => robot?.nudge(b.dataset.turn === '-1' ? -1 : 1)),
+  );
+  // Pressed, the robot tilts to show its underside; pressed again, it returns to rest.
+  const tilt = stage?.querySelector<HTMLButtonElement>('[data-tilt]');
+  tilt?.addEventListener('click', () => {
+    const below = tilt.getAttribute('aria-pressed') !== 'true';
+    tilt.setAttribute('aria-pressed', String(below));
+    robot?.setBelow(below);
+  });
+</script>

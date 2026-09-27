@@ -1,0 +1,485 @@
+---
+// The registration sheet: both courses side by side on one ruled sheet, their rows lined up (photo, name,
+// description, lesson plan, sessions, action), over a strip of the details both courses share.
+import { Icon } from 'astro-icon/components';
+import { allSessions, courses, details, forms } from '../../data/classes';
+import { courseOpen, formatRange, sessionLabel, sessionStatus, todayInSeattle } from './status';
+import { parts } from './text';
+
+const today = todayInSeattle();
+---
+
+<section class="courses" id="courses" aria-label="Courses">
+  <div class="inner">
+    <div class="sheet">
+      <div class="pair">
+        {
+          courses.map((c, i) => {
+            // Only a course with its own sign-up form offers Sign up; the others point families to the interest form.
+            const hasForm = !!c.signUp;
+            const open = courseOpen(allSessions, c.id, today);
+            // "Intro to / LEGO Robotics" and "Advanced / LEGO Robotics": the part that differs leads, the shared
+            // part takes the second line, so the two names read as a pair side by side.
+            const at = c.name.indexOf('LEGO');
+            const [lead, tail] = at > 0 ? [c.name.slice(0, at).trim(), c.name.slice(at)] : [c.name, ''];
+            return (
+              <article class="course" aria-labelledby={`${c.id}-title`}>
+                {/* The course photos open the page's first screen, so they load right away rather than fading in. */}
+                <figure class="duo photo">
+                  <img
+                    src={c.photo.src}
+                    alt={c.photo.alt}
+                    width={c.photo.width}
+                    height={c.photo.height}
+                    loading="eager"
+                    fetchpriority={i === 0 ? 'high' : undefined}
+                    decoding="async"
+                    style={c.photo.focus ? `object-position: ${c.photo.focus}` : undefined}
+                  />
+                </figure>
+
+                <div class="head">
+                  <h2 id={`${c.id}-title`}>
+                    {lead}
+                    {tail && <span class="tail"> {tail}</span>}
+                  </h2>
+                  <p class="meta">
+                    <span class="level">{c.level}</span>
+                    {c.grades && <span>{c.grades}</span>}
+                    {c.prerequisite && <span>Prerequisite: {c.prerequisite}</span>}
+                  </p>
+                </div>
+
+                <div class="about">
+                  {c.description.map((p) => (
+                    <p>{p}</p>
+                  ))}
+                  {c.outcome && <p class="outcome">{c.outcome}</p>}
+                </div>
+
+                <div class="plan">
+                  <h3>Lesson plan</h3>
+                  <ol role="list">
+                    {c.lessons.map((lesson, i) => (
+                      <li>
+                        <span class="n" aria-hidden="true">
+                          {i + 1}
+                        </span>
+                        <span class="visually-hidden">Section {i + 1}: </span>
+                        <span>{lesson}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div class="when">
+                  <h3>Sessions</h3>
+                  {c.sessions.length > 0 ? (
+                    <ul role="list" class="sessions">
+                      {c.sessions.map((s) => {
+                        const status = sessionStatus(s, today);
+                        return (
+                          <li data-session={`${s.start}/${s.end}`} data-form={String(hasForm)} data-status={status}>
+                            <span class="range">{formatRange(s)}</span>
+                            <span class="status" data-session-status>
+                              {sessionLabel(status, hasForm)}
+                            </span>
+                            <span class="where">
+                              {s.term} · {s.place}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <p class="none">{c.noSessions}</p>
+                  )}
+                </div>
+
+                <div class="act">
+                  {hasForm && (
+                    <a
+                      class="btn btn-primary"
+                      data-when="open"
+                      data-for={c.id}
+                      hidden={!open}
+                      href={c.signUp}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      <span>Sign up for {c.name}</span>
+                      <span class="ring" aria-hidden="true">
+                        <Icon name="ph:arrow-up-right" />
+                      </span>
+                      <span class="visually-hidden">(opens the sign-up form in a new tab)</span>
+                    </a>
+                  )}
+                  <a
+                    class="arrow-link"
+                    data-when="closed"
+                    data-for={c.id}
+                    hidden={open}
+                    href={forms.interest.href}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <span>{forms.interest.label}</span>
+                    <span class="ring" aria-hidden="true">
+                      <Icon name="ph:arrow-up-right" />
+                    </span>
+                    <span class="visually-hidden">(opens the interest form in a new tab)</span>
+                  </a>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+
+      <section class="details" aria-labelledby="details-title">
+        <h2 id="details-title" class="visually-hidden">Details for both courses</h2>
+        <dl class="cells">
+          <div class="cell">
+            <dt>Schedule</dt>
+            <dd>
+              {
+                details.schedule.map((s) => (
+                  <p class="line">
+                    <span class="term">{s.term}</span>
+                    {s.value}
+                    <span class="sub">{s.note}</span>
+                  </p>
+                ))
+              }
+              <p class="note">{details.scheduleNote}</p>
+            </dd>
+          </div>
+          <div class="cell">
+            <dt>Price</dt>
+            <dd>
+              {
+                details.price.map((p) => (
+                  <p class="line price">
+                    <strong class="fig">{p.value}</strong> {p.term.toLowerCase()}
+                  </p>
+                ))
+              }
+              <p class="note">
+                {parts(details.priceNote).map((t) => (t.keep ? <span class="nb">{t.text}</span> : t.text))}
+              </p>
+              <p class="note">{details.proceeds}</p>
+            </dd>
+          </div>
+          <div class="cell">
+            <dt>Where</dt>
+            <dd>
+              <p class="line">{details.location}</p>
+              <p class="note">{details.locationNote}</p>
+            </dd>
+          </div>
+          <div class="cell">
+            <dt>Bring</dt>
+            <dd>
+              <p class="line">{details.bring}</p>
+            </dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+  </div>
+</section>
+
+<style>
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) var(--s-9);
+  }
+  /* One ruled sheet: strong outer rule, the courses split by a single vertical rule. */
+  .sheet {
+    border: 1px solid var(--line-strong);
+  }
+  /* The two courses share six rows through subgrid, so every part lines up across the sheet. */
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(6, auto);
+  }
+  .course {
+    grid-row: span 6;
+    display: grid;
+    grid-template-rows: subgrid;
+    min-width: 0;
+  }
+  .course + .course {
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .photo {
+    aspect-ratio: 16 / 9;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .head,
+  .about,
+  .plan,
+  .when,
+  .act {
+    padding-inline: var(--s-6);
+  }
+
+  .head {
+    padding-top: var(--s-6);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem);
+    line-height: 1.02;
+  }
+  /* Side by side, the shared "LEGO Robotics" always takes the second line. */
+  @media (min-width: 900px) {
+    .tail {
+      display: block;
+    }
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .level {
+    color: var(--gold-ink);
+  }
+
+  .about {
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+    padding-top: var(--s-5);
+  }
+  .about p {
+    max-width: 58ch;
+    color: var(--ink-2);
+  }
+  .about .outcome {
+    margin-top: var(--s-2);
+    font-weight: 500;
+    color: var(--gold-ink);
+  }
+
+  h3 {
+    font-size: 1.0625rem;
+  }
+  .plan {
+    padding-top: var(--s-7);
+  }
+  .plan ol {
+    margin: var(--s-4) 0 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  /* A ruled ledger: the section number in the margin, the lesson beside it. */
+  .plan li {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    align-items: baseline;
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .n {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--gold-ink);
+  }
+
+  .when {
+    padding-top: var(--s-7);
+  }
+  .sessions {
+    display: grid;
+    gap: var(--s-4);
+    margin: var(--s-4) 0 0;
+  }
+  .sessions li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: var(--s-4);
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .range {
+    font-weight: 600;
+    font-size: 1.0625rem;
+  }
+  .where {
+    grid-column: 1 / -1;
+    margin-top: 0.15rem;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .status {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  [data-status='upcoming'] .status {
+    color: var(--gold-ink);
+  }
+  [data-status='finished'] .range {
+    color: var(--ink-3);
+  }
+  .none {
+    margin-top: var(--s-3);
+    color: var(--ink-3);
+  }
+
+  .act {
+    align-self: end;
+    padding-top: var(--s-6);
+    padding-bottom: var(--s-6);
+  }
+  .act .arrow-link {
+    color: var(--ink);
+  }
+  .act .btn {
+    white-space: normal;
+    height: auto;
+    min-height: 52px;
+    padding-block: var(--s-2);
+  }
+
+  /* The details both courses share: a strip of cells under the pair, like a drawing's title block. */
+  .details {
+    border-top: 1px solid var(--line-strong);
+  }
+  .cells {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+  }
+  .cell {
+    padding: var(--s-5) var(--s-6) var(--s-6);
+  }
+  .cell + .cell {
+    border-left: 1px solid var(--line);
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  dd {
+    display: grid;
+    gap: var(--s-3);
+    margin: var(--s-3) 0 0;
+  }
+  .line {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+  .term {
+    display: block;
+    font-weight: 600;
+  }
+  .sub {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .price {
+    color: var(--ink-2);
+  }
+  .fig {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--sun);
+  }
+  .note {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .nb {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1099px) {
+    .cells {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    /* Outweighs `.cell + .cell`, so the second row's first cell really loses its side rule. */
+    .cell + .cell:nth-child(3) {
+      border-left: 0;
+    }
+    .cell:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (max-width: 899px) {
+    .pair {
+      grid-template-columns: 1fr;
+      grid-template-rows: none;
+    }
+    .course {
+      grid-row: auto;
+      grid-template-rows: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .course + .course {
+      border-left: 0;
+      border-top: 1px solid var(--line-strong);
+    }
+    .act {
+      align-self: auto;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-6) var(--s-8);
+    }
+    .head,
+    .about,
+    .plan,
+    .when,
+    .act {
+      padding-inline: var(--s-4);
+    }
+    .head {
+      padding-top: var(--s-5);
+    }
+    .plan,
+    .when {
+      padding-top: var(--s-6);
+    }
+    .cells {
+      grid-template-columns: 1fr;
+    }
+    .cell {
+      padding: var(--s-4);
+    }
+    .cell + .cell {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

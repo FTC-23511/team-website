@@ -1,0 +1,32 @@
+---
+// The team's nonprofit standing, as the sponsorship package puts it ("We are a non-profit 501(c)(3) organization, all
+// sponsorships are 100% tax-deductible!"), set wherever the site asks for support.
+import { Icon } from 'astro-icon/components';
+---
+
+<ul class="facts" role="list">
+  <li><Icon name="ph:seal-check" aria-hidden="true" />501(c)(3) nonprofit</li>
+  <li><Icon name="ph:receipt" aria-hidden="true" />All contributions are 100% tax deductible</li>
+</ul>
+
+<style>
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-5);
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+  .facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .facts :global(svg) {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--gold-ink);
+  }
+</style>

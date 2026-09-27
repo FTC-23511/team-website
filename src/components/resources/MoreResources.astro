@@ -1,0 +1,145 @@
+---
+// The close of the Designs, Portfolios and Videos pages: the other open resources, as a ruled index. The ask to
+// support the team is left to the nav and the footer, and to the hub's own close (./Support.astro).
+import { Icon } from 'astro-icon/components';
+import { counts, solversLib } from '../../data/resources';
+
+interface Props {
+  /** The page this sits on, left out of the list. */
+  current: string;
+}
+const { current } = Astro.props;
+
+const pages = [
+  { label: 'All resources', href: '/resources/', note: 'SolversLib, CAD, portfolios, code, and videos' },
+  { label: 'Designs', href: '/resources/designs/', note: `${counts.designs} robots and mechanisms in Onshape` },
+  { label: 'Portfolios', href: '/resources/portfolios/', note: `${counts.portfolios} engineering portfolios` },
+  { label: 'Videos & Workshops', href: '/resources/videos/', note: `${counts.videos} videos` },
+  { label: 'SolversLib Docs', href: solversLib.docs.href, note: 'docs.seattlesolvers.com', external: true },
+].filter((p) => p.href !== current);
+---
+
+<section class="more" aria-labelledby="more-title">
+  <div class="inner">
+    <h2 id="more-title">More resources</h2>
+    <ul role="list">
+      {
+        pages.map((p) => (
+          <li>
+            <a href={p.href} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}>
+              <span class="label">
+                {p.label}
+                {p.external && <span class="visually-hidden"> (opens in a new tab)</span>}
+              </span>
+              <span class="note">{p.note}</span>
+              <span class="ring" aria-hidden="true">
+                <Icon name={p.external ? 'ph:arrow-up-right' : 'ph:arrow-right'} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .more {
+    border-block: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  /* A heading-left ledger: the heading beside the index, as in the hub's rows. */
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--s-5) var(--s-8);
+    align-items: start;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.1rem + 1.6vw, 2.5rem);
+  }
+
+  /* A ruled index: page name, what is there, and the arrow ring that slides on hover. */
+  ul {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  li {
+    border-bottom: 1px solid var(--line);
+  }
+  li a {
+    display: grid;
+    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--s-2) var(--s-5);
+    min-height: 60px;
+    padding-block: var(--s-3);
+    text-decoration: none;
+  }
+  .label {
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .note {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .ring {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transition:
+      transform var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+  .ring :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+  li a:hover .label {
+    color: var(--sun);
+  }
+  li a:hover .ring {
+    transform: translateX(4px);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    li a {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'label ring' 'note ring';
+      row-gap: 0.2rem;
+    }
+    .label {
+      grid-area: label;
+    }
+    .note {
+      grid-area: note;
+    }
+    .ring {
+      grid-area: ring;
+    }
+  }
+</style>

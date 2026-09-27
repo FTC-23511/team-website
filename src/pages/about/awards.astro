@@ -1,0 +1,118 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import WorldsLead from '../../components/about/awards/WorldsLead.astro';
+import AwardsRecord from '../../components/about/AwardsRecord.astro';
+import SeasonLedger from '../../components/about/awards/SeasonLedger.astro';
+import SeasonStrip from '../../components/about/awards/SeasonStrip.astro';
+import FllBand from '../../components/about/awards/FllBand.astro';
+import { ftcSeasons, fll } from '../../data/awards';
+
+// Seasons are laid out by position, newest first: timeline, then ledger, then strips.
+const [current, previous, ...older] = ftcSeasons;
+const fllYears = fll.awards.map((a) => a.years);
+const index = [
+  ...ftcSeasons.map((s) => ({ href: `#${s.id}`, years: s.years, name: s.game })),
+  { href: '#fll', years: `${fllYears[0].slice(0, 4)}-${fllYears[fllYears.length - 1].slice(-2)}`, name: 'FIRST LEGO League' },
+];
+---
+
+<Base
+  title="Awards | Seattle Solvers"
+  description="Seattle Solvers awards by season, led by the Inspire Award, 2nd Place, in the Lovelace Division of the 2026 FIRST World Championship."
+>
+  <PageHeader
+    title="Awards"
+    lede="The awards we have won throughout our time in FIRST Tech Challenge and FIRST LEGO League, arranged by season."
+  >
+    <nav class="index" aria-label="Seasons">
+      <ol role="list" style={`--n: ${index.length}`}>
+        {
+          index.map((s) => (
+            <li>
+              <a href={s.href}>
+                <span class="years">{s.years}</span>
+                <span class="name">{s.name}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </PageHeader>
+
+  <WorldsLead />
+  {current && <AwardsRecord season={current} />}
+  {previous && <SeasonLedger season={previous} />}
+  {older.map((s) => <SeasonStrip season={s} />)}
+  <FllBand />
+</Base>
+
+<style>
+  /* Season index: a row of channels under the lede, one per season. */
+  .index {
+    margin-top: var(--s-7);
+    max-width: 60rem;
+  }
+  .index ol {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  /* Selectors below keep equal element counts: Astro scopes every element, so `li + li` would outrank overrides. */
+  .index li {
+    border-left: 1px solid var(--line);
+  }
+  .index li:first-child {
+    border-left: 0;
+  }
+  .index a {
+    display: grid;
+    gap: 0.2rem;
+    min-height: 44px;
+    padding: var(--s-3) var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .index li:first-child a {
+    padding-left: 0;
+  }
+  .years {
+    color: var(--gold-ink);
+  }
+  .name {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--dur-quick) var(--ease);
+  }
+  .index a:hover .name {
+    text-decoration-color: currentColor;
+  }
+
+  @media (max-width: 767px) {
+    .index {
+      margin-top: var(--s-6);
+    }
+    .index ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .index li:nth-child(odd) {
+      border-left: 0;
+    }
+    .index li:nth-child(odd) a {
+      padding-left: 0;
+    }
+    .index li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

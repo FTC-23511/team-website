@@ -1,0 +1,152 @@
+---
+// Older FTC seasons: one compact strip each, heading, photo and results on a single rule.
+import type { FtcSeason } from '../../../data/awards';
+
+interface Props {
+  season: FtcSeason;
+}
+const { season } = Astro.props;
+const photo = season.photos[0];
+---
+
+<section class="strip-season" id={season.id} aria-labelledby={`${season.id}-title`}>
+  <div class="inner">
+    <div class="head">
+      <h2 id={`${season.id}-title`}>{season.game}</h2>
+      <p class="meta">
+        <span class="years">{season.years}</span>
+        {season.robot && <span>{season.robot.name}</span>}
+      </p>
+    </div>
+
+    {
+      photo && (
+        <figure class="duo photo" style={`--ar: ${(photo.width / photo.height).toFixed(4)}`}>
+          <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
+        </figure>
+      )
+    }
+
+    <div class="results">
+      {
+        season.events.map((e) => (
+          <div class="event-block">
+            <ul class="titles" role="list">
+              {e.awards.map((a) => (
+                <li>
+                  <h3>{a.title}</h3>
+                </li>
+              ))}
+            </ul>
+            <p class="event">{e.name}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .strip-season {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr);
+    gap: var(--s-7);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .years {
+    color: var(--gold-ink);
+  }
+
+  .photo {
+    aspect-ratio: var(--ar);
+    width: 100%;
+    max-width: 461px;
+  }
+
+  .results {
+    display: grid;
+    gap: var(--s-5);
+  }
+  /* Results sit side by side as readout cells, the event on the rule beneath them. */
+  .titles {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .titles li {
+    padding: var(--s-4) var(--s-4) var(--s-4) 0;
+  }
+  .titles li + li {
+    padding-left: var(--s-4);
+    border-left: 1px solid var(--line);
+  }
+  h3 {
+    font-size: var(--step-1);
+  }
+  .event {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--s-6);
+    }
+    .head {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 899px) {
+    .titles {
+      grid-auto-flow: row;
+    }
+    .titles li,
+    .titles li + li {
+      padding: var(--s-3) 0;
+      border-left: 0;
+    }
+    .titles li + li {
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (max-width: 699px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+    .photo {
+      max-width: none;
+    }
+  }
+</style>

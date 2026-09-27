@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { nav } from '../data/site';
+import CypherHero from '../components/CypherHero.astro';
+import Mission from '../components/home/Mission.astro';
+import Statement from '../components/home/Statement.astro';
+import Sponsors from '../components/home/Sponsors.astro';
+
+// The current season's robot page is the Robots menu's first entry, so this map follows it each year.
+const robots = nav.find((n) => n.label === 'Robots')!.children![0].href;
+---
+
+<Base>
+  <script is:inline define:vars={{ robots }}>
+    // The old seattlesolvers.com was one page with hash routes. Links people shared to it (/#classes,
+    // /#apply-team and so on) forward to the page that replaced each view, on arrival or on a hash change.
+    (function () {
+      var routes = {
+        about: '/about/team/',
+        awards: '/about/awards/',
+        seasons: '/about/awards/',
+        impact: '/impact/outreach/',
+        robots: robots,
+        resources: '/resources/',
+        solverslib: '/resources/',
+        'solverslib-docs': '/resources/',
+        classes: '/classes/',
+        'apply-class': '/classes/',
+        'class-policies': '/classes/policies/',
+        apply: '/apply/',
+        'apply-team': '/apply/',
+        sponsors: '/sponsors/',
+        'sponsors-list': '/sponsors/',
+        contact: '/contact/',
+      };
+      function forward() {
+        var key = location.hash.slice(1);
+        if (Object.prototype.hasOwnProperty.call(routes, key)) location.replace(routes[key]);
+      }
+      forward();
+      window.addEventListener('hashchange', forward);
+    })();
+  </script>
+  <CypherHero />
+  <Mission />
+  <Statement />
+  <Sponsors />
+</Base>

@@ -1,0 +1,81 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import WhySponsor from '../../components/sponsors/WhySponsor.astro';
+import Reach from '../../components/sponsors/Reach.astro';
+import Tiers from '../../components/sponsors/Tiers.astro';
+import HowToSponsor from '../../components/sponsors/HowToSponsor.astro';
+import NonprofitFacts from '../../components/NonprofitFacts.astro';
+import { emailUs, sponsorshipPackage } from '../../data/sponsors';
+---
+
+<Base
+  title="Become a Sponsor | Seattle Solvers"
+  description="Sponsor Seattle Solvers, FTC Team #23511: tiers from $100 and their benefits, our reach, and how to sponsor. Contributions are 100% tax deductible."
+>
+  <PageHeader
+    title="Become a Sponsor"
+    lede="Our team has worked with many companies over the years, including the Gene Haas Foundation, Onshape/PTC, FRCTees, and more! We’d love to work with you as well."
+  >
+    <p class="more">
+      Look through our sponsorship package and <a href="#tiers">tiers below</a> for a comprehensive overview of our team
+      and the benefits of a sponsorship. We are always open to discuss further details at our email,{' '}
+      <a href={emailUs.href}>{emailUs.address}</a>.
+    </p>
+    <div class="actions">
+      <a class="btn btn-primary" href={emailUs.href}>
+        <span>{emailUs.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+      <a class="btn btn-outline" href={sponsorshipPackage.href} target="_blank" rel="noopener">
+        <span>{sponsorshipPackage.label}</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+        <span class="visually-hidden">(opens in a new tab)</span>
+      </a>
+    </div>
+    <div class="facts"><NonprofitFacts /></div>
+  </PageHeader>
+
+  <WhySponsor />
+  <Reach />
+  <Tiers />
+  <HowToSponsor />
+</Base>
+
+<style>
+  .more {
+    margin-top: var(--s-4);
+    max-width: 58ch;
+    color: var(--ink-3);
+  }
+  .more a {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .more a:hover {
+    color: var(--gold-ink);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-top: var(--s-6);
+  }
+  .facts {
+    margin-top: var(--s-5);
+  }
+
+  @media (max-width: 479px) {
+    /* Full width, and a long label wraps inside its button so the arrow ring keeps its room. */
+    .actions .btn {
+      width: 100%;
+      height: auto;
+      min-height: 52px;
+      padding-block: var(--s-2);
+      justify-content: space-between;
+      white-space: normal;
+      text-align: left;
+    }
+  }
+</style>

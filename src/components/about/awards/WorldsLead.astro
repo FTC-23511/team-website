@@ -1,0 +1,160 @@
+---
+// The page's lead: the World Championship result, set as instrument readouts on the yellow band.
+import { headline, ordinal } from '../../../data/awards';
+
+const place = ordinal(headline.place);
+const rank = ordinal(headline.divisionRank);
+---
+
+<section class="lead" aria-labelledby="lead-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="lead-title">World Championship</h2>
+      <p class="where">
+        <span>{headline.division}</span>
+        <span>{headline.city}, {headline.date}</span>
+      </p>
+    </div>
+
+    <dl class="dials">
+      <div class="dial main">
+        <dt class="award">{headline.award}</dt>
+        <dd class="num">{place.value}<span class="ord">{place.suffix}</span><span class="visually-hidden"> place</span></dd>
+      </div>
+      <div class="dial">
+        <dt class="label">Rank in the {headline.division}</dt>
+        <dd class="num">{rank.value}<span class="ord">{rank.suffix}</span></dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .lead {
+    --rule: color-mix(in srgb, var(--on-band) 26%, transparent);
+    background-color: var(--band);
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--on-band) 9%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--on-band) 9%, transparent) 1px, transparent 1px);
+    background-size: 80px 80px;
+    /* A crisp ink edge, so the header's sun sets onto the band instead of melting into it. */
+    border-top: 1px solid color-mix(in srgb, var(--on-band) 55%, transparent);
+    color: var(--on-band);
+  }
+  /* One instrument strip: a shared top rule, three cells, labels settling on a common floor. */
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) var(--s-8);
+  }
+  .head,
+  .dials {
+    border-top: 1px solid var(--rule);
+  }
+  .head {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--s-6);
+    padding: var(--s-5) var(--s-6) 0 0;
+  }
+  h2 {
+    font-size: clamp(2rem, 1.2rem + 2vw, 3rem);
+    /* Only matters when a reader widens letter spacing on a phone: the long word breaks instead of being clipped. */
+    overflow-wrap: anywhere;
+  }
+  .where {
+    display: grid;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .dials {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    margin: 0;
+  }
+  .dial {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--s-5) var(--s-6) 0;
+    border-left: 1px solid var(--rule);
+  }
+  .num {
+    order: 1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 0.8;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .main .num {
+    font-size: clamp(6.5rem, 2.4rem + 11vw, 13rem);
+  }
+  .dial:not(.main) .num {
+    font-size: clamp(3.5rem, 1.8rem + 4.4vw, 6.5rem);
+  }
+  .ord {
+    font-size: 0.3em;
+    vertical-align: top;
+    margin-left: 0.08em;
+    letter-spacing: 0.02em;
+  }
+  .award {
+    order: 2;
+    margin-top: var(--s-5);
+    font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .label {
+    order: 2;
+    margin-top: var(--s-5);
+    max-width: 18ch;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 1023px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+    .head {
+      padding-right: 0;
+    }
+    .dials {
+      margin-top: var(--s-6);
+    }
+    .dial.main {
+      border-left: 0;
+      padding-left: 0;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-7);
+    }
+    .dials {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+    .dial {
+      padding: var(--s-4) 0 0 var(--s-4);
+    }
+    .dial.main {
+      padding-right: var(--s-4);
+    }
+  }
+</style>

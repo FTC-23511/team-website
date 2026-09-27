@@ -1,0 +1,225 @@
+---
+// The hub's lead: SolversLib, the team's open-source library, on a night panel with its facts in a title block.
+import { Icon } from 'astro-icon/components';
+import { solversLib } from '../../data/resources';
+---
+
+<section class="lib" id="solverslib" aria-labelledby="lib-title">
+  <div class="inner">
+    <div class="words">
+      <h2 id="lib-title">SolversLib</h2>
+      <p class="statement">{solversLib.summary}.</p>
+      <p class="body">
+        {solversLib.purpose}{' '}{solversLib.swerve} So far it has drawn <strong>{solversLib.visits}</strong> visits.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href={solversLib.docs.href} target="_blank" rel="noopener">
+          <span>{solversLib.docs.label}</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+          <span class="visually-hidden">(opens in a new tab)</span>
+        </a>
+        <ul class="more" role="list">
+          {
+            solversLib.links.map((l) => (
+              <li>
+                <a class="arrow-link" href={l.href} target="_blank" rel="noopener">
+                  <span>
+                    {l.label}
+                    <span class="visually-hidden"> (opens in a new tab)</span>
+                  </span>
+                  <span class="ring" aria-hidden="true">
+                    <Icon name="ph:arrow-up-right" />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <dl class="block">
+      {
+        solversLib.facts.map((f) => (
+          <div class="cell">
+            <dt>{f.label}</dt>
+            <dd>
+              {f.href ? (
+                <a href={f.href} target="_blank" rel="noopener">
+                  {f.value}
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              ) : f.code ? (
+                <code>{f.value}</code>
+              ) : (
+                f.value
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .lib {
+    --rule: rgb(252 249 222 / 0.24);
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* The night panel's dim sun, rising behind the title block. */
+  .lib::before {
+    content: '';
+    position: absolute;
+    right: -14%;
+    bottom: -55%;
+    width: min(64vw, 860px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    z-index: -1;
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--s-8);
+    align-items: end;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .statement {
+    margin-top: var(--s-5);
+    max-width: 22ch;
+    font-size: clamp(1.625rem, 1.05rem + 1.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .body {
+    margin-top: var(--s-5);
+    max-width: 56ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--on-night-2);
+  }
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-4) var(--s-6);
+    margin-top: var(--s-7);
+  }
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+    margin: 0;
+  }
+  .more .arrow-link {
+    color: var(--on-night);
+  }
+  .more .arrow-link:hover :global(.ring) {
+    background: var(--sun);
+    color: var(--night);
+    border-color: var(--sun);
+  }
+  .lib a:focus-visible {
+    outline-color: var(--sun);
+  }
+  .lib .btn-primary:focus-visible {
+    outline-color: var(--on-night);
+  }
+
+  /* A title block, as on a drawing: labels in mono, values set plainly, cream rules between the cells. */
+  .block {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .cell {
+    display: grid;
+    align-content: start;
+    gap: var(--s-2);
+    padding: var(--s-5) var(--s-5) var(--s-5) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cell:nth-child(even) {
+    padding-left: var(--s-5);
+    border-left: 1px solid var(--rule);
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-night-2);
+  }
+  dd {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  /* A name you type, set in mono like the repositories below. */
+  dd code {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  dd a {
+    color: var(--on-night);
+  }
+  dd a:hover {
+    color: var(--sun);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+    .block {
+      max-width: 44rem;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .block {
+      grid-template-columns: 1fr;
+    }
+    .cell,
+    .cell:nth-child(even) {
+      padding: var(--s-4) 0;
+      border-left: 0;
+    }
+  }
+  @media (max-width: 479px) {
+    .actions .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

@@ -1,0 +1,222 @@
+---
+// Where the classes lead, on the yellow band: the same road the team took, from a LEGO robotics class to a
+// FIRST LEGO League team to FTC and the World Championship. Every stop comes from the awards record.
+import { Icon } from 'astro-icon/components';
+import { fll, ftcSeasons, headline, ordinal } from '../../data/awards';
+import { parts } from './text';
+
+const fllSeasons = [...new Set(fll.awards.map((a) => a.years))];
+const firstFtc = ftcSeasons[ftcSeasons.length - 1];
+const place = ordinal(headline.place);
+const stops = [
+  { name: 'LEGO robotics class', detail: 'Grades 4 to 7, right here' },
+  { name: 'FIRST LEGO League', detail: `Team #${fll.team}, ${fllSeasons.join(' and ')}` },
+  { name: 'FIRST Tech Challenge', detail: `Team #23511 since ${firstFtc.years}` },
+  {
+    name: 'World Championship',
+    detail: `${headline.award}, ${place.value}${place.suffix} Place, ${headline.city} ${headline.date.slice(-4)}`,
+  },
+];
+---
+
+<section class="path" aria-labelledby="path-title">
+  <div class="inner">
+    <div class="words">
+      <h2 id="path-title">From LEGO to Worlds</h2>
+      <p class="statement">Our own team started in FIRST LEGO League.</p>
+      <a class="arrow-link" href="/about/awards/">
+        <span>Every award by season</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+
+    <ol class="route" role="list" aria-label="From a LEGO class to the World Championship">
+      {
+        stops.map((s, i) => (
+          <li class:list={['stop', { last: i === stops.length - 1 }]}>
+            <span class="pin" aria-hidden="true" />
+            <p class="name">{s.name}</p>
+            <p class="detail">{parts(s.detail).map((t) => (t.keep ? <span class="nb">{t.text}</span> : t.text))}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* The yellow band, with its own 80px ink grid. */
+  .path {
+    --soft: color-mix(in srgb, var(--on-band) 80%, var(--band));
+    --grid-ink: color-mix(in srgb, var(--on-band) 9%, transparent);
+    background-color: var(--band);
+    background-image:
+      linear-gradient(to right, var(--grid-ink) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-ink) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--on-band);
+  }
+  .path ::selection {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--s-8);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .statement {
+    margin-top: var(--s-5);
+    max-width: 26ch;
+    font-size: clamp(1.375rem, 1rem + 1vw, 1.875rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .words .arrow-link {
+    margin-top: var(--s-6);
+    color: var(--on-band);
+  }
+  .words .arrow-link:hover .ring {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .path a:focus-visible {
+    outline-color: var(--on-band);
+  }
+
+  /* The route: four pins on one line, like the RISE pilot's route. Solid band behind it so the grid stops. */
+  .route {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: var(--s-6) var(--s-5) var(--s-5);
+    background: var(--band);
+    border: 1px solid var(--on-band);
+  }
+  .stop {
+    position: relative;
+    padding-right: var(--s-4);
+  }
+  /* Each pin draws the stretch of line to the next one. */
+  .stop:not(.last)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    right: 0;
+    top: 7px;
+    height: 1.5px;
+    background: var(--on-band);
+    transform-origin: left center;
+  }
+  .pin {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid var(--on-band);
+    border-radius: 50%;
+    background: var(--band);
+  }
+  .last .pin {
+    background: var(--on-band);
+  }
+  .name {
+    margin-top: var(--s-4);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .detail {
+    margin-top: 0.3rem;
+    max-width: 22ch;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--soft);
+  }
+  .nb {
+    white-space: nowrap;
+  }
+
+  /* The line draws itself in, stop by stop, as the route scrolls into view. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .stop:not(.last)::after {
+        animation: path-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 30% cover 45%;
+      }
+      @keyframes path-draw {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+  }
+  /* Phones: the route turns vertical, pins down the left, the line joining them. */
+  @media (max-width: 699px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .route {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+      padding: var(--s-5) var(--s-4);
+    }
+    .stop {
+      padding: 0 0 0 calc(15px + var(--s-4));
+    }
+    .pin {
+      position: absolute;
+      left: 0;
+      top: 0.2rem;
+    }
+    .stop:not(.last)::after {
+      left: 6.75px;
+      right: auto;
+      top: calc(0.2rem + 15px);
+      bottom: calc(-1 * var(--s-5) - 0.2rem);
+      width: 1.5px;
+      height: auto;
+      transform-origin: top center;
+    }
+    .name {
+      margin-top: 0;
+    }
+    .detail {
+      max-width: none;
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .stop:not(.last)::after {
+          animation-name: path-draw-down;
+        }
+        @keyframes path-draw-down {
+          from {
+            transform: scaleY(0);
+          }
+          to {
+            transform: scaleY(1);
+          }
+        }
+      }
+    }
+  }
+</style>

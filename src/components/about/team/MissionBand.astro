@@ -1,0 +1,72 @@
+---
+import { mission } from '../../../data/team';
+
+// Set the closing "have fun!" as an ink stamp. Falls back to plain text if the wording changes.
+const at = mission.lastIndexOf('have fun');
+const [lead, fun] = at > 0 ? [mission.slice(0, at), mission.slice(at)] : [mission, ''];
+---
+
+<section class="mission" aria-labelledby="mission-title">
+  <div class="inner">
+    <h2 id="mission-title">Our mission</h2>
+    <p class="statement">
+      {lead}{fun && <span class="fun">{fun}</span>}
+    </p>
+  </div>
+</section>
+
+<style>
+  /* The yellow statement band with its 80px ink grid. */
+  .mission {
+    --rule: color-mix(in srgb, var(--on-band) 9%, transparent);
+    background-color: var(--band);
+    background-image:
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--on-band);
+  }
+  .mission ::selection {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-6) var(--s-8);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-7) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
+  }
+  .statement {
+    max-width: 52ch;
+    font-size: clamp(1.0625rem, 0.95rem + 0.45vw, 1.375rem);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  /* An inline block so the stamp's height is set here, not by the font's content area,
+     and never reaches into the line above. */
+  .fun {
+    display: inline-block;
+    padding: 0.02em 0.14em 0.1em;
+    line-height: 1;
+    background: var(--on-band);
+    color: var(--band);
+  }
+
+  @media (max-width: 899px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-6);
+    }
+  }
+</style>

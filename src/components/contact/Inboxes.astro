@@ -1,0 +1,134 @@
+---
+// The four team inboxes, ruled like a directory: what each is for, the address, and a copy button.
+import CopyButton from '../CopyButton.astro';
+import { inboxes } from '../../data/contact';
+---
+
+<section class="inboxes" aria-labelledby="inboxes-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="inboxes-title">Email</h2>
+      <p class="sub">Write to the inbox that fits your question, and it reaches the right people first.</p>
+    </div>
+
+    <ul class="rows" role="list">
+      {
+        inboxes.map((box) => (
+          <li class="row">
+            <div class="what">
+              <h3>{box.title}</h3>
+              <p>{box.body}</p>
+            </div>
+            <div class="where">
+              <a class="address" href={`mailto:${box.address}`}>
+                {box.address.split('@')[0]}<wbr />@{box.address.split('@')[1]}
+              </a>
+              <CopyButton text={box.address} what="email address" />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+    gap: var(--s-7);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 28ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .rows {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: var(--s-3) var(--s-6);
+    align-items: center;
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 {
+    font-size: var(--step-1);
+  }
+  .what p {
+    margin-top: 0.3rem;
+    max-width: 40ch;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  /* The address, then its copy button in one right-hand column shared by every row. A long address breaks at the
+     <wbr> before its @ rather than pushing its button under it. */
+  .where {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--s-5);
+  }
+  .address {
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--gold-ink);
+    text-decoration: none;
+    overflow-wrap: normal;
+  }
+  .address:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+    .sub {
+      max-width: 44ch;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+  /* Phones: the copy button drops to its icon (its accessible name still says what it copies). */
+  @media (max-width: 599px) {
+    .address {
+      min-width: 0;
+      font-size: 1.0625rem;
+    }
+    .where :global(.copy) {
+      width: 44px;
+      padding: 0;
+      justify-content: center;
+    }
+    .where :global(.copy-state) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+</style>

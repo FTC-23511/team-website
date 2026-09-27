@@ -1,0 +1,89 @@
+---
+// The closing ask: the newsletter is a sponsorship benefit from the first tier up (sponsorship package, page 4).
+import { Icon } from 'astro-icon/components';
+import { cta } from '../../data/site';
+import { benefits, tiers } from '../../data/sponsors';
+
+const newsletter = benefits.find((b) => /newsletter/i.test(b.label));
+const first = tiers.find((t) => t.id === newsletter?.from) ?? tiers[0];
+---
+
+<section class="ask" aria-labelledby="ask-title">
+  <div class="inner">
+    <h2 id="ask-title">Sponsors get every issue</h2>
+    <div class="copy">
+      <p class="sub">
+        Our bi-monthly newsletter comes with every sponsorship, starting at the {first.name} tier from{' '}
+        <strong>{first.from}</strong>.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href={cta.sponsor.href}>
+          <span>{cta.sponsor.label}</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+        </a>
+        <a class="arrow-link" href="/sponsors/become-a-sponsor/#tiers">
+          <span>Sponsorship tiers</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ask {
+    border-block: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-6) var(--s-8);
+    align-items: end;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    max-width: 14ch;
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    max-width: 40ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--gold-ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-4) var(--s-6);
+    margin-top: var(--s-6);
+  }
+
+  @media (max-width: 899px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 479px) {
+    .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

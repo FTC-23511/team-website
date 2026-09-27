@@ -1,0 +1,75 @@
+---
+import { reach } from '../../data/impact';
+
+// One run of type, figures set inline. Big stand-alone numerals stay special to the home page.
+const [people, teams, visits] = reach;
+---
+
+<section class="reach" aria-labelledby="reach-title">
+  <div class="inner">
+    <h2 id="reach-title" class="visually-hidden">Our reach</h2>
+    <p class="run">
+      We have introduced <strong>{people.value}</strong> people to FIRST, our programs have impacted{' '}
+      <strong>{teams.value}</strong> teams, and SolversLib has drawn <strong>{visits.value}</strong> visits.
+    </p>
+    <p class="source">From our 2026 sponsorship package</p>
+  </div>
+</section>
+
+<style>
+  .reach {
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* A dim sun rising behind the sentence, the night panel's signature. */
+  .reach::before {
+    content: '';
+    position: absolute;
+    right: -10%;
+    top: -40%;
+    width: min(60vw, 820px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    z-index: -1;
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .run {
+    max-width: 30ch;
+    font-size: clamp(1.75rem, 1.1rem + 2.2vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .source {
+    margin-top: var(--s-6);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-night-2);
+  }
+
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+</style>

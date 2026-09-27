@@ -1,0 +1,95 @@
+---
+// One season of open designs. The season's robot leads, drawn tall; its mechanisms stack beside it.
+import DesignSheet from './DesignSheet.astro';
+import type { DesignSeason } from '../../data/resources';
+
+interface Props {
+  season: DesignSeason;
+  /** The page's first season: its robot and the sheet beside it are in the first screen, so they load at once. */
+  first?: boolean;
+}
+const { season, first = false } = Astro.props;
+const lead = season.designs.find((d) => d.lead) ?? season.designs[0];
+const rest = season.designs.filter((d) => d !== lead);
+---
+
+<section class="season" id={season.id} aria-labelledby={`${season.id}-title`}>
+  <div class="inner">
+    <div class="head">
+      <h2 id={`${season.id}-title`}>{season.game}</h2>
+      <p class="years">{season.years}</p>
+    </div>
+    <div class="sheets" style={`--rows: ${Math.max(rest.length, 1)}`}>
+      <div class="lead-cell">
+        <DesignSheet design={lead} lead eager={first} priority={first} />
+      </div>
+      {
+        rest.map((d, i) => (
+          <div class="cell">
+            <DesignSheet design={d} eager={first && i === 0} />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .season + .season {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-2) var(--s-5);
+    margin-bottom: var(--s-6);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .years {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--gold-ink);
+  }
+
+  /* The robot's sheet spans every row on the left, so it always ends level with the stack beside it. */
+  .sheets {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-rows: repeat(var(--rows), auto);
+    gap: var(--s-5);
+  }
+  .lead-cell {
+    grid-row: 1 / -1;
+  }
+
+  @media (max-width: 1023px) {
+    .sheets {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: none;
+    }
+    .lead-cell {
+      grid-row: auto;
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .sheets {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

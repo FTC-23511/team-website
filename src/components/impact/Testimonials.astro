@@ -1,0 +1,225 @@
+---
+// "In their words": what other teams say about our open-source work and mentorship, on a night panel. The first
+// quote is set large; the others follow under a shared rule, grouped by who said them.
+import { Icon } from 'astro-icon/components';
+import { testimonials } from '../../data/testimonials';
+
+const [lead, ...rest] = testimonials;
+
+// Quotes in a row from the same person share one attribution (Tom's two), so a name never repeats.
+const groups: { name: string; team?: (typeof rest)[number]['team']; quotes: string[] }[] = [];
+for (const t of rest) {
+  const last = groups.at(-1);
+  if (last && last.name === t.name && !last.team && !t.team) last.quotes.push(t.quote);
+  else groups.push({ name: t.name, team: t.team, quotes: [t.quote] });
+}
+---
+
+<section class="words" aria-labelledby="words-title">
+  <div class="inner">
+    <h2 id="words-title">In their words</h2>
+
+    <figure class="lead">
+      <blockquote>
+        <p>{lead.quote}</p>
+      </blockquote>
+      <figcaption>
+        <span class="name">{lead.name}</span>
+        {
+          lead.team && (
+            <a class="team" href={lead.team.href} target="_blank" rel="noopener">
+              {lead.team.label}
+              <Icon name="ph:arrow-up-right" aria-hidden="true" />
+              <span class="visually-hidden"> (opens in a new tab)</span>
+            </a>
+          )
+        }
+      </figcaption>
+    </figure>
+
+    <div class="more">
+      {
+        groups.map((g) => (
+          <figure>
+            <div class="quotes">
+              {g.quotes.map((q) => (
+                <blockquote>
+                  <p>{q}</p>
+                </blockquote>
+              ))}
+            </div>
+            <figcaption>
+              <span class="name">{g.name}</span>
+              {g.team && (
+                <a class="team" href={g.team.href} target="_blank" rel="noopener">
+                  {g.team.label}
+                  <Icon name="ph:arrow-up-right" aria-hidden="true" />
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              )}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .words {
+    --rule: rgb(252 249 222 / 0.24);
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* The night panel's dim sun, rising behind the quotes from the lower right. */
+  .words::before {
+    content: '';
+    position: absolute;
+    right: -12%;
+    bottom: -58%;
+    width: min(64vw, 880px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    z-index: -1;
+  }
+  /* Heading-left: the heading holds its column; the quotes take the wider one. */
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    grid-template-areas:
+      'head lead'
+      'head more';
+    gap: var(--s-8) var(--s-7);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    grid-area: head;
+    max-width: 10ch;
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+
+  figure {
+    margin: 0;
+  }
+  blockquote {
+    margin: 0;
+  }
+  blockquote p {
+    color: var(--sun);
+    text-wrap: pretty;
+  }
+  /* Typographer's quotes, the opening one hung into the margin so the text keeps its left edge. */
+  blockquote p::before {
+    content: '\201C';
+    margin-left: -0.42em;
+  }
+  blockquote p::after {
+    content: '\201D';
+  }
+
+  .lead {
+    grid-area: lead;
+  }
+  /* The same statement size as the RISE School and Why sponsor us sentences. */
+  .lead blockquote p {
+    max-width: 34ch;
+    font-size: clamp(1.625rem, 1.05rem + 1.6vw, 2.5rem);
+    font-weight: 500;
+    line-height: 1.28;
+    letter-spacing: -0.015em;
+  }
+
+  .more {
+    grid-area: more;
+    display: grid;
+    gap: var(--s-6);
+  }
+  .more figure {
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--rule);
+  }
+  /* One person's quotes stacked in one column, so their one name follows every quote. */
+  .quotes {
+    display: grid;
+    gap: var(--s-5);
+  }
+  /* Body size, as the home page's mission quote. */
+  .more blockquote p {
+    max-width: 46ch;
+    font-size: var(--step-0);
+    font-weight: 500;
+    line-height: 1.55;
+  }
+
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-4);
+  }
+  .lead figcaption {
+    margin-top: var(--s-5);
+  }
+  .name {
+    font-weight: 600;
+    color: var(--on-night);
+  }
+  .team {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 28px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--on-night-2);
+    text-decoration: none;
+  }
+  .team :global(svg) {
+    width: 13px;
+    height: 13px;
+    transition: transform var(--dur-quick) var(--ease);
+  }
+  .team:hover {
+    color: var(--on-night);
+    text-decoration: underline;
+  }
+  .team:hover :global(svg) {
+    transform: translate(2px, -2px);
+  }
+  .team:focus-visible {
+    outline-color: var(--sun);
+  }
+
+  @media (max-width: 1023px) {
+    .inner {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'head'
+        'lead'
+        'more';
+      gap: var(--s-6);
+    }
+    h2 {
+      max-width: none;
+    }
+    .more {
+      margin-top: var(--s-4);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+</style>

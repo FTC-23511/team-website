@@ -1,0 +1,199 @@
+---
+// A YouTube video that costs nothing until it is played: the thumbnail (local, in the site duotone) with a
+// play ring, linking to YouTube. With JavaScript, pressing it swaps in the privacy-enhanced player in place.
+import { Icon } from 'astro-icon/components';
+import { team } from '../data/site';
+import { watchUrl, type Video } from '../data/videos';
+
+interface Props {
+  video: Video;
+  /** Heading level for the title, so the card fits the page outline. */
+  as?: 'h2' | 'h3' | 'h4';
+  eager?: boolean;
+  /**
+   * The card sits in a section already grouped by type (the Videos page): no type tag, and the channel only
+   * when it is someone else's.
+   */
+  grouped?: boolean;
+}
+const { video, as: Heading = 'h3', eager = false, grouped = false } = Astro.props;
+const [w, h] = video.vertical ? [405, 720] : [1280, 720];
+const kind = grouped ? undefined : video.kind;
+const channel = grouped && video.channel === team.name ? undefined : video.channel;
+const placed = video.playAt !== undefined;
+---
+
+<figure class:list={['video', { vertical: video.vertical }]}>
+  <div class="screen" data-video={video.id} data-video-title={video.original}>
+    <a class="facade duo" href={watchUrl(video.id)} target="_blank" rel="noopener">
+      <img
+        src={video.thumb}
+        alt=""
+        width={w}
+        height={h}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+      <span
+        class:list={['play', { placed }]}
+        style={placed ? `--play-at: ${video.playAt}%` : undefined}
+        aria-hidden="true"
+      >
+        <Icon name="ph:play-fill" />
+      </span>
+      <span class="visually-hidden">
+        Play {video.original}<span data-new-tab> (opens YouTube in a new tab)</span>
+      </span>
+    </a>
+  </div>
+  <figcaption>
+    <Heading class="title">{video.title}</Heading>
+    {
+      (kind || channel) && (
+        <p class="meta">
+          {kind && <span class="kind">{kind}</span>}
+          {channel && <span>{channel}</span>}
+        </p>
+      )
+    }
+    {video.note && <p class="note">{video.note}</p>}
+  </figcaption>
+</figure>
+
+<script>
+  // Swap a facade for the player on press. Modifier clicks still open YouTube in a new tab, but a plain press
+  // plays in place, so the new-tab notice is only for visitors without JavaScript.
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((screen) => {
+    const link = screen.querySelector('a');
+    if (!link) return;
+    link.querySelector('[data-new-tab]')?.remove();
+    link.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      const id = screen.dataset.video!;
+      const frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+      frame.title = screen.dataset.videoTitle ?? 'YouTube video';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      screen.replaceChildren(frame);
+      screen.classList.add('is-playing');
+      frame.focus();
+    });
+  });
+</script>
+
+<style>
+  .video {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--paper-2);
+    container-type: inline-size;
+  }
+  .vertical .screen {
+    aspect-ratio: 9 / 16;
+  }
+  .facade {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .screen :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  /* The play control is a step button: a circle, ink behind a Sun ring, filling Sun when reached for. */
+  .play {
+    --ring: 64px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: var(--ring);
+    height: var(--ring);
+    margin: calc(var(--ring) / -2) 0 0 calc(var(--ring) / -2);
+    border: 1px solid var(--sun);
+    border-radius: 50%;
+    background: rgb(11 10 6 / 0.78);
+    color: var(--sun);
+    transition:
+      background-color var(--dur) var(--ease),
+      color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+  /* A still whose title fills the middle sets --play-at to move the ring into the plain band below the title. That
+     ring takes its size from the still's width, so on a short still it fits the band instead of riding up into
+     the title, and it keeps 4px clear of the frame's bottom edge. */
+  .play.placed {
+    --ring: clamp(44px, 18cqi, 64px);
+    top: min(var(--play-at), calc(100% - var(--ring) / 2 - 4px));
+  }
+  .play :global(svg) {
+    width: 22px;
+    height: 22px;
+    margin-left: 3px;
+  }
+  .facade:hover .play,
+  .facade:focus-visible .play {
+    background: var(--sun);
+    color: var(--paper);
+    transform: scale(1.06);
+  }
+  .facade:focus-visible {
+    outline-offset: 4px;
+  }
+
+  figcaption {
+    padding-top: var(--s-4);
+  }
+  .title {
+    font-family: var(--font-body);
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    text-wrap: balance;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem var(--s-3);
+    margin-top: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .kind {
+    color: var(--gold-ink);
+  }
+  .note {
+    margin-top: var(--s-2);
+    max-width: 44ch;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+
+  /* Small phones: a smaller ring on the smaller stills. The whole still is the link, so the target stays large.
+     A placed ring keeps its own size. */
+  @media (max-width: 479px) {
+    .play {
+      --ring: 48px;
+    }
+  }
+</style>

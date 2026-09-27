@@ -1,0 +1,174 @@
+---
+// Where recruiting stands, read from `recruiting` in site.ts. While closed, the heading and one sentence carry the
+// date. While open (applications open and the form linked), the Apply button and a strip of cells join them.
+import { Icon } from 'astro-icon/components';
+import { recruiting, recruitingOpen as open } from '../../data/site';
+
+const cells = [
+  { label: 'Recruiting for', value: `${recruiting.nextSeason} season` },
+  { label: 'Applications', value: 'Open now' },
+];
+---
+
+<section class="status" aria-labelledby="status-title">
+  <div class:list={['inner', { 'is-open': open }]}>
+    <div class="words">
+      <h2 id="status-title">{open ? 'Applications are open' : `Applications open ${recruiting.opens}`}</h2>
+      <p class="said">
+        {
+          open ? (
+            <>
+              We are recruiting for the <span class="nb">{recruiting.nextSeason}</span> season. Tell us about yourself
+              through the application form.
+            </>
+          ) : (
+            <>
+              Recruiting for the <span class="nb">{recruiting.closedSeason}</span> season has closed. We open applications
+              again in <span class="nb">{recruiting.opens}</span>, for the <span class="nb">{recruiting.nextSeason}</span>{' '}
+              season.
+            </>
+          )
+        }
+      </p>
+      {
+        open && (
+          <a class="btn btn-primary" href={recruiting.form} target="_blank" rel="noopener">
+            <span>Apply now</span>
+            <span class="ring" aria-hidden="true">
+              <Icon name="ph:arrow-up-right" />
+            </span>
+            <span class="visually-hidden">(opens the application form in a new tab)</span>
+          </a>
+        )
+      }
+    </div>
+
+    {
+      open && (
+        <dl class="cells" style={`--n: ${cells.length}`}>
+          {cells.map((c) => (
+            <div class="cell">
+              <dt>{c.label}</dt>
+              <dd>{c.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .status {
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* The night panel's dim sun, rising behind the record. */
+  .status::before {
+    content: '';
+    position: absolute;
+    right: -12%;
+    bottom: -70%;
+    width: min(64vw, 860px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    z-index: -1;
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-8);
+    align-items: end;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .inner.is-open {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+  /* A long word may break rather than run off a narrow screen (widely spaced text at 320px). */
+  h2 {
+    font-size: var(--step-3);
+    overflow-wrap: anywhere;
+  }
+  .said {
+    margin-top: var(--s-5);
+    max-width: 40ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--on-night);
+  }
+  .nb {
+    white-space: nowrap;
+  }
+  .btn {
+    margin-top: var(--s-6);
+  }
+  .btn:focus-visible {
+    outline-color: var(--sun);
+  }
+
+  /* An instrument strip: a shared top rule, a cell per fact, labels under a common floor. */
+  .cells {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid rgb(252 249 222 / 0.24);
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-5) var(--s-5) 0;
+    border-left: 1px solid rgb(252 249 222 / 0.24);
+  }
+  .cell:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-night-2);
+  }
+  dd {
+    margin: 0;
+    font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--sun);
+  }
+
+  @media (max-width: 1023px) {
+    .inner,
+    .inner.is-open {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+      align-items: start;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .cells {
+      grid-template-columns: 1fr;
+    }
+    .cell,
+    .cell:first-child {
+      padding: var(--s-4) 0;
+      border-left: 0;
+    }
+    .cell + .cell {
+      border-top: 1px solid rgb(252 249 222 / 0.24);
+    }
+  }
+</style>

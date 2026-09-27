@@ -1,0 +1,30 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PortfolioSeason from '../../components/resources/PortfolioSeason.astro';
+import MoreResources from '../../components/resources/MoreResources.astro';
+import { portfolioSeasons, portfoliosLede } from '../../data/resources';
+---
+
+<Base
+  title="Engineering Portfolios | Seattle Solvers"
+  description="Engineering portfolios of Seattle Solvers, FTC Team #23511: DECODE World Championship and Washington editions, and every Into the Deep edition."
+>
+  <PageHeader title="Engineering Portfolios" lede={portfoliosLede}>
+    <a class="arrow-link" href="/about/awards/">
+      <span>Every award by season</span>
+      <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+    </a>
+  </PageHeader>
+
+  {portfolioSeasons.map((s, i) => <PortfolioSeason season={s} first={i === 0} />)}
+
+  <MoreResources current="/resources/portfolios/" />
+</Base>
+
+<style>
+  .arrow-link {
+    margin-top: var(--s-5);
+  }
+</style>

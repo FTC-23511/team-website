@@ -1,0 +1,80 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Status from '../components/apply/Status.astro';
+import TheTeam from '../components/apply/TheTeam.astro';
+import StayInTouch from '../components/apply/StayInTouch.astro';
+import { lede } from '../data/apply';
+import { cta, recruiting, recruitingOpen } from '../data/site';
+
+// The description leads with where applications stand, so a search result that cuts it short keeps the date.
+const when = recruitingOpen
+  ? `Applications are open for the ${recruiting.nextSeason} season.`
+  : `Applications open ${recruiting.opens} for the ${recruiting.nextSeason} season.`;
+---
+
+<Base
+  title="Join the Team | Seattle Solvers"
+  description={`${when} Join Seattle Solvers, FTC Team #23511, a student-led FIRST Tech Challenge team with zero membership fees.`}
+>
+  <PageHeader title="Join the Team" lede={lede} />
+  <Status />
+  <TheTeam />
+  <StayInTouch />
+
+  <section class="doors" aria-labelledby="doors-title">
+    <h2 id="doors-title" class="visually-hidden">Other ways in</h2>
+    <ul class="inner" role="list">
+      <li>
+        <h3>LEGO robotics classes</h3>
+        <p>Kids entering grades 4 to 7 can start with our classes, building and coding LEGO SPIKE Prime robots.</p>
+        <a class="arrow-link" href="/classes/">
+          <span>Classes</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+        </a>
+      </li>
+      <li>
+        <h3>Sponsoring us</h3>
+        <p>Sponsors and grants cover our robot parts, travel, and registration, so every student joins for free.</p>
+        <a class="arrow-link" href={cta.sponsor.href}>
+          <span>{cta.sponsor.label}</span>
+          <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  /* The closing doors, on the paper-2 step. */
+  .doors {
+    background: var(--paper-2);
+    border-block: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-6) var(--s-8);
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: var(--s-8) var(--gutter);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  p {
+    margin-top: var(--s-2);
+    max-width: 44ch;
+    color: var(--ink-2);
+  }
+  .arrow-link {
+    margin-top: var(--s-3);
+  }
+
+  @media (max-width: 767px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

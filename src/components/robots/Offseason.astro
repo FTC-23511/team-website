@@ -1,0 +1,203 @@
+---
+// An offseason robot on the yellow band: its write-up and a small title block, the robot standing on the band's edge.
+import { Icon } from 'astro-icon/components';
+import Rich from './Rich.astro';
+import Cutout from './Cutout.astro';
+import type { Season } from '../../data/robots';
+
+interface Props {
+  robot: NonNullable<Season['offseason']>;
+}
+const { robot } = Astro.props;
+const id = `offseason-${robot.name.toLowerCase()}`;
+---
+
+<section class="offseason" aria-labelledby={id}>
+  <div class="inner">
+    <div class="words">
+      <h2 id={id}>{robot.name}</h2>
+      <p class="meta">{robot.when}</p>
+      {
+        robot.paras.map((p, i) => (
+          <p class:list={['para', { lead: i === 0 }]}>
+            <Rich para={p} />
+          </p>
+        ))
+      }
+      <dl class="block">
+        {
+          robot.specs.map((s) => (
+            <div class="cell">
+              <dt>{s.label}</dt>
+              <dd>
+                <span class="value">{s.value}</span>
+                {s.note && <span class="note">{s.note}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <a class="arrow-link" href={robot.cad.href} target="_blank" rel="noopener">
+        <span>
+          {robot.cad.label}
+          <span class="visually-hidden"> (opens in a new tab)</span>
+        </span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+      </a>
+    </div>
+    <div class="robot">
+      <Cutout img={robot.image} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .offseason {
+    --soft: color-mix(in srgb, var(--on-band) 80%, var(--band));
+    --grid-ink: color-mix(in srgb, var(--on-band) 9%, transparent);
+    background-color: var(--band);
+    background-image:
+      linear-gradient(to right, var(--grid-ink) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-ink) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--on-band);
+  }
+  .offseason ::selection {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--s-8);
+    align-items: end;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter) 0;
+  }
+  .words {
+    align-self: center;
+    padding-bottom: var(--s-9);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .meta {
+    margin-top: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+  .para {
+    margin-top: var(--s-4);
+    max-width: 56ch;
+    color: var(--soft);
+  }
+  .para.lead {
+    margin-top: var(--s-5);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--on-band);
+  }
+
+  /* A small title block in ink on the band, like the RISE School pilot's. */
+  .block {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: var(--s-6) 0 var(--s-6);
+    border: 1px solid var(--on-band);
+    background: var(--band);
+  }
+  /* Every cell carries its left rule; the first of each row drops it and later rows gain a top rule. The overrides
+     share the base rule's specificity (Astro scopes each selector), so the breakpoint versions below win in order. */
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    min-height: 6.5rem;
+    padding: var(--s-3) var(--s-4) var(--s-4);
+    border-left: 1px solid var(--on-band);
+  }
+  .cell:nth-child(4n + 1) {
+    border-left: 0;
+  }
+  .cell:nth-child(n + 5) {
+    border-top: 1px solid var(--on-band);
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+  dd {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+  }
+  .value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .note {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: var(--soft);
+  }
+
+  .arrow-link {
+    color: var(--on-band);
+  }
+  .arrow-link:hover :global(.ring) {
+    background: var(--on-band);
+    color: var(--band);
+  }
+  .offseason a:focus-visible {
+    outline-color: var(--on-band);
+  }
+  .words :global(a:not(.arrow-link)) {
+    color: inherit;
+    text-decoration-thickness: 1.5px;
+  }
+
+  .robot {
+    justify-self: center;
+    width: min(100%, 24rem);
+  }
+
+  @media (max-width: 1099px) {
+    .inner {
+      gap: var(--s-6);
+    }
+    .block {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cell:nth-child(4n + 1) {
+      border-left: 1px solid var(--on-band);
+    }
+    .cell:nth-child(odd) {
+      border-left: 0;
+    }
+    .cell:nth-child(n + 3) {
+      border-top: 1px solid var(--on-band);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      grid-template-columns: 1fr;
+      padding-top: var(--s-8);
+    }
+    .words {
+      padding-bottom: 0;
+    }
+    .robot {
+      width: min(70%, 18rem);
+    }
+  }
+</style>

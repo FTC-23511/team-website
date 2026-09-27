@@ -1,0 +1,140 @@
+---
+import { events } from '../../data/impact';
+---
+
+<section class="events" id="events" aria-labelledby="events-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="events-title">Community events</h2>
+      <p class="sub">Our team attends public events to promote STEM and FIRST to diverse audiences.</p>
+    </div>
+
+    <ol class="log" role="list">
+      {
+        events.map((e) => (
+          <li class:list={['entry', `span-${e.span}`]}>
+            <figure>
+              <div class="duo frame">
+                <img
+                  src={e.image}
+                  alt={e.alt}
+                  width={e.width}
+                  height={e.height}
+                  loading="lazy"
+                  decoding="async"
+                  style={e.focus ? `object-position: ${e.focus}` : undefined}
+                />
+              </div>
+              <figcaption>
+                <h3>{e.name}</h3>
+                <p>{e.body}</p>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    margin-bottom: var(--s-7);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 38ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  /* A visual log laid like bricks: each row of three frames fills twelve columns at a shared height. */
+  .log {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--s-7) var(--s-5);
+    margin: 0;
+  }
+  .span-3 {
+    grid-column: span 3;
+  }
+  .span-4 {
+    grid-column: span 4;
+  }
+  .span-5 {
+    grid-column: span 5;
+  }
+  figure {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .frame {
+    height: clamp(15rem, 6rem + 17vw, 25rem);
+  }
+
+  figcaption {
+    padding-top: var(--s-4);
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+  figcaption p {
+    margin-top: 0.35rem;
+    max-width: 44ch;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+
+  /* Two columns: a pair, then one frame across, repeating. */
+  @media (max-width: 1099px) {
+    .log {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .entry {
+      grid-column: span 1;
+    }
+    .entry:nth-child(3n) {
+      grid-column: 1 / -1;
+    }
+    .frame {
+      height: clamp(15rem, 30vw, 20rem);
+    }
+    /* The full-width frame keeps 16:9, which shows three quarters of a 4:3 photo's height. */
+    .entry:nth-child(3n) .frame {
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .log {
+      grid-template-columns: 1fr;
+      row-gap: var(--s-6);
+    }
+    .entry,
+    .entry:nth-child(3n) {
+      grid-column: auto;
+    }
+    .frame,
+    .entry:nth-child(3n) .frame {
+      height: auto;
+      aspect-ratio: 3 / 2;
+    }
+    .span-3 .frame {
+      aspect-ratio: 1;
+    }
+  }
+</style>

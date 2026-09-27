@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Enrollment from '../../components/classes/Enrollment.astro';
+import CourseSheet from '../../components/classes/CourseSheet.astro';
+import Classroom from '../../components/classes/Classroom.astro';
+import Path from '../../components/classes/Path.astro';
+import PolicySummary from '../../components/classes/PolicySummary.astro';
+import { allSessions, header } from '../../data/classes';
+---
+
+<Base
+  title="LEGO Robotics Classes | Seattle Solvers"
+  description="LEGO robotics classes for kids entering grades 4 to 7, taught by Seattle Solvers, FTC Team #23511, from our own FIRST LEGO League curriculum."
+>
+  <PageHeader title={header.title} lede={header.lede}>
+    <Enrollment />
+  </PageHeader>
+  <CourseSheet />
+  <Classroom />
+  <Path />
+  <PolicySummary />
+
+  <!-- Every session, for the browser's re-check of the enrollment status (applyLiveStatus in status.ts). -->
+  <script type="application/json" id="class-sessions" set:html={JSON.stringify(allSessions).replace(/</g, '\\u003c')} />
+</Base>
+
+<script>
+  import { applyLiveStatus } from '../../components/classes/status';
+
+  applyLiveStatus();
+</script>

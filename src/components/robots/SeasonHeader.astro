@@ -1,0 +1,151 @@
+---
+// The season page's opening band, in the page-header grammar (Orbitron title, lede, a sun disk, a bottom hairline),
+// with the season's robot standing on that hairline in front of the rising sun.
+import { Icon } from 'astro-icon/components';
+import Cutout from './Cutout.astro';
+import { titleFit } from '../titleFit';
+import type { Season } from '../../data/robots';
+
+interface Props {
+  season: Season;
+}
+const { season } = Astro.props;
+const { cad, code, portfolio } = season.links;
+
+// The title is capped so its longest word always fits a phone's line, as PageHeader does (see titleFit).
+const fit = titleFit(season.game);
+---
+
+<header class="season-head">
+  <div class="inner">
+    <div class="words">
+      <h1 style={`--fit: ${fit.toFixed(3)}`}>{season.game}</h1>
+      <p class="meta">
+        <span class="years">{season.years}</span>
+        <span>{season.robot.name}</span>
+      </p>
+      <p class="lede">{season.lede}</p>
+      <ul class="links" role="list">
+        {
+          [cad, code, portfolio].map((l) => (
+            <li>
+              <a class="arrow-link" href={l.href} target="_blank" rel="noopener">
+                <span>
+                  {l.label}
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </span>
+                <span class="ring" aria-hidden="true">
+                  <Icon name="ph:arrow-up-right" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <figure class="robot">
+      <span class="sun" aria-hidden="true"></span>
+      <Cutout img={season.robot.image} eager />
+    </figure>
+  </div>
+</header>
+
+<style>
+  .season-head {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border-bottom: 1px solid var(--line);
+  }
+  /* The robot stands on the bottom hairline, so the band has no bottom padding: the words keep their own. */
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--s-7);
+    align-items: end;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) 0;
+  }
+  .words {
+    align-self: center;
+    padding-block: var(--s-7) var(--s-8);
+  }
+  h1 {
+    max-width: 16ch;
+    font-size: min(var(--step-page-title), calc((100vw - 2 * var(--gutter)) / var(--fit, 8)));
+    /* Only matters when a reader widens letter spacing: a long word breaks instead of being clipped. */
+    overflow-wrap: anywhere;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-4);
+    margin-top: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  .years {
+    color: var(--gold-ink);
+  }
+  .lede {
+    margin-top: var(--s-5);
+    max-width: 44ch;
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-6);
+    margin: var(--s-6) 0 0;
+  }
+
+  /* The robot in front of a sun rising from the hairline: the disk is sized by the figure and sunk below the band's
+     edge, which clips it, so only its upper part shows behind the robot. */
+  .robot {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 30rem);
+    margin: 0;
+  }
+  .sun {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 128%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, 44%);
+    background: radial-gradient(circle at 50% 42%, var(--sun-disk) 0 58%, var(--sun-disk-edge) 100%);
+    box-shadow: inset 0 0 0 2px var(--sun-rim);
+    z-index: -1;
+  }
+
+  @media (max-width: 1023px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+      gap: var(--s-6);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-top: var(--s-7);
+    }
+    .words {
+      padding-block: 0 var(--s-7);
+    }
+    .robot {
+      width: min(78%, 22rem);
+    }
+  }
+</style>

@@ -1,0 +1,179 @@
+---
+// The benefits comparison for narrow screens: one rung per tier, listing what it adds to the tier
+// before it. Built from the same data as BenefitsTable, so the two always agree.
+import { Icon } from 'astro-icon/components';
+import FootRef from './FootRef.astro';
+import { tiers, tierAdds } from '../../data/sponsors';
+
+const plateSize: Record<string, string> = { Small: 's', Medium: 'm', Large: 'l', 'Extra large': 'xl' };
+---
+
+<ol class="ladder" role="list" aria-label="Benefits at each sponsorship tier">
+  {
+    tiers.map((t, i) => (
+      <li class="rung">
+        <span class="node" aria-hidden="true" />
+        <h3 class="name">{t.name}</h3>
+        <p class="price">
+          <span class="from">{t.from}</span> <span class="to">{t.to}</span>
+        </p>
+        {i > 0 && <p class="plus">Everything in {tiers[i - 1].name}, plus</p>}
+        <ul class="adds" role="list">
+          {tierAdds(t.id).map(({ benefit: b, detail }) => (
+            <li>
+              <span class="glyph" aria-hidden="true">
+                {b.kind === 'logo' && detail ? (
+                  <span class:list={['plate', `plate-${plateSize[detail]}`]} />
+                ) : (
+                  <Icon name="ph:check-bold" />
+                )}
+              </span>
+              <span class="what">
+                {b.label}
+                {b.onRequest && <FootRef note="onRequest" />}{' '}
+                {(detail || b.customizable) && (
+                  <span class="tags">
+                    {detail && <span class="tag">{detail}</span>}{' '}
+                    {b.customizable && (
+                      <span class="tag">
+                        Customizable
+                        <FootRef note="customizable" />
+                      </span>
+                    )}
+                  </span>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .ladder {
+    position: relative;
+    display: grid;
+    gap: var(--s-6);
+    margin: 0;
+  }
+  /* The rail the tier markers sit on. */
+  .ladder::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--line-strong);
+  }
+  .rung {
+    position: relative;
+    padding-left: var(--s-6);
+  }
+  .node {
+    position: absolute;
+    left: 0;
+    top: 0.3rem;
+    width: 13px;
+    height: 13px;
+    border: 1px solid var(--gold-deep);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  .name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+  .price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 var(--s-2);
+    margin-top: 0.1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .from {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--gold-ink);
+  }
+  .to {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+  .plus {
+    margin-top: var(--s-3);
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .adds {
+    display: grid;
+    margin: var(--s-3) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .adds li {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+  }
+  .glyph {
+    display: grid;
+    place-items: center;
+    align-self: stretch;
+    background: color-mix(in srgb, var(--gold) 24%, var(--paper));
+  }
+  .glyph :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .what {
+    padding: var(--s-3) 0 var(--s-3) var(--s-4);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: 0.35rem;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .plate {
+    display: block;
+    border: 1.5px solid currentColor;
+  }
+  .plate-s {
+    width: 14px;
+    height: 8px;
+  }
+  .plate-m {
+    width: 18px;
+    height: 10px;
+  }
+  .plate-l {
+    width: 22px;
+    height: 12px;
+  }
+  .plate-xl {
+    width: 26px;
+    height: 14px;
+  }
+</style>

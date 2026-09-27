@@ -1,0 +1,4 @@
+{
+  "prompt": "Origin: square crop of public/models/cypher-poster-dark.webp, the no-WebGL capture of the site's own WebGL hero (1440x828 hero at 1440 wide, rest pose yaw -0.5 pitch 0.2, rendering public/models/cypher.bin: 174,728 points built from the team's Cypher.stl by tools/pointcloud/build_cloud.py). Steps: cropped to the sun disk's bounding square in that capture (766x766 at x 539, y 18; the disk centred at 64% / 48.4% of the hero, 766px across), the ink ground (#0b0a06) subtracted per channel with ImageMagick so empty ground is pure black for the screen blend, encoded with cwebp -q 88 -m 6 -sharp_yuv. Home hero fallback, drawn over the sun when the robot cannot render.",
+  "createdAt": "2026-09-27T19:48:44.903Z"
+}

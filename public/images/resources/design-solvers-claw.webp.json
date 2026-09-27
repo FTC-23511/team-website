@@ -1,0 +1,4 @@
+{
+  "prompt": "Origin: Solvers Claw CAD render (transparent PNG, 1016x1016) from the Designs page of the Seattle Solvers Google Site (sites.google.com/view/seattlesolvers/resources/cad-designs), downloaded 2026-09-27. Re-cut 2026-09-27: the render's translucent white floor stipple removed by keeping only the opaque claw and sample (alpha 250 and up, grown 2px to keep the anti-aliased rim, with stipple-level alpha under 130 cleared from that rim); cropped to the object's alpha bounds with a 4% margin on a padded transparent canvas (696x1046); resized to 532x800; webp q78 with lossy alpha (alpha_q 80). Shown on the light drawing plate on /resources/designs.",
+  "createdAt": "2026-09-27T13:38:58.000Z"
+}

@@ -1,0 +1,258 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { Adult, Student } from '../../../data/team';
+
+// One group on Meet the Team. Students, alumni, mentors and coaches all share this card grid, so every
+// portrait on the page is the same size. A student without a photo yet shows the initial of their name.
+interface Props {
+  id: string;
+  title: string;
+  people: (Student | Adult)[];
+  /** How many of the first portraits load right away (the group that opens the page), the first at high priority. */
+  eager?: number;
+}
+const { id, title, people, eager = 0 } = Astro.props;
+
+const isAdult = (p: Student | Adult): p is Adult => 'role' in p;
+const isLead = (role: string) => /\b(Lead|Captain)\b/.test(role);
+---
+
+<section class="roster" aria-labelledby={`${id}-title`}>
+  <div class="inner">
+    <div class="head">
+      <h2 id={`${id}-title`}>{title}</h2>
+      {Astro.slots.has('note') && <div class="note"><slot name="note" /></div>}
+    </div>
+    <ul class="people" role="list">
+      {
+        people.map((p, i) => (
+          <li>
+            {p.photo ? (
+              <div class="duo portrait">
+                <img
+                  src={p.photo}
+                  alt={p.alt ?? p.name}
+                  width="600"
+                  height="800"
+                  loading={i < eager ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 && eager > 0 ? 'high' : undefined}
+                  decoding="async"
+                />
+              </div>
+            ) : (
+              <div class="portrait blank" aria-hidden="true">
+                <span>{p.name.charAt(0)}</span>
+              </div>
+            )}
+            <div class="caption">
+              <div class="who">
+                <h3>{p.name}</h3>
+                {isAdult(p) &&
+                  p.team &&
+                  (p.team.href ? (
+                    <a class="team" href={p.team.href} target="_blank" rel="noopener">
+                      {p.team.label}
+                      <Icon name="ph:arrow-up-right" aria-hidden="true" />
+                      <span class="visually-hidden"> (opens in a new tab)</span>
+                    </a>
+                  ) : (
+                    <span class="team">{p.team.label}</span>
+                  ))}
+              </div>
+              {isAdult(p) ? (
+                <>
+                  {/* A long role may break after any slash ("Awards/Team Management/Media Mentor"). */}
+                  <p class="role">{p.role.split('/').map((part, j) => (j > 0 ? <>/<wbr />{part}</> : part))}</p>
+                  {p.lines.length > 0 && (
+                    <ul class="lines" role="list">
+                      {p.lines.map((l) => (
+                        <li>{l}</li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              ) : (
+                p.roles.length > 0 && (
+                  <ul class="roles" role="list">
+                    {p.roles.map((r) => (
+                      <li class:list={{ lead: isLead(r) }}>{r}</li>
+                    ))}
+                  </ul>
+                )
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .roster + .roster {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    /* --line flattened onto the paper: neighboring cards share one rule, so it has to be opaque. */
+    --rule: #2a2922;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-4) var(--s-7);
+    margin-bottom: var(--s-6);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-6);
+    max-width: 44rem;
+    padding-bottom: 0.3rem;
+  }
+  .note :global(p) {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  /* Same columns in every group. A 1px gap under a 1px ring gives each shared edge a single rule, and
+     a short last row simply ends. */
+  .people {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+  }
+  .people > li {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+  .portrait {
+    aspect-ratio: 3 / 4;
+  }
+  .blank {
+    container-type: inline-size;
+    display: grid;
+    place-items: center;
+    background: var(--paper-2);
+  }
+  .blank span {
+    font-family: var(--font-display);
+    font-size: 38cqi;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--sun-disk);
+  }
+  .caption {
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+  .who {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--s-3);
+  }
+  h3 {
+    font-size: var(--step-1);
+    color: var(--gold-ink);
+  }
+  .team {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 28px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .team :global(svg) {
+    width: 13px;
+    height: 13px;
+    transition: transform var(--dur-quick) var(--ease);
+  }
+  a.team:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  a.team:hover :global(svg) {
+    transform: translate(2px, -2px);
+  }
+  .roles,
+  .lines {
+    margin: var(--s-2) 0 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+  .roles .lead {
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+  .role {
+    margin-top: var(--s-2);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  .lines {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .role,
+  .lines li {
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 1279px) {
+    .people {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 899px) {
+    .people {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 599px) {
+    .people {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .note :global(p) {
+      font-size: 1rem;
+    }
+    .caption {
+      padding: var(--s-3) var(--s-3) var(--s-4);
+    }
+    h3 {
+      font-size: 1.0625rem;
+    }
+    .roles,
+    .lines {
+      font-size: 0.8125rem;
+    }
+    .role {
+      font-size: 0.875rem;
+    }
+  }
+</style>

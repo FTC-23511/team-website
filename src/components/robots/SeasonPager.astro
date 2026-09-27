@@ -1,0 +1,121 @@
+---
+// Links to the neighboring robot seasons, as a strip of large rows.
+import { Icon } from 'astro-icon/components';
+import { neighbors, type Season } from '../../data/robots';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const { newer, older } = neighbors(slug);
+const links: { season: Season; dir: string; icon: string }[] = [];
+if (older) links.push({ season: older, dir: 'Earlier season', icon: 'ph:arrow-left' });
+if (newer) links.push({ season: newer, dir: 'Later season', icon: 'ph:arrow-right' });
+---
+
+{
+  links.length > 0 && (
+    <nav class="pager" aria-label="Robot seasons">
+      <ul class="inner" role="list">
+        {links.map(({ season, dir, icon }) => (
+          <li>
+            <a href={`/robots/${season.slug}/`} class:list={{ back: icon === 'ph:arrow-left' }}>
+              <span class="ring" aria-hidden="true">
+                <Icon name={icon} />
+              </span>
+              <span class="words">
+                <span class="visually-hidden">{dir}: </span>
+                <span class="name">{season.game}</span>
+                <span class="sub">
+                  {season.years}, {season.robot.name}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .pager {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  li + li {
+    border-left: 1px solid var(--line);
+  }
+  a {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    min-height: 44px;
+    padding: var(--s-7) 0;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  li + li a {
+    padding-left: var(--s-6);
+  }
+  /* The earlier season points back: ring first. The later one reads name first, ring last. */
+  a:not(.back) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+  .words {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .name {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .sub {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .ring {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transition:
+      transform var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+  .ring :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+  a:hover .ring {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  a.back:hover .ring {
+    transform: translateX(-4px);
+  }
+  a:not(.back):hover .ring {
+    transform: translateX(4px);
+  }
+  a:hover .name {
+    color: var(--gold-ink);
+  }
+</style>

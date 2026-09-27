@@ -1,0 +1,169 @@
+---
+// The closing ask on Become a Sponsor: how sponsoring works (PDF page 5), then the Email us seal.
+import { Icon } from 'astro-icon/components';
+import Seal from './Seal.astro';
+import { emailUs, howToSponsor } from '../../data/sponsors';
+
+const [first, second] = howToSponsor.steps;
+---
+
+<section class="how" aria-labelledby="how-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="how-title">How to sponsor</h2>
+      <p class="sub">{howToSponsor.note}</p>
+      <a class="arrow-link" href="/sponsors/donate/">
+        <span>Donate</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+      </a>
+    </div>
+
+    <ol class="steps" role="list">
+      <li>
+        <span class="num" aria-hidden="true">1</span>
+        <h3>{first.title}</h3>
+        <p>{first.body} <a href={emailUs.href}>{emailUs.address}</a>.</p>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">2</span>
+        <h3>{second.title}</h3>
+        <p>{second.body}</p>
+      </li>
+    </ol>
+
+    <Seal label={emailUs.label} href={emailUs.href} />
+  </div>
+</section>
+
+<style>
+  .how {
+    border-block: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: calc(34% - var(--s-7)) minmax(0, 1fr) auto;
+    gap: var(--s-7);
+    align-items: center;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 30ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .head .arrow-link {
+    margin-top: var(--s-5);
+  }
+
+  /* Two numbered markers joined by a hairline, like the tier nodes. */
+  .steps {
+    --gap: var(--s-6);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+    margin: 0;
+  }
+  .steps li {
+    position: relative;
+  }
+  /* The connector runs from the first marker to the second, across the gap. */
+  .steps li:first-child::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 36px;
+    right: calc(-1 * var(--gap));
+    height: 1px;
+    background: var(--line-strong);
+  }
+  .num {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--gold-deep);
+    border-radius: 50%;
+    background: var(--paper-2);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--gold-ink);
+  }
+  h3 {
+    margin-top: var(--s-4);
+    font-size: var(--step-2);
+  }
+  .steps p {
+    margin-top: var(--s-2);
+    max-width: 40ch;
+    color: var(--ink-2);
+  }
+  .steps a {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .steps a:hover {
+    color: var(--gold-ink);
+  }
+
+  /* Two columns: the heading over the steps on the left, the seal beside both on the right, so the section reads,
+     and tabs, in its own order: heading, steps, seal. */
+  @media (max-width: 1279px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .steps {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .inner > :global(.seal) {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+  }
+  /* Beside the seal the steps stack, each marker beside its words, joined by a vertical line. */
+  @media (max-width: 899px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+    .steps li {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr);
+      column-gap: var(--s-4);
+    }
+    .num {
+      grid-row: span 2;
+    }
+    h3 {
+      margin-top: 0.2rem;
+    }
+    .steps li:first-child::after {
+      top: 36px;
+      bottom: calc(-1 * var(--gap));
+      left: 18px;
+      right: auto;
+      width: 1px;
+      height: auto;
+    }
+  }
+  /* Phones: one column, the seal a full-width row after the steps. */
+  @media (max-width: 599px) {
+    .inner {
+      grid-template-columns: 1fr;
+      padding-block: var(--s-8);
+    }
+    .steps,
+    .inner > :global(.seal) {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+</style>

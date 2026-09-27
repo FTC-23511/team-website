@@ -1,0 +1,104 @@
+---
+// Why sponsor us: the sponsorship package's case (PDF page 4), closing on the Google Site's reminder.
+import { Icon } from 'astro-icon/components';
+import { whySponsor } from '../../data/sponsors';
+---
+
+<section class="why" aria-labelledby="why-title">
+  <div class="inner">
+    <h2 id="why-title">Why sponsor us</h2>
+    <div class="body">
+      <p class="lede">{whySponsor.lede}</p>
+      <ul class="points" role="list">
+        {
+          whySponsor.points.map((p) => (
+            <li>
+              <Icon name={p.icon} class="icon" aria-hidden="true" />
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="remember">{whySponsor.remember}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Content starts on the page's 34% rail, where the benefits table's tier columns begin. */
+  .inner {
+    display: grid;
+    grid-template-columns: calc(34% - var(--s-7)) minmax(0, 1fr);
+    gap: var(--s-7);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: clamp(2.25rem, 1.2rem + 2vw, 3rem);
+  }
+  .lede {
+    max-width: 26ch;
+    font-size: clamp(1.625rem, 1.1rem + 1.5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .points {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6);
+    margin: var(--s-7) 0 0;
+  }
+  .points li {
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--line-strong);
+  }
+  .points :global(.icon) {
+    width: 28px;
+    height: 28px;
+    color: var(--gold-ink);
+  }
+  h3 {
+    margin-top: var(--s-4);
+    font-size: 1.25rem;
+  }
+  .points p {
+    margin-top: var(--s-2);
+    max-width: 38ch;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+  .remember {
+    margin-top: var(--s-7);
+    padding-left: var(--s-5);
+    max-width: 60ch;
+    border-left: 1px solid var(--gold-deep);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--gold-ink);
+  }
+
+  @media (max-width: 1199px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+  }
+  @media (max-width: 767px) {
+    .points {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+      margin-top: var(--s-6);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+</style>

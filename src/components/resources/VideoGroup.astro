@@ -1,0 +1,154 @@
+---
+// One group of videos. A lead group plays its first video large with the rest stacked beside it; a pair sits
+// side by side; vertical Shorts stand next to their words at phone proportions.
+import { Icon } from 'astro-icon/components';
+import VideoFacade from '../VideoFacade.astro';
+import type { VideoGroup } from '../../data/resources';
+
+interface Props {
+  group: VideoGroup;
+  link?: { label: string; href: string };
+}
+const { group, link } = Astro.props;
+const [first, ...others] = group.videos;
+---
+
+<section class:list={['group', `layout-${group.layout}`]} id={group.id} aria-labelledby={`${group.id}-title`}>
+  <div class="inner">
+    <div class="head">
+      <h2 id={`${group.id}-title`}>{group.title}</h2>
+      {group.sub && <p class="sub">{group.sub}</p>}
+      {
+        link && (
+          <a class="arrow-link" href={link.href}>
+            <span>{link.label}</span>
+            <span class="ring" aria-hidden="true">
+              <Icon name="ph:arrow-right" />
+            </span>
+          </a>
+        )
+      }
+    </div>
+
+    {
+      group.layout === 'lead' && first ? (
+        <div class="lead-grid">
+          <div class="lead">
+            <VideoFacade video={first} eager grouped />
+          </div>
+          {others.map((v) => (
+            <div class="side">
+              <VideoFacade video={v} grouped />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="row">
+          {group.videos.map((v) => (
+            <VideoFacade video={v} grouped />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .group + .group {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .head {
+    margin-bottom: var(--s-6);
+  }
+  /* The section headline, capped on the smallest phones so the longest single word, "Autonomous", still fits the
+     line. Every group's heading takes the cap, so the page's headings stay one size. */
+  h2 {
+    font-size: min(clamp(2.25rem, 1.2rem + 2vw, 3rem), 10.4vw);
+    /* Only breaks inside a word if a reader's own text spacing makes it wider than the line. */
+    overflow-wrap: anywhere;
+  }
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 52ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .head .arrow-link {
+    margin-top: var(--s-4);
+  }
+
+  /* Lead: the first video large, the others stacked in the narrow column beside it. */
+  .lead-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--s-6) var(--s-5);
+    align-items: start;
+  }
+  .lead {
+    grid-row: span 2;
+  }
+
+  /* A pair side by side. */
+  .layout-pair .row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-6) var(--s-5);
+  }
+
+  /* Shorts: words beside, the two vertical players at phone proportions. */
+  .layout-shorts .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-7);
+    align-items: start;
+  }
+  .layout-shorts .head {
+    margin-bottom: 0;
+  }
+  .layout-shorts .row {
+    display: flex;
+    gap: var(--s-5);
+  }
+  .layout-shorts .row > :global(*) {
+    flex: 0 1 300px;
+  }
+  /* On a phone the two Shorts split the width, so a title word widened by a reader's own letter spacing breaks
+     instead of running off the screen. Every word fits at the default spacing. */
+  .layout-shorts .row :global(.title) {
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 1023px) {
+    .lead-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .lead {
+      grid-row: auto;
+      grid-column: 1 / -1;
+    }
+    .layout-shorts .inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-6);
+    }
+  }
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 599px) {
+    .lead-grid,
+    .layout-pair .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .layout-shorts .row > :global(*) {
+      flex: 1 1 0;
+    }
+  }
+</style>

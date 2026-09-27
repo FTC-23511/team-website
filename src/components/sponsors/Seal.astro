@@ -1,0 +1,96 @@
+---
+// The closing action: a solid Solvers-yellow seal holding a circle, a label and an arrow ring.
+// On small screens it becomes a full-width row.
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  label: string;
+  href: string;
+}
+const { label, href } = Astro.props;
+---
+
+<a class="seal" href={href}>
+  <span class="seal-ring">
+    <span class="seal-label">{label}</span>
+  </span>
+  <span class="seal-arrow" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+</a>
+
+<style>
+  .seal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-4);
+    width: 13rem;
+    aspect-ratio: 1;
+    background: var(--band);
+    color: var(--on-band);
+    text-decoration: none;
+    transition: background-color 0.3s var(--ease);
+  }
+  .seal-ring {
+    display: grid;
+    place-items: center;
+    width: 7.5rem;
+    aspect-ratio: 1;
+    border: 1.5px solid var(--on-band);
+    border-radius: 50%;
+    transition: transform 0.5s var(--ease);
+  }
+  .seal-label {
+    max-width: 5.5rem;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .seal-arrow {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--on-band);
+    border-radius: 50%;
+    transition: transform 0.4s var(--ease);
+  }
+  .seal-arrow :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .seal:hover {
+    background: var(--sun);
+  }
+  .seal:hover .seal-ring {
+    transform: rotate(-8deg) scale(1.04);
+  }
+  .seal:hover .seal-arrow {
+    transform: translateX(5px);
+  }
+  .seal:focus-visible {
+    outline-color: var(--ink);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 599px) {
+    .seal {
+      width: 100%;
+      aspect-ratio: auto;
+      flex-direction: row;
+      padding: var(--s-5);
+    }
+    .seal-ring {
+      width: auto;
+      aspect-ratio: auto;
+      border: 0;
+    }
+    .seal-label {
+      max-width: none;
+    }
+  }
+</style>

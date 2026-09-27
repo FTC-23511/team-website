@@ -1,0 +1,30 @@
+---
+// A footnote mark that links to the note under the benefits table ("*" or "**", as in the PDF).
+import { benefitNotes } from '../../data/sponsors';
+
+interface Props {
+  note: keyof typeof benefitNotes;
+}
+const { note } = Astro.props;
+const n = Object.keys(benefitNotes).indexOf(note) + 1;
+---
+
+<a class="fn" href={`#benefit-note-${n}`}
+  ><span aria-hidden="true">{benefitNotes[note].mark}</span><span class="visually-hidden"> (note {n})</span></a
+>
+
+<style>
+  .fn {
+    margin-left: 0.1em;
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--gold-ink);
+    text-decoration: none;
+    vertical-align: 0.3em;
+    line-height: 0;
+  }
+  .fn:hover {
+    color: var(--ink);
+  }
+</style>

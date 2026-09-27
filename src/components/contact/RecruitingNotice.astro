@@ -1,0 +1,64 @@
+---
+// The competition team's recruiting status, first thing on Contact, as on the team's own Contact page.
+import { Icon } from 'astro-icon/components';
+import { recruiting, recruitingOpen } from '../../data/site';
+---
+
+<div class="notice" role="note" aria-label="Recruiting">
+  <Icon name="ph:users-three" class="icon" aria-hidden="true" />
+  <p>
+    {
+      recruitingOpen ? (
+        <>
+          Applications to join the competition team for the <span class="nb">{recruiting.nextSeason}</span> season are
+          open.
+        </>
+      ) : (
+        <>
+          Recruiting for the <span class="nb">{recruiting.closedSeason}</span> season has closed. It opens again in{' '}
+          <span class="nb">{recruiting.opens}</span> for <span class="nb">{recruiting.nextSeason}</span>.
+        </>
+      )
+    }
+  </p>
+  <a class="arrow-link" href="/apply/">
+    <span>Join the Team</span>
+    <span class="ring" aria-hidden="true"><Icon name="ph:arrow-right" /></span>
+  </a>
+</div>
+
+<style>
+  .notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-5);
+    margin-top: var(--s-6);
+    max-width: 52rem;
+    padding: var(--s-3) var(--s-3) var(--s-3) var(--s-5);
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+  }
+  .notice :global(.icon) {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    color: var(--gold-ink);
+  }
+  p {
+    flex: 1 1 22rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  /* Dates and seasons stay whole, as on Join the Team. */
+  .nb {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 599px) {
+    .notice {
+      padding: var(--s-4);
+    }
+  }
+</style>

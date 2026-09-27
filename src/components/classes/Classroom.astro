@@ -1,0 +1,105 @@
+---
+// The classroom: the program's record set as one sentence, figures inline, over a strip of class photos.
+import { classroomPhotos, record } from '../../data/classes';
+
+// A photo with a small copy is one of the pair: about half the row on phones, about a quarter of it above.
+const pairSizes = '(max-width: 767px) 46vw, 26vw';
+---
+
+<section class="classroom" aria-labelledby="classroom-title">
+  <div class="inner">
+    <h2 id="classroom-title" class="visually-hidden">In the classroom</h2>
+    <p class="run">
+      We have run these classes for <strong>{record.years}</strong> years and taught{' '}
+      <strong>{record.students}</strong> students, at {record.cost} of other nearby businesses.
+    </p>
+
+    <div class="photos">
+      {
+        classroomPhotos.map((p) => (
+          <figure class="duo" style={`--ar: ${(p.width / p.height).toFixed(4)}`}>
+            <img
+              src={p.src}
+              srcset={p.small && `${p.small.src} ${p.small.width}w, ${p.src} ${p.width}w`}
+              sizes={p.small && pairSizes}
+              alt={p.alt}
+              width={p.width}
+              height={p.height}
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .classroom {
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* The night panel's dim sun, rising behind the sentence. */
+  .classroom::before {
+    content: '';
+    position: absolute;
+    left: -14%;
+    top: -55%;
+    width: min(62vw, 860px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    z-index: -1;
+  }
+  .inner {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  .run {
+    max-width: 30ch;
+    font-size: clamp(1.75rem, 1.1rem + 2.2vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  /* Photos share one height whatever their shape: each grows by its own aspect ratio. */
+  .photos {
+    display: flex;
+    gap: var(--s-3);
+    margin-top: var(--s-8);
+  }
+  .photos figure {
+    flex: var(--ar) 1 0;
+    aspect-ratio: var(--ar);
+    min-width: 0;
+  }
+
+  @media (max-width: 767px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+    .photos {
+      flex-wrap: wrap;
+      margin-top: var(--s-7);
+    }
+    /* Phones: the wide classroom first across the full width, then the other two as a pair. */
+    .photos figure:nth-child(2) {
+      order: -1;
+      flex-basis: 100%;
+    }
+  }
+</style>

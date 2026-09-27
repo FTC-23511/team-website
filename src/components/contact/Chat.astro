@@ -1,0 +1,179 @@
+---
+// Discord first, where the team is most active; the other platforms after it, marked as the slower way in.
+import { Icon } from 'astro-icon/components';
+import { discord, elsewhere } from '../../data/contact';
+---
+
+<section class="chat" aria-labelledby="chat-title">
+  <div class="inner">
+    <div class="discord">
+      <h2 id="chat-title">Discord</h2>
+      <p class="run">
+        Quick questions go fastest in our public Discord server, where we are most active. Join{' '}
+        <strong>{discord.members}</strong> members there.
+      </p>
+      <a class="btn btn-primary" href={discord.href} target="_blank" rel="noopener">
+        <span>Join our Discord</span>
+        <span class="ring" aria-hidden="true"><Icon name="ph:arrow-up-right" /></span>
+        <span class="visually-hidden">(opens in a new tab)</span>
+      </a>
+    </div>
+
+    <div class="elsewhere">
+      <h3>Elsewhere</h3>
+      <p class="note">{elsewhere.note}</p>
+      <ul class="links" role="list">
+        {
+          elsewhere.links.map((l) => (
+            <li>
+              <a href={l.href} target="_blank" rel="noopener">
+                <Icon name={l.icon} class="icon" aria-hidden="true" />
+                <span class="label">{l.label}</span>
+                <Icon name="ph:arrow-up-right" class="ext" aria-hidden="true" />
+                <span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .chat {
+    position: relative;
+    background: var(--night);
+    color: var(--on-night);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* The dim sun rising from the lower left, behind the invitation. */
+  .chat::before {
+    content: '';
+    position: absolute;
+    left: -14%;
+    bottom: -62%;
+    width: min(62vw, 860px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--night-2);
+    z-index: -1;
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--s-8);
+    align-items: start;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-9) var(--gutter);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .run {
+    margin-top: var(--s-5);
+    max-width: 30ch;
+    font-size: clamp(1.375rem, 1.05rem + 1vw, 2rem);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--sun);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .btn {
+    margin-top: var(--s-6);
+  }
+  .btn:focus-visible {
+    outline-color: var(--sun);
+  }
+
+  .elsewhere {
+    padding-top: var(--s-5);
+    border-top: 1px solid rgb(252 249 222 / 0.24);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  .note {
+    margin-top: var(--s-2);
+    max-width: 36ch;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--on-night-2);
+  }
+  .links {
+    margin: var(--s-5) 0 0;
+  }
+  .links a {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) 16px;
+    align-items: center;
+    gap: var(--s-3);
+    min-height: 52px;
+    padding: var(--s-2) 0;
+    border-bottom: 1px solid rgb(252 249 222 / 0.14);
+    text-decoration: none;
+    color: var(--on-night);
+    transition: color var(--dur-quick) var(--ease);
+  }
+  .links :global(.icon) {
+    width: 22px;
+    height: 22px;
+  }
+  .links :global(.ext) {
+    width: 16px;
+    height: 16px;
+    color: var(--on-night-2);
+    transition:
+      transform var(--dur) var(--ease),
+      color var(--dur-quick) var(--ease);
+  }
+  .label {
+    font-size: 1.0625rem;
+    font-weight: 500;
+  }
+  .links a:hover {
+    color: var(--sun);
+  }
+  .links a:hover :global(.ext) {
+    color: var(--sun);
+    transform: translate(2px, -2px);
+  }
+  .links a:focus-visible {
+    outline-color: var(--sun);
+  }
+  /* Forced colors don't repaint an icon's own color: the new-tab arrow takes its link's system color instead. */
+  @media (forced-colors: active) {
+    .links a :global(.ext),
+    .links a:hover :global(.ext) {
+      color: inherit;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+  }
+  @media (max-width: 599px) {
+    .inner {
+      padding-block: var(--s-8);
+    }
+  }
+  @media (max-width: 479px) {
+    .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

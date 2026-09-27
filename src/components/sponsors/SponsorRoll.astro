@@ -1,0 +1,235 @@
+---
+// Every sponsor, by tier, on the page's light ground. Tiers whose sponsors have their own paragraph on the Google Site
+// (Platinum and Diamond) show it with the logo; the rest are logo walls sized by tier.
+import { Icon } from 'astro-icon/components';
+import SponsorLogo from './SponsorLogo.astro';
+import { logoSize } from './logoSize';
+import CopyButton from '../CopyButton.astro';
+import { sponsorTiers } from '../../data/home';
+import { sponsorStories, fabworksCode } from '../../data/sponsors';
+---
+
+<div class="roll">
+  {
+    sponsorTiers.map((t, i) => {
+      const id = `tier-${t.tier.toLowerCase()}`;
+      const stories = t.sponsors.every((s) => sponsorStories[s.name]);
+      const hasFabworks = t.sponsors.some((s) => s.name === fabworksCode.sponsor);
+      // The logos in a row of stories share one height, so the names under them line up.
+      const markH = Math.max(...t.sponsors.map((s) => logoSize(s, t.size).height));
+      return (
+        <section class="tier" aria-labelledby={id}>
+          <h2 id={id}>{t.tier}</h2>
+          <div class="body">
+            {stories ? (
+              <ul role="list" class:list={['stories', { single: t.sponsors.length === 1 }]} style={`--mark-h: ${markH}rem`}>
+                {t.sponsors.map((s) => {
+                  const story = sponsorStories[s.name];
+                  return (
+                    <li class="story">
+                      <div class="mark">
+                        <SponsorLogo sponsor={s} size={t.size} eager={i < 2} />
+                      </div>
+                      <div class="words">
+                        <h3>{s.name}</h3>
+                        <p class="said">{story.story}</p>
+                        <p class="visit">
+                          {story.visit.before}
+                          <a href={story.visit.href} target="_blank" rel="sponsored noopener">
+                            {story.visit.link}
+                            <span class="visually-hidden"> (opens in a new tab)</span>
+                          </a>
+                          {story.visit.after}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <ul role="list" class:list={['logos', `size-${t.size}`]}>
+                {t.sponsors.map((s) => (
+                  <li>
+                    <SponsorLogo sponsor={s} size={t.size} />
+                  </li>
+                ))}
+              </ul>
+            )}
+            {hasFabworks && (
+              <div class="deal">
+                <Icon name="ph:tag" class="deal-icon" aria-hidden="true" />
+                <p>
+                  Be sure to use code <code>{fabworksCode.code}</code> at checkout when ordering from{' '}
+                  <a href={fabworksCode.href} target="_blank" rel="sponsored noopener">
+                    Fabworks<span class="visually-hidden"> (opens in a new tab)</span>
+                  </a>{' '}
+                  as it gives you a 5% discount and supports us!
+                </p>
+                <CopyButton text={fabworksCode.code} what="code" label="Copy code" />
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    })
+  }
+</div>
+
+<style>
+  .roll {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) var(--s-9);
+  }
+  .tier {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: var(--s-7);
+    padding-block: var(--s-7);
+    border-top: 1px solid var(--line);
+  }
+  .tier:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    letter-spacing: 0.02em;
+  }
+
+  /* Platinum and Diamond: the logo beside each sponsor's own words. */
+  .stories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-7) var(--s-6);
+    margin: 0;
+  }
+  .story {
+    display: grid;
+    align-content: start;
+    gap: var(--s-5);
+  }
+  .stories.single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stories.single .story {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: center;
+  }
+  /* Story logos sit flush left and grow from their left edge. */
+  .mark {
+    display: flex;
+    align-items: center;
+    min-height: var(--mark-h);
+    --logo-align: flex-start;
+    --logo-origin: left center;
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  .said {
+    margin-top: var(--s-3);
+    max-width: 46ch;
+    color: var(--ink-2);
+  }
+  .visit {
+    margin-top: var(--s-3);
+    max-width: 52ch;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+  .visit a {
+    color: var(--ink);
+  }
+  .visit a:hover {
+    color: var(--gold-ink);
+  }
+
+  /* Gold, Silver, Bronze: logo walls, each mark centered in an even cell. */
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--cell), 1fr));
+    align-items: center;
+    justify-items: center;
+    gap: var(--s-6) var(--s-5);
+    margin: 0;
+  }
+  .logos.size-m {
+    --cell: 11rem;
+  }
+  .logos.size-s {
+    --cell: 9rem;
+  }
+
+  /* The Fabworks discount, filed under Silver. */
+  .deal {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-4);
+    margin-top: var(--s-7);
+    padding: var(--s-4) var(--s-5);
+    border: 1px solid var(--line-strong);
+    max-width: 52rem;
+  }
+  .deal p {
+    flex: 1 1 26rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .deal a {
+    color: var(--ink);
+  }
+  .deal a:hover {
+    color: var(--gold-ink);
+  }
+  .deal :global(.deal-icon) {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    color: var(--gold-ink);
+  }
+  code {
+    padding: 0.1em 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+  }
+
+  @media (max-width: 1099px) {
+    .tier {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+    }
+  }
+  @media (max-width: 767px) {
+    .stories {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+    .stories.single .story {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+    }
+  }
+  @media (max-width: 599px) {
+    .roll {
+      padding-block: var(--s-7) var(--s-8);
+    }
+    .tier {
+      padding-block: var(--s-6);
+    }
+    .logos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .deal {
+      padding: var(--s-4);
+    }
+  }
+</style>
