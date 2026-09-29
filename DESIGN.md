@@ -252,13 +252,6 @@ components:
   sun-disk:
     backgroundColor: "{colors.sun-disk}"
     rounded: "{rounded.circle}"
-  cursor-ring:
-    rounded: "{rounded.circle}"
-    size: "30px"
-  cursor-dot:
-    backgroundColor: "{colors.sun}"
-    rounded: "{rounded.circle}"
-    size: "6px"
 ---
 
 # Design System: Seattle Solvers
@@ -277,7 +270,7 @@ Motion is one family of long, soft ease-outs. Scrolling is weighted (Lenis), pag
 - Dark, with one sanctioned light ground: the Our Sponsors roll and closing ask.
 - Uppercase Orbitron headings; Inter for all body text; Azeret Mono only for data labels and buttons. No serif anywhere.
 - The team's own white "Logo with Name" artwork, unmodified, in the nav and footer.
-- Sharp rectangles; circles only for arrow rings, step and play buttons, markers, the cursor and suns.
+- Sharp rectangles; circles only for arrow rings, step and play buttons, markers and suns.
 - Solid Solvers Yellow action blocks with a circle-arrow ring, and an outline twin.
 - Night panels one step above the ground and a yellow band as full-bleed section breaks.
 - Drawing grammar: ruled ledgers, title blocks of mono labels over plain values, dimension lines.
@@ -291,7 +284,7 @@ A single-hue world on a night ground: warm near-black steps, cream text, and yel
 
 ### Primary
 - **Solvers Yellow** (`solvers-yellow`): the action and band color (`--band`, also `--sun-rim`). Fills every Sponsor us block, the outline button's and copy button's hover, the yellow bands (the zero-fees statement, the Awards Worlds lead, the Team mission, the Outreach RISE School pilot, the Classes path, the offseason robot) and the Become a Sponsor seal. It always carries ink-ground text (`--on-band`). It is also the 2px ring around every sun disk.
-- **Sun** (`sun`): the bright yellow, and the site's gold text color on the dark ground (`--gold-ink` resolves to it). Hover state for yellow blocks, the text-selection highlight, the cursor, Cypher's dots, and every small gold text: the hero's "FTC Team #23511" line, the home sponsors sub-line, new-tab arrows, readout numerals, inline figures, the mission quote, footer column names, the nonprofit facts' icons and the copy button's copied state.
+- **Sun** (`sun`): the bright yellow, and the site's gold text color on the dark ground (`--gold-ink` resolves to it). Hover state for yellow blocks, the text-selection highlight, Cypher's dots, and every small gold text: the hero's "FTC Team #23511" line, the home sponsors sub-line, new-tab arrows, readout numerals, inline figures, the mission quote, footer column names, the nonprofit facts' icons and the copy button's copied state.
 
 ### Secondary
 - **Deep Gold** (`gold-deep`): decoration only. Focus outlines, the text caret, the scrollbar thumb, the Cypher canvas focus ring, the copied button's border. Never text.
@@ -382,16 +375,15 @@ Flat. Depth comes from tonal steps (ground, ground 2, night, night 2), hairlines
 - **Dropdown lift** (`box-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7)`, the `--shadow` token): nav dropdown panels only.
 - **Sun rim** (`box-shadow: inset 0 0 0 2px var(--sun-rim)`): the yellow ring on sun disks. A line, not a lift.
 - **Ruled ring** (`box-shadow: 0 0 0 1px #2a2922`): the 1px ring around roster cards, so a 1px gap draws each shared edge once. A line, not a lift.
-- **Cursor halo** (`box-shadow: 0 0 0 1.5px var(--cursor-halo)`): the ink edge on the cursor so it reads over yellow and photos.
 
 ### Named Rules
 **The Flat Sun Rule.** Nothing on the page floats except the nav dropdown. Separation is a hairline, a tonal step, or a band of color.
 
 ## Shapes
 
-Every rectangle is square-cornered: buttons, plates, panels, photos, dropdowns, fields. Circles are a second vocabulary with fixed meanings: the arrow ring inside every action, step, pause and play buttons, timeline, tier and status markers, the nav's active dot, the cursor, and the sun disks. Borders are 1px hairlines; the seal's ring, the route line and pins, and the cursor ring are 1.5px; the sun rim is 2px.
+Every rectangle is square-cornered: buttons, plates, panels, photos, dropdowns, fields. Circles are a second vocabulary with fixed meanings: the arrow ring inside every action, step, pause and play buttons, timeline, tier and status markers, the nav's active dot, and the sun disks. Borders are 1px hairlines; the seal's ring and the route line and pins are 1.5px; the sun rim is 2px.
 
-**The Two Shapes Rule.** Rectangles for surfaces, circles only for arrow rings, step, pause and play buttons, markers, the cursor and suns. No rounded rectangles.
+**The Two Shapes Rule.** Rectangles for surfaces, circles only for arrow rings, step, pause and play buttons, markers and suns. No rounded rectangles.
 
 **The Hairline Rule.** Side rules are at most 1px, whether a quote rule, a readout divider, or a column separator.
 
@@ -436,7 +428,7 @@ A night band. At left, the white Logo with Name artwork (84px tall) with the non
 One row of two facts with Phosphor icons in gold: "501(c)(3) nonprofit" and "All contributions are 100% tax deductible", Ink 2 at 0.875rem. Set under the actions wherever the site asks for support: the Our Sponsors header, Become a Sponsor's header and the home sponsors section.
 
 ### Cursor
-On fine pointers only, a 30px circle (1.5px ring) with a 6px dot in its center, both in Sun (`--cursor-fill`) with an ink halo (`--cursor-halo`), written straight from pointer events with no easing lag. Over links and buttons the circle opens wider (scale 1.45) and the dot shrinks; pressing tightens the circle. Over selectable text the circle gives way to a slim text bar, and over form fields it hides for the native caret. Only on the robot itself, inside its sun disk or while dragging, it hides and the native grab hand takes over. In forced colors the drawn cursor is off and the system pointer stays.
+The system's own pointer everywhere. On the robot itself, inside its sun disk or while dragging, the canvas shows the grab and grabbing hands (home and 404).
 
 ### Photos
 Photos show in their own colors, filling a frame (`.duo`) on a Ground 2 backing while they load. Robot cutouts and CAD renders are in color too. The one exception is Meet the Team: its portraits (`.duo.tinted`) rest in grayscale under a Duo Light multiply overlay, and on hover or focus-within (hover-capable devices) the overlay fades out and the grayscale eases to full color together, on `--ease-inout`: 0.65s coming in, 0.9s draining back out. Lazy images fade in with a keyframe animation, never a `transition`, so they can't overwrite a component's transition list. Images in the first screen load eagerly and paint as they arrive, without the fade: the Designs and Portfolios first season, the Classes course photos, the first three roster portraits, the Awards record photo, and the first two sponsor tiers.
@@ -508,7 +500,7 @@ Behind everything, the team's own photos crossfade (1.6s, `--ease-inout`) every 
 ### Cypher (signature component)
 The team's robot as 174,728 dots, packed 32 bits each by `tools/pointcloud/build_cloud.py` (10 bits per axis and a 2-bit category: surface haze, feature edge, or team-number outline). Rendered in WebGL2 in front of the slideshow, across the whole hero, over the dim sun disk.
 - **Load:** until the data arrives, a sparse tenth of the field twinkles. Then every dot starts on a wide 3D shell around the robot, spirals in on its own beat and lands with an ease-out; the build takes 1.5s after a 0.25s hold. The robot turns from the first frame: 0.55 rad/s while the dots stream in, easing to a steady 0.09 rad/s idle, landing on its best angle with the 23511 plate readable.
-- **Interaction:** free rotation by drag or arrow keys, including from underneath (horizontal only on touch so the page still scrolls); the step buttons turn it and tilt it to show its underside; the cursor parts the dots.
+- **Interaction:** free rotation by drag (mouse or finger) or arrow keys, including from underneath; a touch that starts inside the sun turns the robot instead of scrolling, and the page scrolls from anywhere else; the step buttons turn it and tilt it to show its underside; the cursor parts the dots.
 - **Color and depth:** everything is a shade of yellow except the team numbers. Edges are Sun, Gold and a lemon #ffde33; haze is Amber #d9a800 and Gold at 0.18; the "23511" outlines are a pale cream #f0e096. The far side recedes in opacity and toward Dot Far. Standard premultiplied blending.
 - **Placement:** CSS sets `--robot-x`, `--robot-y` and `--robot-s`; the script writes `--sun-cx`, `--sun-cy` and `--sun-d`, which place the sun disk, the poster and the controls. On phones the robot sits below the call to action.
 - **Fallbacks:** reduced motion shows it fully built and still. Without WebGL2 or the model, or after a lost graphics context, the poster (the robot at rest, cropped to its sun) is screened over the sun; a restored context brings the live robot back.
@@ -516,8 +508,8 @@ The team's robot as 174,728 dots, packed 32 bits each by `tools/pointcloud/build
 ### Accessibility and Output
 - **Reduced motion:** every transition and animation collapses, Lenis stays off, the page cross-fade is off (the view transition is declared only under `no-preference`), and Cypher is built and still.
 - **Page transitions:** a 0.35s cross-fade on `--ease-soft` with the header held still.
-- **Print:** the ground prints as designed (`print-color-adjust: exact`), and screen-only controls (skip link, cursor, menu button, copy buttons, the slideshow toggle, the hero controls, play rings) are left out.
-- **Forced colors:** the nav dot, new-tab arrows and logo ground as above; the drawn cursor off.
+- **Print:** the ground prints as designed (`print-color-adjust: exact`), and screen-only controls (skip link, menu button, copy buttons, the slideshow toggle, the hero controls, play rings) are left out.
+- **Forced colors:** the nav dot, new-tab arrows and logo ground as above.
 
 ## Do's and Don'ts
 
@@ -546,7 +538,7 @@ The team's robot as 174,728 dots, packed 32 bits each by `tools/pointcloud/build
 - **Don't** put an eyebrow or kicker label above a heading.
 - **Don't** use Azeret Mono for headings.
 - **Don't** set a stand-alone big numeral outside the home readouts and the Awards Worlds lead band (the Outreach figure column is held at 2.375rem).
-- **Don't** round rectangle corners; circles are only for arrow rings, step, pause and play buttons, markers, the cursor and suns.
+- **Don't** round rectangle corners; circles are only for arrow rings, step, pause and play buttons, markers and suns.
 - **Don't** draw a side rule thicker than 1px.
 - **Don't** set text in Deep Gold on the dark ground, or small text in Solvers Yellow on the ground.
 - **Don't** add drop shadows beyond the nav dropdown.

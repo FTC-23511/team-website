@@ -80,10 +80,15 @@ the home page's hero and "Who we are" photos; that's all done in CSS, so always 
 
 `npm run build` produces a plain static site in `dist/`. It is hosted on Vercel (the team's `software@` account),
 connected to this repository: every push to `main` publishes the site, and every other branch gets its own preview
-link. Addresses have no trailing slash (`/about/team`): each page is built as its own file, `vercel.json` serves it at
+link. The site lives at `www.seattlesolvers.com`; `seattlesolvers.com`, `seattlesolvers.org` and
+`www.seattlesolvers.org` redirect there with the path kept (redirect domains in the Vercel project). Both domains'
+DNS is on Cloudflare (the `solvers.seattle@` account) with these records set to DNS only (grey cloud): A records
+`216.198.79.1` and `64.29.17.1` on the bare domain, and a CNAME on `www` to the `vercel-dns-017.com` name Vercel
+gives the project. Addresses have no trailing slash (`/about/team`): each page is built as its own file, `vercel.json` serves it at
 the clean address, and a slashed link (`/about/team/`) redirects to it. Internal links are written without the slash.
-`astro.config.mjs` sets the site address (used for the sitemap, canonical links and link previews: on Vercel it is the
-project's production domain, or `SITE_URL` if that environment variable is set) and the redirects:
+`astro.config.mjs` sets the site address (used for the sitemap, canonical links and link previews: the `SITE_URL`
+environment variable, which Vercel sets to `https://www.seattlesolvers.com` for production builds, else the
+project's production domain) and the redirects:
 menu parents without a page of their own (`/about`, `/robots`), Outreach's old address (`/impact/outreach`, now at
 `/impact`), and the old Google Site's paths, which the
 sponsorship package still links to.
