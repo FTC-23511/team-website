@@ -46,8 +46,6 @@
   --dot-far: #7c6d1f;
   --dot-haze: 0.18;
   --dot-alpha: 1;
-  --cursor-fill: #ffe75c;
-  --cursor-halo: #0b0a06;
   --duo-light: #ffed9c;
   --shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7);
 
@@ -521,7 +519,6 @@ html.js img[loading='lazy'].is-loaded {
     print-color-adjust: exact;
   }
   .skip-link,
-  .cursor,
   .menu-btn,
   .copy-wrap,
   .slides-toggle,

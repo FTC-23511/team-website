@@ -467,19 +467,28 @@ export function mountCypher(root: HTMLElement, options: CypherOptions = {}): Cyp
     kick();
   };
 
-  // Drag on the robot rotates it freely, including underneath (horizontal only on touch so the page
-  // still scrolls). Drags that start elsewhere in the hero are left alone.
+  // Drag on the robot rotates it freely, including underneath, with a finger as with a mouse. Drags that start
+  // elsewhere in the hero are left alone, so the page still scrolls from anywhere outside the sun.
   const toClip = (e: PointerEvent) => {
     const r = canvas.getBoundingClientRect();
     return [((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1)];
   };
-  const overRobot = (e: PointerEvent) => {
+  const overRobot = (e: { clientX: number; clientY: number }) => {
     const r = canvas.getBoundingClientRect();
     const dx = e.clientX - r.left - sun.cx, dy = e.clientY - r.top - sun.cy;
     return dx * dx + dy * dy <= sun.r * sun.r;
   };
   // .is-over-robot tells the page (and its cursor) when the pointer is on the robot itself.
   const setOver = (on: boolean) => root.classList.toggle('is-over-robot', on);
+  // The canvas lets the page take vertical swipes (touch-action: pan-y); a touch that lands on the robot claims the
+  // whole gesture instead, so dragging up and down tilts it rather than scrolling.
+  canvas.addEventListener(
+    'touchstart',
+    (e) => {
+      if (loaded && e.cancelable && overRobot(e.touches[0])) e.preventDefault();
+    },
+    { passive: false },
+  );
   canvas.addEventListener('pointerdown', (e) => {
     if (!loaded || !overRobot(e)) return;
     dragging = true;
@@ -502,9 +511,9 @@ export function mountCypher(root: HTMLElement, options: CypherOptions = {}): Cyp
       const dx = e.clientX - lastX, dy = e.clientY - lastY;
       const k = 0.0075;
       yaw += dx * k;
-      if (e.pointerType === 'mouse') pitch += dy * k;
+      pitch += dy * k;
       yawVel = dx * k * 0.5;
-      pitchVel = e.pointerType === 'mouse' ? dy * k * 0.3 : 0;
+      pitchVel = dy * k * 0.3;
       lastX = e.clientX;
       lastY = e.clientY;
       lastMove = performance.now();

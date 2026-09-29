@@ -4,7 +4,6 @@ import interFont from '@fontsource-variable/inter/files/inter-latin-opsz-normal.
 import orbitronFont from '@fontsource-variable/orbitron/files/orbitron-latin-wght-normal.woff2?url';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import Cursor from '../components/Cursor.astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
 interface Props {
@@ -79,7 +78,6 @@ const ogImage = new URL(image, Astro.site);
       <slot />
     </main>
     <Footer />
-    <Cursor />
     <!-- Real-visitor page speed, reported to the team's Vercel project (Speed Insights). -->
     <SpeedInsights />
     <script>
