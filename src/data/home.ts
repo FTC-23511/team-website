@@ -91,6 +91,9 @@ export const sponsorTiers: { tier: string; size: 'xl' | 'l' | 'm' | 's'; sponsor
   {
     tier: 'Bronze',
     size: 's',
-    sponsors: [{ name: 'Tektite', logo: '/images/sponsors/tektite.webp', href: 'https://tektitebiz.com/', compact: true, caption: true, ratio: 0.644 }],
+    sponsors: [
+      { name: 'Tektite', logo: '/images/sponsors/tektite.webp', href: 'https://tektitebiz.com/', compact: true, caption: true, ratio: 0.644 },
+      { name: 'Online Metals', logo: '/images/sponsors/online-metals.webp', href: 'https://www.onlinemetals.com/', compact: true, ratio: 1.461 },
+    ],
   },
 ];
