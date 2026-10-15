@@ -9,13 +9,12 @@ export const mission =
 // From the Google Site's Sponsors page.
 export const studentLed = 'Our team is fully student-led, and we fundraise 100% of our money.';
 
-// photo and alt are left out for a placeholder: the card shows the name's initial until the photo
+// photo is left out for a placeholder: the card shows the name's initial until the photo
 // and roles arrive.
 export type Student = {
   name: string;
   roles: string[];
   photo?: string;
-  alt?: string;
 };
 
 // Current students: the captain first, then the order the Google Site lists them, then the newer members. Roles as the
@@ -25,43 +24,36 @@ export const students: Student[] = [
     name: 'Ishaan',
     roles: ['Team Captain', 'Outreach Lead', 'Design Team', 'Finance Team'],
     photo: '/images/team/ishaan.webp',
-    alt: 'Ishaan in the team jacket',
   },
   {
     name: 'Arush',
     roles: ['Programming Lead', 'Finance Co-Lead'],
     photo: '/images/team/arush.webp',
-    alt: 'Arush in the team jacket',
   },
   {
     name: 'Sarannya',
     roles: ['Build Team', 'Outreach Team'],
     photo: '/images/team/sarannya.webp',
-    alt: 'Sarannya in the team jacket',
   },
   {
     name: 'Viraj',
     roles: ['CAD Lead', 'Outreach Team'],
     photo: '/images/team/viraj.webp',
-    alt: 'Viraj in the team jacket',
   },
   {
     name: 'Erin',
     roles: ['Build Team', 'Finance Team', 'Outreach Team'],
     photo: '/images/team/erin.webp',
-    alt: 'Erin in the team jacket',
   },
   {
     name: 'Aarav',
     roles: ['Build Lead', 'Outreach Team'],
     photo: '/images/team/aarav.webp',
-    alt: 'Aarav in a grey hoodie',
   },
   {
     name: 'Uthkarsh',
     roles: ['Design Team', 'Outreach Team', 'Build Team'],
     photo: '/images/team/uthkarsh.webp',
-    alt: 'Uthkarsh in a white shirt',
   },
   // The newer members below are not on the Google Site yet. Their photos and roles come from the team's live
   // site (seattlesolvers.com, 2026-09-27), with its role names mapped to this page's: Mechanical (CAD) is the
@@ -70,19 +62,16 @@ export const students: Student[] = [
     name: 'Vihaan',
     roles: ['Design Team', 'Programming Team', 'Outreach Team'],
     photo: '/images/team/vihaan.webp',
-    alt: 'Vihaan in a black t-shirt and blue glasses',
   },
   {
     name: 'Kabir',
     roles: ['Finance Co-Lead', 'Build Team'],
     photo: '/images/team/kabir.webp',
-    alt: 'Kabir in a black button-up shirt',
   },
   {
     name: 'George',
     roles: ['Programming Team', 'Finance Team'],
     photo: '/images/team/george.webp',
-    alt: 'George in a navy sweater',
   },
   // Placeholder: add the photo when it is in.
   { name: 'Sanjay', roles: ['Design Team', 'Build Team', 'Outreach Team'] },
@@ -90,42 +79,33 @@ export const students: Student[] = [
     name: 'Brandon',
     roles: ['Finance Team', 'Programming Team'],
     photo: '/images/team/brandon.webp',
-    alt: 'Brandon in a light blue polo shirt',
   },
 ];
 
 // Former students. Roles are the ones they held on the team.
 export const alumni: Student[] = [
   {
-    name: 'Saket',
-    roles: ['Team Captain', 'Design/CAD Lead', 'Programming Team', 'Finance Team'],
-    photo: '/images/team/saket.webp',
-    alt: 'Saket in the team jacket',
-  },
-  {
     name: 'Ajay',
     roles: ['Programming Co-Lead', 'Finance Lead'],
     photo: '/images/team/ajay.webp',
-    alt: 'Ajay in the team jacket',
   },
   // Photo and roles from the team (2026-09-27); the CAD team is this page's Design Team.
   {
     name: 'Anthony',
     roles: ['Design Team', 'Outreach Team'],
     photo: '/images/team/anthony.webp',
-    alt: 'Anthony in a navy suit and red tie at dusk',
   },
 ];
 
 // team: the FIRST team shown beside the name on the Google Site, with its link when it has one.
 // role: the mentoring or coaching role. lines: the rest of the entry, in the site's order.
+// photo is left out for a placeholder, as with students.
 export type Adult = {
   name: string;
   team?: { label: string; href?: string };
   role: string;
   lines: string[];
-  photo: string;
-  alt: string;
+  photo?: string;
 };
 
 export const mentors: Adult[] = [
@@ -140,7 +120,6 @@ export const mentors: Adult[] = [
       'Student at UPenn',
     ],
     photo: '/images/team/mentors/aakarsh.webp',
-    alt: 'Aakarsh outdoors with his arms crossed',
   },
   {
     name: 'Anish',
@@ -153,7 +132,6 @@ export const mentors: Adult[] = [
       'Student at Stanford University',
     ],
     photo: '/images/team/mentors/anish.webp',
-    alt: 'Anish wearing a mask and sunglasses',
   },
   {
     name: 'Sanchit',
@@ -161,7 +139,6 @@ export const mentors: Adult[] = [
     role: 'CAD/Design Mentor',
     lines: ['Alumnus of FRC Team 1294, Pack of Parts', 'Student at Purdue University'],
     photo: '/images/team/mentors/sanchit.webp',
-    alt: 'Sanchit in a suit and tie',
   },
   {
     name: 'Aarsh',
@@ -173,7 +150,6 @@ export const mentors: Adult[] = [
       'Student at UIUC',
     ],
     photo: '/images/team/mentors/aarsh.webp',
-    alt: 'Aarsh in a red jacket outdoors',
   },
   {
     name: 'Aaditya',
@@ -184,7 +160,6 @@ export const mentors: Adult[] = [
       'Currently conducting CV/Robotics research at college',
     ],
     photo: '/images/team/mentors/aaditya.webp',
-    alt: 'Aaditya holding a robot drivetrain frame',
   },
   {
     name: 'Kai',
@@ -192,27 +167,46 @@ export const mentors: Adult[] = [
     role: 'Awards/Team Management/Media Mentor',
     lines: [
       'Washington FIRST Tech Challenge Dean’s List Semi-Finalist (2023)',
-      'FIRST WA DEI Committee Chair',
+      'WCI Executive Board',
       'Alumnus of FTC Team 23383, R-\u2060COURT and FRC 2147, CHUCK',
+      'Student at Western Washington University',
     ],
     photo: '/images/team/mentors/kai.webp',
-    alt: 'Kai in a black suit, green shirt and dark tie',
   },
   {
     // The Google Site repeated Aaditya's lines here by mistake; the team gave Devyn's own on 2026-09-27.
     name: 'Devyn',
-    team: { label: 'FTC 14343' },
+    team: { label: 'FTC 14343', href: 'https://ftc14343.org/' },
     role: 'Software/Strategy Mentor',
     lines: ['Programming Lead of FTC Team 14343'],
     photo: '/images/team/mentors/devyn.webp',
-    alt: 'Devyn giving a thumbs up at a workbench',
   },
   {
     name: 'Spencer',
     role: 'Hardware/Team Management Mentor',
     lines: ['Robotics System Engineer at Amazon Robotics'],
     photo: '/images/team/mentors/spencer.webp',
-    alt: 'Spencer in a white shirt',
+  },
+  {
+    name: 'Win',
+    role: 'Mentor',
+    lines: ['Tool Design Engineer at Boeing'],
+    photo: '/images/team/mentors/win.webp',
+  },
+  {
+    // Moved over from the alumni on 2026-10-14.
+    name: 'Saket',
+    team: { label: 'FTC 23511' },
+    role: 'CAD/Design Mentor',
+    lines: ['Alumnus of FTC Team 23511, Seattle Solvers', 'Former Captain + Design/CAD Lead'],
+    photo: '/images/team/mentors/saket.webp',
+  },
+  {
+    name: 'Rowan',
+    team: { label: 'FRC 1778', href: 'https://www.chillout1778.org/' },
+    role: 'Programming/Design/CAD Mentor',
+    lines: ['Alumnus of FRC Team 1778, Chill Out and FTC 3805, Atomic Robotics', 'Founder of WCI'],
+    photo: '/images/team/mentors/rowan.webp',
   },
 ];
 
@@ -222,6 +216,11 @@ export const coaches: Adult[] = [
     role: 'Head Coach',
     lines: ['Software Coach'],
     photo: '/images/team/coach/zheng.webp',
-    alt: 'Zheng in a Seattle Solvers t-shirt',
+  },
+  {
+    name: 'Raghu',
+    role: 'Head Coach',
+    lines: [],
+    photo: '/images/team/coach/raghu.webp',
   },
 ];
