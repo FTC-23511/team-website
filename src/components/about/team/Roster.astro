@@ -4,6 +4,7 @@ import type { Adult, Student } from '../../../data/team';
 
 // One group on Meet the Team. Students, alumni, mentors and coaches all share this card grid, so every
 // portrait on the page is the same size. A student without a photo yet shows the initial of their name.
+// Portraits have an empty alt: the name right under each one already says who it is.
 interface Props {
   id: string;
   title: string;
@@ -31,7 +32,7 @@ const isLead = (role: string) => /\b(Lead|Captain)\b/.test(role);
               <div class="duo tinted portrait">
                 <img
                   src={p.photo}
-                  alt={p.alt ?? p.name}
+                  alt=""
                   width="600"
                   height="800"
                   loading={i < eager ? 'eager' : 'lazy'}
