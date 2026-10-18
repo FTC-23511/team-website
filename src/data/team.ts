@@ -152,16 +152,6 @@ export const mentors: Adult[] = [
     photo: '/images/team/mentors/aarsh.webp',
   },
   {
-    name: 'Aaditya',
-    team: { label: 'FRC 1294', href: 'https://www.packofparts.org/' },
-    role: 'Software/Vision Mentor',
-    lines: [
-      'Alumnus of FRC Team 1294, Pack of Parts, former Software Lead',
-      'Currently conducting CV/Robotics research at college',
-    ],
-    photo: '/images/team/mentors/aaditya.webp',
-  },
-  {
     name: 'Kai',
     team: { label: 'FTC 23383', href: 'https://ftcscout.org/teams/23383' },
     role: 'Awards/Team Management/Media Mentor',
@@ -174,7 +164,7 @@ export const mentors: Adult[] = [
     photo: '/images/team/mentors/kai.webp',
   },
   {
-    // The Google Site repeated Aaditya's lines here by mistake; the team gave Devyn's own on 2026-09-27.
+    // The Google Site repeated another mentor's lines here by mistake; the team gave Devyn's own on 2026-09-27.
     name: 'Devyn',
     team: { label: 'FTC 14343', href: 'https://ftc14343.org/' },
     role: 'Software/Strategy Mentor',
