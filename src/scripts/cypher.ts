@@ -430,7 +430,9 @@ export function mountCypher(root: HTMLElement, options: CypherOptions = {}): Cyp
     gl.uniform1f(U.pointerOn, still ? 0 : pointerOn);
     gl.uniform1f(U.aspect, aspect);
     gl.uniform1f(U.size, small ? 1.2 : 1.35);
-    gl.uniform1f(U.dpr, dpr);
+    // Dots are never drawn under one device pixel per CSS pixel: zoomed out, the ratio drops below 1 and they thin to
+    // faint specks.
+    gl.uniform1f(U.dpr, Math.max(dpr, 1));
     gl.uniform1f(U.alpha, palette.alpha);
     gl.uniform3fv(U.far, palette.far);
     gl.uniform1f(U.haze, palette.haze);

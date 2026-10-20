@@ -13,6 +13,17 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
 <section class="hero" aria-labelledby="hero-title">
   <!-- Background slideshow of the team's photos, behind the robot and the words. -->
   <div class="slides" data-slides aria-hidden="true">
+    <!-- The duotone as one filter: grayscale, contrast 1.04 and brightness 1.08, then a multiply by Duo Light
+         (#ffed9c). A multiply blend layer looks the same but makes the GPU read back the whole hero every frame the
+         photos drift, which is what made zoomed-out windows (where the hero never leaves the screen) lag. -->
+    <svg class="duo-filter" width="0" height="0" focusable="false">
+      <filter id="hero-duo" color-interpolation-filters="sRGB">
+        <feColorMatrix
+          values="0.2388 0.8033 0.0811 0 -0.0216  0.2388 0.8033 0.0811 0 -0.0216  0.2388 0.8033 0.0811 0 -0.0216  0 0 0 1 0"
+        />
+        <feColorMatrix values="1 0 0 0 0  0 0.9294 0 0 0  0 0 0.6118 0 0  0 0 0 1 0" />
+      </filter>
+    </svg>
     {
       heroSlides.map((s, i) => (
         <img
@@ -82,13 +93,15 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
     position: relative;
     display: flex;
     align-items: center;
-    min-height: calc(100dvh - var(--header-h));
+    /* Capped in min-height too: a min-height above the max-height wins, so on a tall (or zoomed-out) window the hero
+       would otherwise fill the whole screen and the sun balloon with it. */
+    min-height: min(calc(100dvh - var(--header-h)), 1040px);
     max-height: 1040px;
     overflow: hidden;
     isolation: isolate;
   }
 
-  /* Slideshow: the team's photos in the pale duotone (grayscale under a Duo Light multiply tint), which the home page's
+  /* Slideshow: the team's photos in the pale duotone (grayscale under a Duo Light tint), which the home page's
      first two bands keep while photos elsewhere show in color. An ink gradient sits only behind the words, so the
      headline stays crisp while the photos show in full around the sun. */
   .slides {
@@ -97,7 +110,11 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
     z-index: -2;
     overflow: hidden;
     isolation: isolate;
-    background: var(--paper-2);
+    /* Ground 2 under the same tint the photos get. */
+    background: #141207;
+  }
+  .duo-filter {
+    position: absolute;
   }
   .slide {
     position: absolute;
@@ -106,18 +123,10 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
     height: 100%;
     object-fit: cover;
     object-position: var(--focus, 50% 50%);
-    filter: grayscale(1) contrast(1.04) brightness(1.08);
+    /* The tint is held: a backdrop has no hover to return to color. */
+    filter: url(#hero-duo);
     opacity: 0;
     transition: opacity 1.6s var(--ease-inout);
-  }
-  /* The tint is held: a backdrop has no hover to return to color. */
-  .slides::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--duo-light);
-    mix-blend-mode: multiply;
-    pointer-events: none;
   }
   .slide.is-active {
     opacity: 1;
@@ -203,7 +212,7 @@ const POSTER_ALT = "Cypher, the team's robot, drawn in dots.";
     --fit: calc((99vw - var(--words)) * 0.944);
     --d: var(--sun-d, min(92.5%, var(--fit)));
     /* The same diameter in viewport units, for lengths across the hero (a percentage there is of its width). */
-    --d-across: var(--sun-d, min(0.925 * max(100dvh - var(--header-h), 33rem), var(--fit)));
+    --d-across: var(--sun-d, min(0.925 * max(min(100dvh - var(--header-h), 1040px), 33rem), var(--fit)));
     --cx: var(--sun-cx, max(64%, var(--words) + var(--d-across) / 2));
     --cy: var(--sun-cy, calc(45% + 0.0368 * min(92.5%, var(--fit))));
     position: absolute;
