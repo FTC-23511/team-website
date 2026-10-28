@@ -73,8 +73,6 @@ export const students: Student[] = [
     roles: ['Programming Team', 'Finance Team'],
     photo: '/images/team/george.webp',
   },
-  // Placeholder: add the photo when it is in.
-  { name: 'Sanjay', roles: ['Design Team', 'Build Team', 'Outreach Team'] },
   {
     name: 'Brandon',
     roles: ['Finance Team', 'Programming Team'],
