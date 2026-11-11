@@ -1,11 +1,13 @@
 // Newsletters page content. Source: the Newsletters page of the team's Google Site
 // (sites.google.com/view/seattlesolvers/about-us/newsletters, scraped 2026-09-27): each issue's Canva link and its
 // topic line, with typos fixed. Covers are page 1 of each design, captured from its public Canva view on
-// 2026-09-27 (public/images/newsletters, each with a provenance sidecar).
+// 2026-09-27 (public/images/newsletters, each with a provenance sidecar). Summer 2026 was added 2026-11-11 from the
+// issue itself: topics written from its pages, cover rendered from its PDF export.
 //
 // New issue: add it at the top of `issues` (newest first) with its Canva share link, then save page 1 of the design
-// as public/images/newsletters/<yyyy-mm>.webp (880px wide) and a 360px-wide copy as <yyyy-mm>-360.webp
-// (`coverSmall`, used once the issue moves to the back issues). The newest issue is featured automatically.
+// as public/images/newsletters/<yyyy-mm>.webp (880px wide; <yyyy-mm> is the first month the issue covers) and a
+// 360px-wide copy as <yyyy-mm>-360.webp (`coverSmall`, used once the issue moves to the back issues). The newest
+// issue is featured automatically.
 
 export type Issue = {
   /** The months it covers, as the team titles it. */
@@ -27,6 +29,15 @@ export const intro =
   'Our newsletter is where we write up what the team has been working on: the robot, SolversLib, our classes, outreach, and competitions.';
 
 export const issues: Issue[] = [
+  {
+    // Titled "Summer 2026 Sponsor Newsletter"; its pages run from Worlds (April + May) to the BioBuzz kickoff.
+    period: 'April to October 2026',
+    season: 'Summer 2026',
+    topics: ['Worlds and the Inspire Award', 'Offseason training', 'Our new CNC router', 'BioBuzz v1 robot'],
+    href: 'https://canva.link/5bt7vl7qbfhxklp',
+    cover: '/images/newsletters/2026-04.webp',
+    coverSmall: '/images/newsletters/2026-04-360.webp',
+  },
   {
     period: 'February + March 2026',
     season: 'Winter 2025-26',
